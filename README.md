@@ -21,6 +21,9 @@ cd wf-rag && python server.py      # 索引缺失时先 python build_index.py
 
 服务未启动时工具会返回可读错误提示，不影响 LLM 其他能力。
 
+### 重要组件
+此插件需搭配[rag索引](https://github.com/mmxd12/wf-rag-pack) 使用，请自行前去安装
+
 ## 启动自检（v1.1.0 新增）
 
 插件加载时会**自动探活**两个后端服务（只检查 HTTP 可达性，不依赖任何数据）：
