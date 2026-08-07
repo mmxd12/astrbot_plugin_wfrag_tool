@@ -13,7 +13,7 @@
     },
     "timeout": {
         "description": "HTTP 请求超时（秒）",
-        "type": "integer",
+        "type": "int",
         "default": 30,
         "hint": "wf-api 首次查询词库构建可能较慢，可调大"
     }
