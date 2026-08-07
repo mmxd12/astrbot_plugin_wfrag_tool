@@ -304,17 +304,7 @@ class WFRagTool(Star):
                             f"（{s.get('status')}）")
                 return "\n".join(lines)
             if tool in ("ws", "wf", "world", "w"):
-                if isinstance(d, list):
-                    return f"共 {len(d)} 条，首条：\n{json.dumps(d[0], ensure_ascii=False, indent=1)[:1200]}"
-                if "activeChallenges" in d:
-                    lines = [f"🎯 电波第 {d.get('season')} 季，剩余 {d.get('eta') or '—'}"]
-                    for c in (d.get("activeChallenges") or [])[:8]:
-                        lines.append(
-                            f"  {'[周]' if not c.get('isDaily') else '[日]'}"
-                            f"{c.get('title')}（{c.get('reputation')}声望）"
-                            f"\n    {c.get('desc')} | 剩 {c.get('eta')}")
-                    return "\n".join(lines)
-                return json.dumps(d, ensure_ascii=False, indent=1)[:1500]
+                return self._ws_pretty(d)
             if tool in ("dict", "d"):
                 lines = []
                 for h in (d.get("hits") or [])[:6]:
@@ -330,6 +320,88 @@ class WFRagTool(Star):
         except Exception as e:
             return f"（格式化失败: {e}）\n{text[:800]}"
         return text[:1500]
+
+    def _ws_pretty(self, d) -> str:
+        """世界状态人类可读格式化（测试命令展示用）。"""
+        try:
+            if isinstance(d, dict) and "activeChallenges" in d:      # 电波
+                lines = [f"🎯 电波第 {d.get('season')} 季，剩余 {d.get('eta') or '—'}"]
+                for c in (d.get("activeChallenges") or [])[:8]:
+                    lines.append(
+                        f"  {'[周]' if not c.get('isDaily') else '[日]'}"
+                        f"{c.get('title')}（{c.get('reputation')}声望）"
+                        f"\n    {c.get('desc')} | 剩 {c.get('eta')}")
+                return "\n".join(lines)
+            if isinstance(d, dict) and "variants" in d:              # 突击
+                lines = [f"⚔ 今日突击（奖励: {d.get('rewardPool')}）"]
+                for v in (d.get("variants") or [])[:3]:
+                    lines.append(
+                        f"  {v.get('missionType')} | {v.get('node')}"
+                        f"\n    修正: {v.get('modifier')} —— {v.get('modifierDescription')}")
+                return "\n".join(lines)
+            if isinstance(d, dict) and "currentReward" in d:          # 钢铁之路
+                r = d.get("currentReward") or {}
+                lines = [f"🛡 钢铁之路: 当前奖励 {r.get('name')}（{r.get('cost')} 声望），剩余 {d.get('remaining')}"]
+                rot = []
+                for i in (d.get("rotation") or [])[:6]:
+                    rot.append(f"{i.get('name')}({i.get('cost')})")
+                lines.append("  轮换: " + " | ".join(rot))
+                return "\n".join(lines)
+            if isinstance(d, dict) and "character" in d:              # 奸商
+                inv = d.get("inventory") or []
+                lines = [f"🧙 {d.get('character')} 在 {d.get('location')}"]
+                if inv:
+                    for it in inv[:8]:
+                        lines.append(f"  {it.get('item')} — {it.get('ducats')} 杜卡 + {it.get('credits')} 现金")
+                    if len(inv) > 8:
+                        lines.append(f"  ...另有 {len(inv)-8} 项")
+                else:
+                    lines.append("  （本次清单尚未公布）")
+                return "\n".join(lines)
+            if isinstance(d, list) and d and "mission" in d[0]:       # 警报
+                lines = [f"🚨 警报 {len(d)} 条"]
+                for a in (d or [])[:6]:
+                    m = a.get("mission") or {}
+                    rw = m.get("reward") or {}
+                    reward_txt = ""
+                    ci = rw.get("countedItems") or []
+                    if ci:
+                        reward_txt = " | ".join(f"{x.get('count')}×{x.get('type')}" for x in ci[:3])
+                    elif rw.get("credits"):
+                        reward_txt = f"{rw.get('credits')} 现金"
+                    lines.append(
+                        f"  {m.get('type')} @ {m.get('node')}"
+                        f"{' | 奖励: ' + reward_txt if reward_txt else ''}"
+                        f" | 敌人 {m.get('minEnemyLevel')}-{m.get('maxEnemyLevel')}级")
+                return "\n".join(lines)
+            if isinstance(d, list) and d and "tier" in d[0]:          # 裂缝
+                lines = [f"🌀 虚空裂缝 {len(d)} 条"]
+                for f in (d or [])[:8]:
+                    lines.append(
+                        f"  {f.get('tier')} | {f.get('missionType')} @ {f.get('node')}"
+                        f"{'（钢铁）' if f.get('isHard') else ''}"
+                        f" | 剩 {(f.get('expiry') or '')[:16].replace('T', ' ')}")
+                return "\n".join(lines)
+            if isinstance(d, list) and d and "attacker" in d[0]:      # 入侵
+                lines = [f"🪖 入侵 {len(d)} 条"]
+                for inv in (d or [])[:6]:
+                    def _rw(side):
+                        rw = (side.get("reward") or {})
+                        ci = rw.get("countedItems") or []
+                        return " | ".join(f"{x.get('count')}×{x.get('type')}" for x in ci[:2]) or f"{rw.get('credits')}现金"
+                    lines.append(
+                        f"  {inv.get('node')}: {inv.get('attacker', {}).get('factionKey')}"
+                        f"[{_rw(inv.get('attacker') or {})}] vs "
+                        f"{inv.get('defender', {}).get('factionKey')}"
+                        f"[{_rw(inv.get('defender') or {})}]")
+                return "\n".join(lines)
+        except Exception as e:
+            return f"（世界状态格式化失败: {e}）"
+        # 兜底: 未知结构, 输出摘要
+        if isinstance(d, list):
+            return f"共 {len(d)} 条:\n" + "\n".join(
+                json.dumps(x, ensure_ascii=False)[:300] for x in d[:3])
+        return json.dumps(d, ensure_ascii=False, indent=1)[:1500]
 
     @filter.command("wfllm", alias={"wfragtool"})
     async def test_tool(self, event: AstrMessageEvent):
