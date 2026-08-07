@@ -283,11 +283,24 @@ class WFRagTool(Star):
     @filter.command("wfllm", alias={"wfragtool"})
     async def test_tool(self, event: AstrMessageEvent):
         """测试 llm_tool：/wfllm <rag|price|ws|dict> <参数>"""
-        msg = (event.message_str or "").strip()
-        for p in ("/wfllm", "/wfragtool"):
-            if msg.startswith(p):
-                msg = msg[len(p):].strip()
-                break
+        # 优先用 AstrBot 解析好的命令参数（不同版本 message_str 可能带/不带斜杠）
+        msg = ""
+        try:
+            arg = event.get_command_arg()
+            if arg is not None and getattr(arg, "arg_str", None):
+                msg = str(arg.arg_str).strip()
+        except Exception:
+            msg = ""
+        if not msg:
+            msg = (event.message_str or "").strip()
+            for p in ("/wfllm", "#wfllm", "/wfragtool", "#wfragtool",
+                      "wfragtool", "wfllm"):
+                if msg == p:
+                    msg = ""
+                    break
+                if msg.startswith(p + " "):
+                    msg = msg[len(p):].strip()
+                    break
         parts = msg.split(maxsplit=1)
         if not parts:
             yield event.plain_result(
