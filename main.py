@@ -280,6 +280,57 @@ class WFRagTool(Star):
 
     # ---------- 测试命令 ----------
 
+    def _pretty(self, tool: str, text: str) -> str:
+        """把工具返回的 JSON 转成人类可读文本（仅测试命令展示用）。"""
+        try:
+            d = json.loads(text)
+        except Exception:
+            return text
+        if isinstance(d, dict) and d.get("success") is False:
+            return f"\u26a0 {d.get('message', '查询失败')}"
+        try:
+            if tool in ("price", "wm", "p"):
+                st = d.get("statistics") or {}
+                lines = [
+                    f"\U0001f4e6 {d.get('zh') or d.get('item')}（{d.get('en') or ''}）",
+                    f"  均价 {st.get('avg_price')} | 中位 {st.get('median')} | "
+                    f"最低 {st.get('min_price')} | 最高 {st.get('max_price')} | "
+                    f"成交量 {st.get('volume')}",
+                ]
+                for s in (d.get("top_sellers") or [])[:3]:
+                    if s.get("name"):
+                        lines.append(
+                            f"  卖家 {s['name']}: {s.get('price')}p × {s.get('qty')}"
+                            f"（{s.get('status')}）")
+                return "\n".join(lines)
+            if tool in ("ws", "wf", "world", "w"):
+                if isinstance(d, list):
+                    return f"共 {len(d)} 条，首条：\n{json.dumps(d[0], ensure_ascii=False, indent=1)[:1200]}"
+                if "activeChallenges" in d:
+                    lines = [f"🎯 电波第 {d.get('season')} 季，剩余 {d.get('eta') or '—'}"]
+                    for c in (d.get("activeChallenges") or [])[:8]:
+                        lines.append(
+                            f"  {'[周]' if not c.get('isDaily') else '[日]'}"
+                            f"{c.get('title')}（{c.get('reputation')}声望）"
+                            f"\n    {c.get('desc')} | 剩 {c.get('eta')}")
+                    return "\n".join(lines)
+                return json.dumps(d, ensure_ascii=False, indent=1)[:1500]
+            if tool in ("dict", "d"):
+                lines = []
+                for h in (d.get("hits") or [])[:6]:
+                    lines.append(
+                        f"  {h.get('key') or h.get('zh')} → {h.get('en')}"
+                        f"{'（' + str(h.get('zh')) + '）' if h.get('zh') and h.get('key') else ''}"
+                        f"{' | 紫卡价 ' + str(h.get('ducats')) if h.get('ducats') else ''}")
+                return "\n".join(lines) or "（无结果）"
+            if tool in ("rag", "search", "r"):
+                return (d.get("context") or "")[:1500] + (
+                    "\n\n来源: " + ", ".join(
+                        s.get("title") for s in (d.get("sources") or [])[:3]))
+        except Exception as e:
+            return f"（格式化失败: {e}）\n{text[:800]}"
+        return text[:1500]
+
     @filter.command("wfllm", alias={"wfragtool"})
     async def test_tool(self, event: AstrMessageEvent):
         """测试 llm_tool：/wfllm <rag|price|ws|dict> <参数>"""
@@ -327,7 +378,7 @@ class WFRagTool(Star):
             else:
                 yield event.plain_result(f"未知工具: {tool}，可用 rag|price|ws|dict")
                 return
-            yield event.plain_result(res)
+            yield event.plain_result(self._pretty(tool, res))
         except Exception as e:
             logger.error(f"[wfrag_tool] 测试异常: {e}")
             yield event.plain_result(f"异常: {type(e).__name__}: {e}")
