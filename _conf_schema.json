@@ -1,0 +1,20 @@
+{
+    "wf_api_url": {
+        "description": "wf-api 服务地址（市价/世界状态/词库）",
+        "type": "string",
+        "default": "http://127.0.0.1:3000",
+        "hint": "如 wf-api 换了端口或部署到其他机器，改这里"
+    },
+    "wf_rag_url": {
+        "description": "wf-rag 检索服务地址（Wiki 知识库）",
+        "type": "string",
+        "default": "http://127.0.0.1:8765",
+        "hint": "需先运行 wf-rag/server.py"
+    },
+    "timeout": {
+        "description": "HTTP 请求超时（秒）",
+        "type": "integer",
+        "default": 30,
+        "hint": "wf-api 首次查询词库构建可能较慢，可调大"
+    }
+}
