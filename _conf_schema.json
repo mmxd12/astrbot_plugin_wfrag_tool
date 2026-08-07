@@ -2,14 +2,14 @@
     "wf_api_url": {
         "description": "wf-api 服务地址（市价/世界状态/词库）",
         "type": "string",
-        "default": "http://127.0.0.1:3000",
-        "hint": "如 wf-api 换了端口或部署到其他机器，改这里"
+        "default": "https://wf.nana7mi.top",
+        "hint": "默认指向云端共享服务，装完即用；自建服务可改回 http://127.0.0.1:3000"
     },
     "wf_rag_url": {
         "description": "wf-rag 检索服务地址（Wiki 知识库）",
         "type": "string",
         "default": "http://127.0.0.1:8765",
-        "hint": "需先运行 wf-rag/server.py"
+        "hint": "需先运行 wf-rag/server.py；与 AstrBot 同机 Docker 时填 http://172.17.0.1:8765"
     },
     "timeout": {
         "description": "HTTP 请求超时（秒）",
