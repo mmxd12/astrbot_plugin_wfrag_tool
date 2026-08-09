@@ -31,10 +31,10 @@ WF_RAG = "http://127.0.0.1:8765"
 TIMEOUT = 30
 
 # 常见世界状态类型 -> 提示语（供 LLM 参考，不强制）
-WS_TYPES = "电波|突击|裂缝|钢铁裂缝|九重天|奸商|达尔沃|小小黑|钢铁之路|执刑官|仲裁|入侵|警报|双衍|科研|赏金|全局增益"
+WS_TYPES = "电波|突击|裂缝|钢铁裂缝|九重天|奸商|达尔沃|小小黑|钢铁之路|执刑官|仲裁|入侵|警报|双衍|科研|全局增益|赤毒|舰队|先遣舰|日历|促销|新闻|活动|集团任务|时间戳|地球|金星|火卫二|扎里曼|赏金|科维兽|1999赏金"
 
 
-@register("astrbot_plugin_wfrag_tool", "小浅", "Warframe LLM 工具：Wiki RAG + 市价 + 世界状态 + 词库", "1.1.0")
+@register("astrbot_plugin_wfrag_tool", "小浅", "Warframe LLM 工具：Wiki RAG + 市价 + 世界状态 + 词库", "1.2.0")
 class WFRagTool(Star):
     def __init__(self, context: Context, config=None):
         super().__init__(context)
@@ -219,7 +219,12 @@ class WFRagTool(Star):
                 九重天(railjack)、奸商(voidTrader)、达尔沃(dailyDeals)、小小黑(persistentEnemies)、
                 钢铁之路(steelPath)、执刑官(archonHunt)、仲裁(arbitration)、
                 入侵(invasions)、警报(alerts)、双衍(duviriCycle)、科研(archimedeas)、
-                全局增益(globalUpgrades)、地球/金星/火卫二/扎里曼 昼夜(earthCycle/vallisCycle/cambionCycle/zarimanCycle)
+                全局增益(globalUpgrades)、赤毒(kuva)、舰队(constructionProgress)、
+                先遣舰(sentientOutposts)、日历(calendar)、促销(flashSales)、
+                新闻(news)、活动(events)、集团任务(syndicateMissions)、时间戳(timestamp)、
+                地球/金星/火卫二/扎里曼 昼夜(earthCycle/vallisCycle/cambionCycle/zarimanCycle)、
+                科维兽赏金/扎里曼赏金(Cavia)、1999赏金/霍瓦尼亚赏金(Hex)、
+                地球赏金(Ostrons)、金星赏金(Solaris)、火卫二赏金(EntratiSyndicate)
 
         返回:
             JSON: 该类型的当前状态数据（已剔除图片等大字段）
@@ -427,12 +432,12 @@ class WFRagTool(Star):
         parts = msg.split(maxsplit=1)
         if not parts:
             yield event.plain_result(
-                "Warframe LLM 工具插件 v1.1.0\n"
+                "Warframe LLM 工具插件 v1.2.0\n"
                 f"服务状态：{self._health_line()}\n"
                 "已注册 4 个 llm_tool：\n"
                 "  wf_rag_search(query, top_k)   - Wiki 知识库检索\n"
                 "  wf_market_price(item)         - 市价查询（支持黑话）\n"
-                "  wf_world_state(type)          - 世界状态（电波/突击/奸商…）\n"
+                "  wf_world_state(type)          - 世界状态（电波/突击/裂缝/钢裂/九重天/奸商/赏金…）\n"
                 "  wf_dict(keyword)              - 黑话/词库解析\n\n"
                 "测试：/wfllm rag 电击异常 | price 奶妈P | ws 电波 | dict 三傻"
             )
