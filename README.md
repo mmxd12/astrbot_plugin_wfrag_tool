@@ -6,7 +6,7 @@
 |---|---|---|
 | `wf_rag_search(query, top_k)` | 检索 Warframe 中文 Wiki 知识库，返回权威机制/数值片段+出处 | wf-rag (8765) |
 | `wf_market_price(item)` | Warframe Market 市价查询，**支持玩家黑话**（奶妈P/福马/三傻…） | wf-api (3000) |
-| `wf_world_state(type)` | 世界状态：电波/突击/裂缝/钢铁裂缝/九重天/奸商/达尔沃/钢铁之路/执刑官/仲裁… | wf-api (3000) |
+| `wf_world_state(type)` | 世界状态：电波/突击/裂缝/钢铁裂缝/九重天/奸商/达尔沃/钢铁之路/执刑官/仲裁/赏金(科维兽/1999)… | wf-api (3000) |
 | `wf_dict(keyword)` | 词库/黑话解析：黑话 → 正式英文名 | wf-api (3000) |
 
 ## 🚀 一键安装（3 种方式任选）
@@ -50,7 +50,7 @@ RAG 检索（Wiki 知识库）依赖 [wf-rag-pack](https://github.com/mmxd12/wf-
 部署方式见该仓库 README（fetch.py → build_slang.py → build_index.py → server.py）。
 若仅需市价/世界状态/词库（wf-api），无需安装 wf-rag。
 
-## 启动自检（v1.1.0 新增）
+## 启动自检（v1.2.0）
 
 插件加载时会**自动探活**两个后端服务（只检查 HTTP 可达性，不依赖任何数据）：
 
