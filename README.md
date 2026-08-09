@@ -6,7 +6,7 @@
 |---|---|---|
 | `wf_rag_search(query, top_k)` | 检索 Warframe 中文 Wiki 知识库，返回权威机制/数值片段+出处 | wf-rag (8765) |
 | `wf_market_price(item)` | Warframe Market 市价查询，**支持玩家黑话**（奶妈P/福马/三傻…） | wf-api (3000) |
-| `wf_world_state(type)` | 世界状态：电波/突击/裂缝/奸商/达尔沃/钢铁之路/执刑官/仲裁… | wf-api (3000) |
+| `wf_world_state(type)` | 世界状态：电波/突击/裂缝/钢铁裂缝/九重天/奸商/达尔沃/钢铁之路/执刑官/仲裁… | wf-api (3000) |
 | `wf_dict(keyword)` | 词库/黑话解析：黑话 → 正式英文名 | wf-api (3000) |
 
 ## 🚀 一键安装（3 种方式任选）
