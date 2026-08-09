@@ -31,7 +31,7 @@ WF_RAG = "http://127.0.0.1:8765"
 TIMEOUT = 30
 
 # 常见世界状态类型 -> 提示语（供 LLM 参考，不强制）
-WS_TYPES = "电波|突击|裂缝|奸商|达尔沃|小小黑|钢铁之路|执刑官|仲裁|入侵|警报|双衍|科研|赏金|全局增益"
+WS_TYPES = "电波|突击|裂缝|钢铁裂缝|九重天|奸商|达尔沃|小小黑|钢铁之路|执刑官|仲裁|入侵|警报|双衍|科研|赏金|全局增益"
 
 
 @register("astrbot_plugin_wfrag_tool", "小浅", "Warframe LLM 工具：Wiki RAG + 市价 + 世界状态 + 词库", "1.1.0")
@@ -215,11 +215,11 @@ class WFRagTool(Star):
 
         Args:
             type(string): 状态类型，支持中文/英文。常用：
-                电波(nightwave)、突击(sortie)、裂缝(fissures)、奸商(voidTrader)、
-                达尔沃(dailyDeals)、小小黑(persistentEnemies)、钢铁之路(steelPath)、
-                执刑官(archonHunt)、仲裁(arbitration)、入侵(invasions)、警报(alerts)、
-                双衍(duviriCycle)、科研(archimedeas)、全局增益(globalUpgrades)、
-                地球/金星/火卫二/扎里曼 昼夜(earthCycle/vallisCycle/cambionCycle/zarimanCycle)
+                电波(nightwave)、突击(sortie)、裂缝(fissures)、钢铁裂缝(steelFissures)、
+                九重天(railjack)、奸商(voidTrader)、达尔沃(dailyDeals)、小小黑(persistentEnemies)、
+                钢铁之路(steelPath)、执刑官(archonHunt)、仲裁(arbitration)、
+                入侵(invasions)、警报(alerts)、双衍(duviriCycle)、科研(archimedeas)、
+                全局增益(globalUpgrades)、地球/金星/火卫二/扎里曼 昼夜(earthCycle/vallisCycle/cambionCycle/zarimanCycle)
 
         返回:
             JSON: 该类型的当前状态数据（已剔除图片等大字段）
