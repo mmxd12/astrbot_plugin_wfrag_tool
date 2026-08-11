@@ -1,10 +1,11 @@
 """AstrBot LLM 工具插件：Warframe 实时数据 + Wiki RAG
 
-注册 4 个 llm_tool（function calling），让 LLM 在对话中主动调用：
-  - wf_rag_search   检索 Warframe 中文 Wiki 知识库（wf-rag 服务 / 8765）
-  - wf_market_price Warframe Market 市价查询（wf-api / 3000，支持黑话）
-  - wf_world_state  世界状态查询（电波/突击/裂缝/奸商/钢铁之路…）
-  - wf_dict         词库/黑话解析（wf-api / 3000）
+注册 5 个 llm_tool（function calling），让 LLM 在对话中主动调用：
+  - wf_rag_search         检索 Warframe 中文 Wiki 知识库（wf-rag 服务 / 8765）
+  - wf_market_price       Warframe Market 市价查询（wf-api / 3000，支持黑话）
+  - wf_world_state        世界状态查询（电波/突击/裂缝/奸商/钢铁之路/仲裁…）
+  - wf_arbitration_essence 仲裁精华表（精华/小时、品质、节点）
+  - wf_dict               词库/黑话解析（wf-api / 3000）
 
 依赖两个本地服务（只读 HTTP，插件本身不缓存任何数据）：
   - wf-api  http://127.0.0.1:3000   (node wf-api，市价/世界状态/词库)
@@ -31,10 +32,10 @@ WF_RAG = "http://127.0.0.1:8765"
 TIMEOUT = 30
 
 # 常见世界状态类型 -> 提示语（供 LLM 参考，不强制）
-WS_TYPES = "电波|突击|裂缝|钢铁裂缝|九重天|奸商|达尔沃|小小黑|钢铁之路|执刑官|仲裁|入侵|警报|双衍|科研|全局增益|赤毒|舰队|先遣舰|日历|促销|新闻|活动|集团任务|时间戳|地球|金星|火卫二|扎里曼|赏金|科维兽|1999赏金"
+WS_TYPES = "电波|突击|裂缝|钢铁裂缝|九重天|奸商|达尔沃|小小黑|钢铁之路|执刑官|仲裁|仲裁精华(arb)|入侵|警报|双衍|科研|全局增益|赤毒|舰队|先遣舰|日历|促销|新闻|活动|集团任务|时间戳|地球|金星|火卫二|扎里曼|赏金|科维兽|1999赏金"
 
 
-@register("astrbot_plugin_wfrag_tool", "小浅", "Warframe LLM 工具：Wiki RAG + 市价 + 世界状态 + 词库", "1.2.0")
+@register("astrbot_plugin_wfrag_tool", "小浅", "Warframe LLM 工具：Wiki RAG + 市价 + 世界状态 + 仲裁精华 + 词库", "1.3.0")
 class WFRagTool(Star):
     def __init__(self, context: Context, config=None):
         super().__init__(context)
@@ -248,7 +249,48 @@ class WFRagTool(Star):
                     d[k] = v[:10] + [{"...": f"还有 {len(v) - 10} 项已省略"}]
         return self._trim(json.dumps(d, ensure_ascii=False), 3500)
 
-    # ---------- 工具 4：词库/黑话 ----------
+    # ---------- 工具 4：仲裁精华 ----------
+
+    @filter.llm_tool(name="wf_arbitration_essence")
+    async def wf_arbitration_essence(self, event: AstrMessageEvent, **kwargs) -> str:
+        """查询仲裁精华表：每个仲裁任务的精华/小时、品质、节点
+
+        用户问“仲裁精华”“仲裁表”“仲裁奖励”“仲裁每小时多少精华”“仲裁哪个节点精华多”等时调用。
+
+        Args:
+            days(int): 可选，查询天数，默认7，最多30
+
+        返回:
+            JSON: {success, data:[{node, missionType, essence, quality, enemy, eta}]}
+        """
+        days = int(kwargs.get("days", 7)) if kwargs.get("days") is not None else 7
+        days = max(1, min(days, 30))
+        url = self.api + "/arb/" + str(days)
+        r = await self._get(url)
+        if not r["__ok"]:
+            return json.dumps({"success": False, "message": f"wf-api 服务不可用: {r['__err']}"}, ensure_ascii=False)
+        d = r["__data"]
+        if isinstance(d, dict) and d.get("error"):
+            return json.dumps({"success": False, "message": str(d["error"])}, ensure_ascii=False)
+        if not isinstance(d.get("data"), list):
+            return json.dumps({"success": False, "message": "仲裁精华数据暂不可用"}, ensure_ascii=False)
+        items = d["data"]
+        # 精华品质映射
+        quality_map = {"S": "S级", "B": "B级", "C": "C级", "D": "D级"}
+        out = []
+        for item in items:
+            q = item.get("quality", "N/A")
+            out.append({
+                "node": item.get("node"),
+                "missionType": item.get("missionType"),
+                "enemy": item.get("enemy"),
+                "essence": item.get("essence"),
+                "quality": quality_map.get(q, q),
+                "eta": item.get("eta"),
+            })
+        return json.dumps({"success": True, "data": out}, ensure_ascii=False)
+
+    # ---------- 工具 5：词库/黑话 ----------
 
     @filter.llm_tool(name="wf_dict")
     async def wf_dict(self, event: AstrMessageEvent, **kwargs) -> str:
@@ -310,6 +352,8 @@ class WFRagTool(Star):
                 return "\n".join(lines)
             if tool in ("ws", "wf", "world", "w"):
                 return self._ws_pretty(d)
+            if tool in ("arb", "arbitration", "essence", "精华"):
+                return self._arb_pretty(d)
             if tool in ("dict", "d"):
                 lines = []
                 for h in (d.get("hits") or [])[:6]:
@@ -408,6 +452,25 @@ class WFRagTool(Star):
                 json.dumps(x, ensure_ascii=False)[:300] for x in d[:3])
         return json.dumps(d, ensure_ascii=False, indent=1)[:1500]
 
+    def _arb_pretty(self, d) -> str:
+        """仲裁精华人类可读格式化。"""
+        items = d.get("data") or []
+        if not items:
+            return "暂无仲裁精华数据"
+        lines = ["📋 仲裁精华表（精华/小时）", "─" * 40]
+        for item in items[:15]:
+            node = item.get("node", "?")
+            ess = item.get("essence", "?")
+            q = item.get("quality", "")
+            mt = item.get("missionType", "?")
+            en = item.get("enemy", "?")
+            eta = item.get("eta", "?")
+            lines.append(f"  {node}")
+            lines.append(f"    {mt} vs {en} | {ess}精华/小时 ({q}) | {eta}")
+        if len(items) > 15:
+            lines.append(f"  ...还有 {len(items)-15} 条")
+        return "\n".join(lines)
+
     @filter.command("wfllm", alias={"wfragtool"})
     async def test_tool(self, event: AstrMessageEvent):
         """测试 llm_tool：/wfllm <rag|price|ws|dict> <参数>"""
@@ -432,14 +495,15 @@ class WFRagTool(Star):
         parts = msg.split(maxsplit=1)
         if not parts:
             yield event.plain_result(
-                "Warframe LLM 工具插件 v1.2.0\n"
+                "Warframe LLM 工具插件 v1.3.0\n"
                 f"服务状态：{self._health_line()}\n"
-                "已注册 4 个 llm_tool：\n"
-                "  wf_rag_search(query, top_k)   - Wiki 知识库检索\n"
-                "  wf_market_price(item)         - 市价查询（支持黑话）\n"
-                "  wf_world_state(type)          - 世界状态（电波/突击/裂缝/钢裂/九重天/奸商/赏金…）\n"
-                "  wf_dict(keyword)              - 黑话/词库解析\n\n"
-                "测试：/wfllm rag 电击异常 | price 奶妈P | ws 电波 | dict 三傻"
+                "已注册 5 个 llm_tool：\n"
+                "  wf_rag_search(query, top_k)       - Wiki 知识库检索\n"
+                "  wf_market_price(item)             - 市价查询（支持黑话）\n"
+                "  wf_world_state(type)              - 世界状态（电波/突击/裂缝/钢裂/九重天/奸商/赏金…）\n"
+                "  wf_arbitration_essence(days)      - 仲裁精华表（精华/小时、品质）\n"
+                "  wf_dict(keyword)                  - 黑话/词库解析\n\n"
+                "测试：/wfllm rag 电击异常 | price 奶妈P | ws 电波 | arb | dict 三傻"
             )
             return
         tool, arg = parts[0].lower(), (parts[1] if len(parts) > 1 else "")
@@ -450,10 +514,13 @@ class WFRagTool(Star):
                 res = await self.wf_market_price(event, item=arg)
             elif tool in ("ws", "wf", "world", "w"):
                 res = await self.wf_world_state(event, type=arg)
+            elif tool in ("arb", "arbitration", "essence", "精华"):
+                days = int(arg) if arg.isdigit() else 7
+                res = await self.wf_arbitration_essence(event, days=days)
             elif tool in ("dict", "d"):
                 res = await self.wf_dict(event, keyword=arg)
             else:
-                yield event.plain_result(f"未知工具: {tool}，可用 rag|price|ws|dict")
+                yield event.plain_result(f"未知工具: {tool}，可用 rag|price|ws|arb|dict")
                 return
             yield event.plain_result(self._pretty(tool, res))
         except Exception as e:
