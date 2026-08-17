@@ -1,12 +1,15 @@
 # astrbot_plugin_wfrag_tool — Warframe LLM 工具
 
-给 AstrBot 注册 **4 个 LLM 工具**（function calling），让 AI 在对话中主动查询 Warframe 实时数据与 Wiki 知识库：
+给 AstrBot 注册 **7 个 LLM 工具**（function calling），让 AI 在对话中主动查询 Warframe 实时数据与 Wiki 知识库：
 
 | 工具 | 功能 | 后端 |
 |---|---|---|
 | `wf_rag_search(query, top_k)` | 检索 Warframe 中文 Wiki 知识库，返回权威机制/数值片段+出处 | wf-rag (8765) |
 | `wf_market_price(item)` | Warframe Market 市价查询，**支持玩家黑话**（奶妈P/福马/三傻…） | wf-api (3000) |
+| `wf_riven_price(item, page)` | **紫卡（Riven）拍卖行情**（wmr 接口，中英文武器名均可） | wf-api (3000) |
+| `wf_lich_price(item, page)` | **玄骸/姐妹武器（Kuva/Tenet）市场价**（wmw 接口） | wf-api (3000) |
 | `wf_world_state(type)` | 世界状态：电波/突击/裂缝/钢铁裂缝/九重天/奸商/达尔沃/钢铁之路/执刑官/仲裁/赏金(科维兽/1999)… | wf-api (3000) |
+| `wf_arbitration_essence(days)` | 仲裁精华表：精华/小时、品质、节点 | wf-api (3000) |
 | `wf_dict(keyword)` | 词库/黑话解析：黑话 → 正式英文名 | wf-api (3000) |
 
 ## 🚀 一键安装（3 种方式任选）
@@ -78,4 +81,4 @@ RAG 检索（Wiki 知识库）依赖 [wf-rag-pack](https://github.com/mmxd12/wf-
 
 源码同步维护在 `wf-rag/llm_tool.py`（本目录 main.py 为其副本）。
 自测脚本：`wf-rag/test_llm_tool.py` —— **零依赖**（mock 掉 AstrBot 装饰器），
-任意 Python 3.10+ 直接 `python test_llm_tool.py` 即可验证 4 个工具，只需 wf-api/wf-rag 服务在线。
+任意 Python 3.10+ 直接 `python test_llm_tool.py` 即可验证 7 个工具，只需 wf-api/wf-rag 服务在线。
