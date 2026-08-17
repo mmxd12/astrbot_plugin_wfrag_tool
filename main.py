@@ -336,11 +336,13 @@ class WFRagTool(Star):
         lo = st.get("min_price")
         hi = st.get("max_price")
         vo = st.get("volume")
-        summary = f"🔫 {zh_name}（{en_name}）Riven"
+        summary = f"🔫 {zh_name}（{en_name}）"
+        rtype = word.get("rivenType") or word.get("type") or ""
+        disp = word.get("disposition") or ""
+        total = d.get("total") or 0
+        summary += "\n" + f"紫卡行情 | 类型：{rtype} | 倾向：{disp} | 挂单总数：{total}"
         if av is not None:
             summary += "\n" + f"均价 {av} | 中位 {md} | 最低 {lo} | 最高 {hi} | 成交量 {vo}"
-        else:
-            summary += "\n" + f"共计 {d.get('total')} 条挂单 in warframe.market"
         out["summary"] = summary
         return self._trim(json.dumps(out, ensure_ascii=False), 3500)
 
