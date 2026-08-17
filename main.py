@@ -235,7 +235,7 @@ class WFRagTool(Star):
         vo = st.get("volume")
         summary = f"📦 {zh}（{en}）"
         if av is not None:
-            summary += f" | 均价 {av} | 中位 {md} | 最低 {lo} | 最高 {hi} | 成交量 {vo}"
+            summary += "\n" + f"均价 {av} | 中位 {md} | 最低 {lo} | 最高 {hi} | 成交量 {vo}"
         out["summary"] = summary
         return json.dumps(out, ensure_ascii=False)
 
