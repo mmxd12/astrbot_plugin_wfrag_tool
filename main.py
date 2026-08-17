@@ -1,8 +1,10 @@
 """AstrBot LLM 工具插件：Warframe 实时数据 + Wiki RAG
 
-注册 5 个 llm_tool（function calling），让 LLM 在对话中主动调用：
+注册 7 个 llm_tool（function calling），让 LLM 在对话中主动调用：
   - wf_rag_search         检索 Warframe 中文 Wiki 知识库（wf-rag 服务 / 8765）
   - wf_market_price       Warframe Market 市价查询（wf-api / 3000，支持黑话）
+  - wf_riven_price        紫卡（Riven）拍卖查询（wf-api /wmr，中英文武器名）
+  - wf_lich_price         玄骸/姐妹（Kuva/Tenet）武器市场价（wf-api /wmw）
   - wf_world_state        世界状态查询（电波/突击/裂缝/奸商/钢铁之路/仲裁…）
   - wf_arbitration_essence 仲裁精华表（精华/小时、品质、节点）
   - wf_dict               词库/黑话解析（wf-api / 3000）
@@ -35,7 +37,7 @@ TIMEOUT = 30
 WS_TYPES = "电波|突击|裂缝|钢铁裂缝|九重天|奸商|达尔沃|小小黑|钢铁之路|执刑官|仲裁|仲裁精华(arb)|入侵|警报|双衍|科研|全局增益|赤毒|舰队|先遣舰|日历|促销|新闻|活动|集团任务|时间戳|地球|金星|火卫二|扎里曼|赏金|科维兽|1999赏金"
 
 
-@register("astrbot_plugin_wfrag_tool", "小浅", "Warframe LLM 工具：Wiki RAG + 市价 + 世界状态 + 仲裁精华 + 词库", "1.3.0")
+@register("astrbot_plugin_wfrag_tool", "小浅", "Warframe LLM 工具：Wiki RAG + 市价 + 紫卡(wmr) + 玄骸/姐妹(wmw) + 世界状态 + 仲裁精华 + 词库", "1.4.0")
 class WFRagTool(Star):
     def __init__(self, context: Context, config=None):
         super().__init__(context)
@@ -206,7 +208,141 @@ class WFRagTool(Star):
         }
         return json.dumps(out, ensure_ascii=False)
 
-    # ---------- 工具 3：世界状态 ----------
+    # ---------- 工具 3：紫卡拍卖查询（wmr） ----------
+
+    RIVEN_ATTR_ZH = {
+        "damage": "基伤", "multishot": "多重", "critical_chance": "暴率",
+        "critical_damage": "暴伤", "status_chance": "触发", "status_duration": "触发持续",
+        "fire_rate": "射速", "magazine_capacity": "弹匣", "ammo_max": "备弹",
+        "reload_speed": "换弹", "punch_through": "穿透", "zoom": "变焦",
+        "heat_damage": "火焰", "cold_damage": "冰冻", "toxin_damage": "毒素",
+        "electric_damage": "电击", "impact_damage": "冲击", "puncture_damage": "穿刺",
+        "slash_damage": "切割", "damage_vs_grineer": "对G", "damage_vs_corpus": "对C",
+        "damage_vs_infested": "对I", "projectile_speed": "弹速", "flight_speed": "飞行速度",
+        "combo_duration": "连击持续", "attack_speed": "攻速", "range": "范围",
+        "slide": "滑铲", "initial_combo": "初始连击", "negative_magazine_capacity": "弹匣减",
+    }
+
+    @filter.llm_tool(name="wf_riven_price")
+    async def wf_riven_price(self, event: AstrMessageEvent, **kwargs) -> str:
+        """查询 Warframe 紫卡（Riven Mod）拍卖行情（wmr 接口）
+
+        用户问“XX武器的紫卡多少钱”“XX紫卡什么价”“wmr XX”“紫卡行情”时调用。
+        支持中文/英文武器名（如 食人女魔、Ogris、诸葛连弩）。
+
+        Args:
+            item(string): 武器名，中英文皆可，如 “食人女魔” “Ogris”
+            page(int): 可选，页数，默认 1，每页约 10 条
+
+        返回:
+            JSON: {success, name, total(挂单总数), word:{en,zh,type,disposition,reqMasteryRank},
+                   sellers:[{price(直购), starting_price(起拍), attributes(属性), polarity, owner, status}]}
+        """
+        item = str(kwargs.get("item", "")).strip()
+        if not item:
+            return json.dumps({"success": False, "message": "缺少参数 item（武器名）"}, ensure_ascii=False)
+        try:
+            page = max(1, int(kwargs.get("page", 1) or 1))
+        except (TypeError, ValueError):
+            page = 1
+        url = self.api + "/wmr/" + urllib.parse.quote(item) + f"?page={page}"
+        r = await self._get(url)
+        if not r["__ok"]:
+            return json.dumps({"success": False, "message": f"wf-api 服务不可用: {r['__err']}"}, ensure_ascii=False)
+        d = r["__data"]
+        if isinstance(d, dict) and (d.get("error") or d.get("word") is None):
+            return json.dumps({"success": False, "message": str(d.get("error") or f"未找到武器「{item}」的紫卡数据")}, ensure_ascii=False)
+        word = d.get("word") or {}
+        sellers = []
+        for s in (d.get("seller") or [])[:8]:
+            it = s.get("item") or {}
+            attrs = []
+            for a in (it.get("attributes") or []):
+                nm = self.RIVEN_ATTR_ZH.get(a.get("url_name"), a.get("url_name"))
+                sign = "+" if a.get("positive") else "-"
+                attrs.append(f"{sign}{nm}{a.get('value'):g}")
+            sellers.append({
+                "price": s.get("buyout_price"),
+                "starting_price": s.get("starting_price"),
+                "attributes": attrs,
+                "polarity": it.get("polarity"),
+                "owner": (s.get("owner") or {}).get("ingame_name"),
+                "status": (s.get("owner") or {}).get("status"),
+            })
+        out = {
+            "success": True,
+            "name": d.get("name"),
+            "total": d.get("total"),
+            "word": {
+                "en": word.get("en"), "zh": word.get("zh"),
+                "type": word.get("rivenType") or word.get("type"),
+                "disposition": word.get("disposition"),
+                "reqMasteryRank": word.get("reqMasteryRank"),
+            },
+            "sellers": sellers,
+        }
+        return self._trim(json.dumps(out, ensure_ascii=False), 3500)
+
+    # ---------- 工具 4：玄骸/姐妹武器市场价（wmw） ----------
+
+    @filter.llm_tool(name="wf_lich_price")
+    async def wf_lich_price(self, event: AstrMessageEvent, **kwargs) -> str:
+        """查询玄骸/姐妹武器（Kuva / Tenet）市场价（wmw 接口）
+
+        用户问“赤毒XX多少钱”“信条XX什么价”“wmw XX”“玄骸武器行情”时调用。
+        支持中文/英文武器名（如 食人女魔、Kuva Ogris、信条·循环离子枪）。
+
+        Args:
+            item(string): 武器名，中英文皆可，如 “食人女魔” “Kuva Ogris”
+            page(int): 可选，页数，默认 1，每页约 10 条
+
+        返回:
+            JSON: {success, name, total, word:{en,zh,type,reqMasteryRank},
+                   sellers:[{price(直购), starting_price(起拍), item(元素/词条), owner, status}]}
+        """
+        item = str(kwargs.get("item", "")).strip()
+        if not item:
+            return json.dumps({"success": False, "message": "缺少参数 item（武器名）"}, ensure_ascii=False)
+        try:
+            page = max(1, int(kwargs.get("page", 1) or 1))
+        except (TypeError, ValueError):
+            page = 1
+        url = self.api + "/wmw/" + urllib.parse.quote(item) + f"?page={page}"
+        r = await self._get(url)
+        if not r["__ok"]:
+            return json.dumps({"success": False, "message": f"wf-api 服务不可用: {r['__err']}"}, ensure_ascii=False)
+        d = r["__data"]
+        if isinstance(d, dict) and (d.get("error") or d.get("word") is None):
+            return json.dumps({"success": False, "message": str(d.get("error") or f"未找到武器「{item}」的玄骸/姐妹数据")}, ensure_ascii=False)
+        word = d.get("word") or {}
+        sellers = []
+        for s in (d.get("seller") or [])[:8]:
+            it = s.get("item") or {}
+            it_slim = {k: v for k, v in it.items()
+                       if k in ("element", "percent", "damage", "multishot",
+                                "critical_chance", "status_chance", "fire_rate",
+                                "magazine_size", "reload_speed") and v is not None}
+            sellers.append({
+                "price": s.get("buyout_price"),
+                "starting_price": s.get("starting_price"),
+                "item": it_slim,
+                "owner": (s.get("owner") or {}).get("ingame_name"),
+                "status": (s.get("owner") or {}).get("status"),
+            })
+        out = {
+            "success": True,
+            "name": d.get("name"),
+            "total": d.get("total"),
+            "word": {
+                "en": word.get("en"), "zh": word.get("zh"),
+                "type": word.get("type"),
+                "reqMasteryRank": word.get("reqMasteryRank"),
+            },
+            "sellers": sellers,
+        }
+        return self._trim(json.dumps(out, ensure_ascii=False), 3500)
+
+    # ---------- 工具 5：世界状态 ----------
 
     @filter.llm_tool(name="wf_world_state")
     async def wf_world_state(self, event: AstrMessageEvent, **kwargs) -> str:
@@ -495,15 +631,17 @@ class WFRagTool(Star):
         parts = msg.split(maxsplit=1)
         if not parts:
             yield event.plain_result(
-                "Warframe LLM 工具插件 v1.3.0\n"
+                "Warframe LLM 工具插件 v1.4.0\n"
                 f"服务状态：{self._health_line()}\n"
-                "已注册 5 个 llm_tool：\n"
+                "已注册 7 个 llm_tool：\n"
                 "  wf_rag_search(query, top_k)       - Wiki 知识库检索\n"
                 "  wf_market_price(item)             - 市价查询（支持黑话）\n"
+                "  wf_riven_price(item, page)        - 紫卡拍卖查询（wmr，中英文武器名）\n"
+                "  wf_lich_price(item, page)         - 玄骸/姐妹武器市场价（wmw）\n"
                 "  wf_world_state(type)              - 世界状态（电波/突击/裂缝/钢裂/九重天/奸商/赏金…）\n"
                 "  wf_arbitration_essence(days)      - 仲裁精华表（精华/小时、品质）\n"
                 "  wf_dict(keyword)                  - 黑话/词库解析\n\n"
-                "测试：/wfllm rag 电击异常 | price 奶妈P | ws 电波 | arb | dict 三傻"
+                "测试：/wfllm rag 电击异常 | price 奶妈P | riven 食人女魔 | lich 食人女魔 | ws 电波 | arb | dict 三傻"
             )
             return
         tool, arg = parts[0].lower(), (parts[1] if len(parts) > 1 else "")
@@ -512,6 +650,10 @@ class WFRagTool(Star):
                 res = await self.wf_rag_search(event, query=arg)
             elif tool in ("price", "wm", "p"):
                 res = await self.wf_market_price(event, item=arg)
+            elif tool in ("riven", "r"):
+                res = await self.wf_riven_price(event, item=arg)
+            elif tool in ("lich", "l"):
+                res = await self.wf_lich_price(event, item=arg)
             elif tool in ("ws", "wf", "world", "w"):
                 res = await self.wf_world_state(event, type=arg)
             elif tool in ("arb", "arbitration", "essence", "精华"):
@@ -520,7 +662,7 @@ class WFRagTool(Star):
             elif tool in ("dict", "d"):
                 res = await self.wf_dict(event, keyword=arg)
             else:
-                yield event.plain_result(f"未知工具: {tool}，可用 rag|price|ws|arb|dict")
+                yield event.plain_result(f"未知工具: {tool}，可用 rag|price|riven|lich|ws|arb|dict")
                 return
             yield event.plain_result(self._pretty(tool, res))
         except Exception as e:
