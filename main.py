@@ -395,7 +395,7 @@ class WFRagTool(Star):
             "heat": "heat", "火": "heat", "火焰": "heat", "火元素": "heat",
             "cold": "cold", "冰": "cold", "冰冻": "cold", "冰元素": "cold", "cryo": "cold",
             "electricity": "electricity", "电": "electricity", "电击": "electricity", "电元素": "electricity", "electric": "electricity",
-            "magnetic": "magnetic", "磁": "magnetic", "磁性": "magnetic", "磁元素": "magnetic",
+            "magnetic": "magnetic", "磁": "magnetic", "磁性": "magnetic", "磁力": "magnetic", "磁元素": "magnetic",
             "radiation": "radiation", "辐射": "radiation", "放射": "radiation", "辐射元素": "radiation",
             "impact": "impact", "冲击": "impact", "冲击元素": "impact",
             "viral": "viral", "病毒": "viral", "corrosive": "corrosive", "腐蚀": "corrosive",
