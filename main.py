@@ -188,12 +188,23 @@ class WFRagTool(Star):
             return json.dumps({"success": False, "message": str(d["error"])}, ensure_ascii=False)
         word = d.get("word") or {}
         st = d.get("statistics") or {}
-        sellers = [{
-            "name": (s.get("user") or {}).get("ingameName"),
-            "price": s.get("platinum"),
-            "qty": s.get("quantity"),
-            "status": (s.get("user") or {}).get("status"),
-        } for s in (d.get("seller") or [])[:3]]
+        raw = d.get("seller") or []
+        # 有价格、按价格升序
+        priced = [s for s in raw if s.get("platinum") is not None]
+        priced.sort(key=lambda s: s["platinum"])
+        online = []
+        offline = []
+        for s in priced:
+            sts = (s.get("user") or {}).get("status", "")
+            (offline if sts == "offline" else online).append(s)
+        def slim(seller):
+            u = seller.get("user") or {}
+            return {
+                "name": u.get("ingameName"),
+                "price": seller.get("platinum"),
+                "qty": seller.get("quantity"),
+                "status": u.get("status"),
+            }
         out = {
             "success": True,
             "item": d.get("name"),
@@ -204,8 +215,21 @@ class WFRagTool(Star):
                 "max_price": st.get("max_price"), "median": st.get("median"),
                 "volume": st.get("volume"), "wa_price": st.get("wa_price"),
             },
-            "top_sellers": sellers,
+            "top_sellers": [slim(s) for s in online[:10]],
+            "offline_reference": [slim(s) for s in offline[:5]],
         }
+        # 在最前面插入一行人类可读的概要
+        en = word.get("en") or ""
+        zh = word.get("zh") or d.get("name") or ""
+        av = st.get("avg_price")
+        md = st.get("median")
+        lo = st.get("min_price")
+        hi = st.get("max_price")
+        vo = st.get("volume")
+        summary = f"📦 {zh}（{en}）"
+        if av is not None:
+            summary += f" | 均价 {av} | 中位 {md} | 最低 {lo} | 最高 {hi} | 成交量 {vo}"
+        out["summary"] = summary
         return json.dumps(out, ensure_ascii=False)
 
     # ---------- 工具 3：紫卡拍卖查询（wmr） ----------
