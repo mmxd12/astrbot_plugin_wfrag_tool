@@ -284,22 +284,39 @@ class WFRagTool(Star):
         if isinstance(d, dict) and (d.get("error") or d.get("word") is None):
             return json.dumps({"success": False, "message": str(d.get("error") or f"未找到武器「{item}」的紫卡数据")}, ensure_ascii=False)
         word = d.get("word") or {}
-        sellers = []
-        for s in (d.get("seller") or [])[:8]:
-            it = s.get("item") or {}
+        en_name = word.get("en") or d.get("name") or ""
+        zh_name = word.get("zh") or d.get("name") or ""
+        STATUS_MAP = {"ingame": "游戏中", "online": "在线", "offline": "离线"}
+        STATUS_ICON = {"ingame": "🔴", "online": "🟢", "offline": "⚪"}
+        raw = d.get("seller") or []
+        # 有价格、按直购价升序（无直购价用起拍价）
+        priced = [s for s in raw if s.get("buyout_price") is not None or s.get("starting_price") is not None]
+        priced.sort(key=lambda s: s.get("buyout_price") or s.get("starting_price") or 999999)
+        online = []
+        offline = []
+        for s in priced:
+            sts = (s.get("owner") or {}).get("status", "")
+            (offline if sts == "offline" else online).append(s)
+        def slim(seller):
+            ow = seller.get("owner") or {}
+            name = ow.get("ingame_name", "")
+            price = seller.get("buyout_price") or seller.get("starting_price")
+            sts = ow.get("status", "")
+            it = seller.get("item") or {}
             attrs = []
             for a in (it.get("attributes") or []):
                 nm = self.RIVEN_ATTR_ZH.get(a.get("url_name"), a.get("url_name"))
                 sign = "+" if a.get("positive") else "-"
                 attrs.append(f"{sign}{nm}{a.get('value'):g}")
-            sellers.append({
-                "price": s.get("buyout_price"),
-                "starting_price": s.get("starting_price"),
+            return {
+                "owner": name,
+                "price": price,
                 "attributes": attrs,
                 "polarity": it.get("polarity"),
-                "owner": (s.get("owner") or {}).get("ingame_name"),
-                "status": (s.get("owner") or {}).get("status"),
-            })
+                "status": STATUS_MAP.get(sts, sts),
+                "status_icon": STATUS_ICON.get(sts, "⚪"),
+                "buy_template": f"/w {name} Hi! I want to buy: {en_name} Riven for {price} platinum, Are you still selling?" if price and name else "",
+            }
         out = {
             "success": True,
             "name": d.get("name"),
@@ -310,8 +327,21 @@ class WFRagTool(Star):
                 "disposition": word.get("disposition"),
                 "reqMasteryRank": word.get("reqMasteryRank"),
             },
-            "sellers": sellers,
+            "top_sellers": [slim(s) for s in online[:10]],
+            "offline_reference": [slim(s) for s in offline[:5]],
         }
+        st = d.get("statistics") or {}
+        av = st.get("avg_price")
+        md = st.get("median")
+        lo = st.get("min_price")
+        hi = st.get("max_price")
+        vo = st.get("volume")
+        summary = f"🔫 {zh_name}（{en_name}）Riven"
+        if av is not None:
+            summary += "\n" + f"均价 {av} | 中位 {md} | 最低 {lo} | 最高 {hi} | 成交量 {vo}"
+        else:
+            summary += "\n" + f"共计 {d.get('total')} 条挂单 in warframe.market"
+        out["summary"] = summary
         return self._trim(json.dumps(out, ensure_ascii=False), 3500)
 
     # ---------- 工具 4：玄骸/姐妹武器市场价（wmw） ----------
