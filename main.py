@@ -350,18 +350,24 @@ class WFRagTool(Star):
 
     @filter.llm_tool(name="wf_lich_price")
     async def wf_lich_price(self, event: AstrMessageEvent, **kwargs) -> str:
-        """查询玄骸/姐妹武器（Kuva / Tenet）市场价（wmw 接口）
+        """查询玄骸/姐妹武器（Kuva / Tenet）市场价（wmw 接口，支持多属性筛选）
 
         用户问“赤毒XX多少钱”“信条XX什么价”“wmw XX”“玄骸武器行情”时调用。
         支持中文/英文武器名（如 食人女魔、Kuva Ogris、信条·循环离子枪）。
+        支持按元素/百分比/最高价筛选，如 “wmw 食人女魔 毒 60%” “赤毒 沙皇 火 50% 200p内”。
 
         Args:
             item(string): 武器名，中英文皆可，如 “食人女魔” “Kuva Ogris”
-            page(int): 可选，页数，默认 1，每页约 10 条
+            element(string): 可选，筛选元素（毒/毒素/toxin、火/heat、冰/cold、电/electricity、磁/magnetic、辐射/radiation、冲击/impact…）
+            percent(int): 可选，最低元素百分比（如 60 或 "60%"），玄骸元素百分比范围 25~60
+            max_price(int): 可选，最高价格（如 200 或 "200p"）
+            page(int): 可选，起始页数，默认 1
 
         返回:
-            JSON: {success, name, total, word:{en,zh,type,reqMasteryRank},
-                   sellers:[{price(直购), starting_price(起拍), item(元素/词条), owner, status}]}
+            JSON: {success, name, total(筛选后数量), word:{en,zh,type,reqMasteryRank},
+                   summary(概要行，含筛选条件),
+                   top_sellers:[{owner, price, item(元素/伤害%), status, status_icon, buy_template}],
+                   offline_reference:[...]}
         """
         item = str(kwargs.get("item", "")).strip()
         if not item:
@@ -370,19 +376,83 @@ class WFRagTool(Star):
             page = max(1, int(kwargs.get("page", 1) or 1))
         except (TypeError, ValueError):
             page = 1
-        url = self.api + "/wmw/" + urllib.parse.quote(item) + f"?page={page}"
-        r = await self._get(url)
-        if not r["__ok"]:
-            return json.dumps({"success": False, "message": f"wf-api 服务不可用: {r['__err']}"}, ensure_ascii=False)
-        d = r["__data"]
+        # ---- 多属性筛选参数 ----
+        element = str(kwargs.get("element", "") or "").strip()
+        percent = kwargs.get("percent")
+        if percent is not None:
+            try:
+                percent = int(str(percent).replace("%", "").strip())
+            except (TypeError, ValueError):
+                percent = None
+        max_price = kwargs.get("max_price")
+        if max_price is not None:
+            try:
+                max_price = int(str(max_price).replace("p", "").replace("白金", "").strip())
+            except (TypeError, ValueError):
+                max_price = None
+        ELEMENT_ALIAS = {
+            "toxin": "toxin", "毒": "toxin", "毒素": "toxin", "毒元素": "toxin",
+            "heat": "heat", "火": "heat", "火焰": "heat", "火元素": "heat",
+            "cold": "cold", "冰": "cold", "冰冻": "cold", "冰元素": "cold", "cryo": "cold",
+            "electricity": "electricity", "电": "electricity", "电击": "electricity", "电元素": "electricity", "electric": "electricity",
+            "magnetic": "magnetic", "磁": "magnetic", "磁性": "magnetic", "磁元素": "magnetic",
+            "radiation": "radiation", "辐射": "radiation", "放射": "radiation", "辐射元素": "radiation",
+            "impact": "impact", "冲击": "impact", "冲击元素": "impact",
+            "viral": "viral", "病毒": "viral", "corrosive": "corrosive", "腐蚀": "corrosive",
+            "blast": "blast", "爆炸": "blast", "puncture": "puncture", "穿刺": "puncture",
+            "slash": "slash", "切割": "slash", "gas": "gas", "毒气": "gas",
+        }
+        element_filter = None
+        if element:
+            element_filter = ELEMENT_ALIAS.get(element.lower(), element.lower())
+
+        # ---- 拉取数据（需要筛选时翻页） ----
+        async def _fetch_one(pg):
+            url = self.api + "/wmw/" + urllib.parse.quote(item) + f"?page={pg}"
+            return await self._get(url)
+
+        first = await _fetch_one(page)
+        if not first["__ok"]:
+            return json.dumps({"success": False, "message": f"wf-api 服务不可用: {first['__err']}"}, ensure_ascii=False)
+        d = first["__data"]
         if isinstance(d, dict) and (d.get("error") or d.get("word") is None):
             return json.dumps({"success": False, "message": str(d.get("error") or f"未找到武器「{item}」的玄骸/姐妹数据")}, ensure_ascii=False)
         word = d.get("word") or {}
         en_name = word.get("en") or d.get("name") or ""
         zh_name = word.get("zh") or d.get("name") or ""
+        raw = list(d.get("seller") or [])
+        need_filter = element_filter is not None or percent is not None or max_price is not None
+        if need_filter:
+            for pg in range(page + 1, page + 6):
+                r = await _fetch_one(pg)
+                if not r["__ok"]:
+                    break
+                dd = r["__data"]
+                if not isinstance(dd, dict) or dd.get("seller") is None:
+                    break
+                sels = dd.get("seller") or []
+                raw.extend(sels)
+                if len(sels) < 10:
+                    break
+        # ---- 条件筛选 ----
+        if need_filter:
+            filtered = []
+            for s in raw:
+                it = s.get("item") or {}
+                price = s.get("buyout_price") or s.get("starting_price")
+                if element_filter is not None and str(it.get("element") or "").lower() != element_filter:
+                    continue
+                if percent is not None:
+                    dmg = it.get("damage")
+                    if dmg is None or dmg < percent:
+                        continue
+                if max_price is not None and price is not None and price > max_price:
+                    continue
+                filtered.append(s)
+            raw = filtered
+
         STATUS_MAP = {"ingame": "游戏中", "online": "在线", "offline": "离线"}
         STATUS_ICON = {"ingame": "🔴", "online": "🟢", "offline": "⚪"}
-        raw = d.get("seller") or []
         priced = [s for s in raw if s.get("buyout_price") is not None or s.get("starting_price") is not None]
         priced.sort(key=lambda s: s.get("buyout_price") or s.get("starting_price") or 999999)
         online = []
@@ -411,7 +481,7 @@ class WFRagTool(Star):
         out = {
             "success": True,
             "name": d.get("name"),
-            "total": d.get("total"),
+            "total": len(priced),
             "word": {
                 "en": word.get("en"), "zh": word.get("zh"),
                 "type": word.get("type"),
@@ -421,14 +491,18 @@ class WFRagTool(Star):
             "offline_reference": [slim(s) for s in offline[:5]],
         }
         rtype = word.get("type") or ""
-        total = d.get("total") or 0
+        cond = []
+        if element_filter:
+            cond.append(f"元素:{element_filter}")
+        if percent is not None:
+            cond.append(f"≥{percent}%")
+        if max_price is not None:
+            cond.append(f"≤{max_price}p")
+        cond_txt = ("(" + " ".join(cond) + ") ") if cond else ""
         summary = f"🔫 {zh_name}（{en_name}）"
-        summary += "\n" + f"玄骸武器行情 | 类型：{rtype} | 挂单总数：{total}"
+        summary += "\n" + f"玄骸武器行情{cond_txt}匹配 {len(priced)} 条"
         out["summary"] = summary
         return self._trim(json.dumps(out, ensure_ascii=False), 3500)
-
-    # ---------- 工具 5：世界状态 ----------
-
     @filter.llm_tool(name="wf_world_state")
     async def wf_world_state(self, event: AstrMessageEvent, **kwargs) -> str:
         """查询 Warframe 当前世界状态（实时）
