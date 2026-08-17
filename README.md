@@ -7,7 +7,7 @@
 | `wf_rag_search(query, top_k)` | 检索 Warframe 中文 Wiki 知识库，返回权威机制/数值片段+出处 | wf-rag (8765) |
 | `wf_market_price(item)` | Warframe Market 市价查询，**支持玩家黑话**（奶妈P/福马/三傻…） | wf-api (3000) |
 | `wf_riven_price(item, page)` | **紫卡（Riven）拍卖行情**（wmr 接口，中英文武器名均可） | wf-api (3000) |
-| `wf_lich_price(item, page)` | **玄骸/姐妹武器（Kuva/Tenet）市场价**（wmw 接口） | wf-api (3000) |
+| `wf_lich_price(item, element, percent, max_price)` | **玄骸/姐妹武器（Kuva/Tenet）市场价**（wmw 接口），支持按元素/百分比/最高价多属性筛选，如 `wmw 食人女魔 毒 60%` | wf-api (3000) |
 | `wf_world_state(type)` | 世界状态：电波/突击/裂缝/钢铁裂缝/九重天/奸商/达尔沃/钢铁之路/执刑官/仲裁/赏金(科维兽/1999)… | wf-api (3000) |
 | `wf_arbitration_essence(days)` | 仲裁精华表：精华/小时、品质、节点 | wf-api (3000) |
 | `wf_dict(keyword)` | 词库/黑话解析：黑话 → 正式英文名 | wf-api (3000) |
