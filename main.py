@@ -197,13 +197,17 @@ class WFRagTool(Star):
         for s in priced:
             sts = (s.get("user") or {}).get("status", "")
             (offline if sts == "offline" else online).append(s)
+        item_name = word.get("zh") or d.get("name") or ""
         def slim(seller):
             u = seller.get("user") or {}
+            name = u.get("ingameName", "")
+            price = seller.get("platinum")
             return {
-                "name": u.get("ingameName"),
-                "price": seller.get("platinum"),
+                "name": name,
+                "price": price,
                 "qty": seller.get("quantity"),
                 "status": u.get("status"),
+                "buy_template": f"/w {name} Hi! I want to buy: {item_name} for {price} platinum." if price and name else "",
             }
         out = {
             "success": True,
