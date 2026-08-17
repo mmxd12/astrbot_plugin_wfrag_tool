@@ -378,20 +378,36 @@ class WFRagTool(Star):
         if isinstance(d, dict) and (d.get("error") or d.get("word") is None):
             return json.dumps({"success": False, "message": str(d.get("error") or f"未找到武器「{item}」的玄骸/姐妹数据")}, ensure_ascii=False)
         word = d.get("word") or {}
-        sellers = []
-        for s in (d.get("seller") or [])[:8]:
-            it = s.get("item") or {}
+        en_name = word.get("en") or d.get("name") or ""
+        zh_name = word.get("zh") or d.get("name") or ""
+        STATUS_MAP = {"ingame": "游戏中", "online": "在线", "offline": "离线"}
+        STATUS_ICON = {"ingame": "🔴", "online": "🟢", "offline": "⚪"}
+        raw = d.get("seller") or []
+        priced = [s for s in raw if s.get("buyout_price") is not None or s.get("starting_price") is not None]
+        priced.sort(key=lambda s: s.get("buyout_price") or s.get("starting_price") or 999999)
+        online = []
+        offline = []
+        for s in priced:
+            sts = (s.get("owner") or {}).get("status", "")
+            (offline if sts == "offline" else online).append(s)
+        def slim(seller):
+            ow = seller.get("owner") or {}
+            name = ow.get("ingame_name", "")
+            price = seller.get("buyout_price") or seller.get("starting_price")
+            sts = ow.get("status", "")
+            it = seller.get("item") or {}
             it_slim = {k: v for k, v in it.items()
                        if k in ("element", "percent", "damage", "multishot",
                                 "critical_chance", "status_chance", "fire_rate",
                                 "magazine_size", "reload_speed") and v is not None}
-            sellers.append({
-                "price": s.get("buyout_price"),
-                "starting_price": s.get("starting_price"),
+            return {
+                "owner": name,
+                "price": price,
                 "item": it_slim,
-                "owner": (s.get("owner") or {}).get("ingame_name"),
-                "status": (s.get("owner") or {}).get("status"),
-            })
+                "status": STATUS_MAP.get(sts, sts),
+                "status_icon": STATUS_ICON.get(sts, "⚪"),
+                "buy_template": f"/w{name} Hi! I want to buy: {en_name} Weapon for {price} platinum, Are you still selling?" if price and name else "",
+            }
         out = {
             "success": True,
             "name": d.get("name"),
@@ -401,8 +417,14 @@ class WFRagTool(Star):
                 "type": word.get("type"),
                 "reqMasteryRank": word.get("reqMasteryRank"),
             },
-            "sellers": sellers,
+            "top_sellers": [slim(s) for s in online[:10]],
+            "offline_reference": [slim(s) for s in offline[:5]],
         }
+        rtype = word.get("type") or ""
+        total = d.get("total") or 0
+        summary = f"🔫 {zh_name}（{en_name}）"
+        summary += "\n" + f"玄骸武器行情 | 类型：{rtype} | 挂单总数：{total}"
+        out["summary"] = summary
         return self._trim(json.dumps(out, ensure_ascii=False), 3500)
 
     # ---------- 工具 5：世界状态 ----------
