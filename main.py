@@ -159,24 +159,78 @@ class WFRagTool(Star):
     )
 
     async def _ocr_riven(self, event: AstrMessageEvent, paths: list[str]) -> str:
-        """用当前会话的多模态 LLM 读紫卡截图，返回词条文本。"""
-        prov = await self.context.get_using_provider_async(
-            umo=event.unified_msg_origin,
-        )
-        if prov is None:
-            raise RuntimeError("当前会话没有可用的 LLM Provider，无法识别图片")
-        resp = await prov.text_chat(
-            prompt=self._OCR_PROMPT,
-            image_urls=paths[:1],  # 一张卡就够，多图只取第一张
-        )
-        text = (getattr(resp, "completion_text", None) or "").strip()
-        if not text:
-            raise RuntimeError("视觉模型没有返回可用文本")
-        if text.startswith("```"):  # 去掉模型可能套上的代码块
-            text = "\n".join(
-                ln for ln in text.splitlines() if not ln.strip().startswith("```")
-            ).strip()
-        return text
+        """用本地 PaddleOCR 读紫卡截图，返回词条文本（无需 LLM）。"""
+        if not paths:
+            raise RuntimeError("没有找到图片")
+        try:
+            from rapidocr_onnxruntime import RapidOCR
+            engine = RapidOCR()
+            result, elapse = engine(paths[0])
+        except ImportError:
+            raise RuntimeError("本地 OCR 引擎不可用，请安装 rapidocr-onnxruntime")
+        except Exception as e:
+            raise RuntimeError(f"OCR 识别失败: {e}")
+
+        if not result:
+            raise RuntimeError("OCR 未识别到任何文字")
+
+        # 把所有识别到的文本按 Y 坐标排序后拼接
+        items = [(box[0][1], text) for box, text, score in result if text.strip()]
+        items.sort(key=lambda x: x[0])  # 按 Y 坐标从上到下排序
+        lines = [text.strip() for _, text in items if text.strip()]
+
+        # 过滤掉段位等级、极性、数字代码等非卡面词条内容
+        import re
+        filtered = []
+        for line in lines:
+            # 跳过纯数字/百分比/段位/极性/小字
+            if re.match(r'^\d+[Vv]?$', line) or line in ('MOD', 'Riven', 'Mod', '裂罅'):
+                continue
+            if re.match(r'^[A-Za-z]+-[A-Za-z]+$', line):  # 随机后缀名如 Igni-visican
+                continue
+            if re.match(r'^[\d.]+[kKmM]?$', line):
+                continue
+            if '段位' in line or '循环' in line or '容量' in line:
+                continue
+            filtered.append(line)
+
+        if not filtered:
+            raise RuntimeError("OCR 未识别到有效词条")
+
+        # 第一行是武器名（去掉随机后缀名）
+        weapon_line = filtered[0]
+        weapon_line = re.sub(r'\s*[A-Za-z]+-[A-Za-z]+\s*$', '', weapon_line).strip()
+        lines_out = [weapon_line]
+
+        # 剩下的行，把词条整理成标准格式
+        for line in filtered[1:]:
+            line = line.strip()
+            if not line:
+                continue
+            # 处理卡面格式：+111.7%多重射击
+            m = re.match(r'([+\-xX×])\s*([\d.]+)\s*%?\s*(.+)', line)
+            if m:
+                sign, val, name = m.group(1), m.group(2), m.group(3).strip()
+                lines_out.append(f"{sign}{val}% {name}")
+                continue
+            # 名字在前：多重射击 +111.7%
+            m = re.match(r'(.+?)\s*[+\-xX×]\s*([\d.]+)\s*%?', line)
+            if m:
+                name, val = m.group(1).strip(), m.group(2)
+                sign = '+' if '+' in line else '-'
+                lines_out.append(f"{sign}{val}% {name}")
+                continue
+            # 带 x 的负面：x0.57对Corpus的伤害
+            m = re.match(r'[xX×]\s*([\d.]+)\s*(.+)?', line)
+            if m:
+                val = float(m.group(1))
+                name = (m.group(2) or '').strip() or '伤害'
+                pct = round((1 - val) * 100, 1)
+                lines_out.append(f"-{pct}% {name}")
+                continue
+            lines_out.append(line)
+
+        return "\n".join(lines_out)
 
     # ---------- 工具 1：RAG 检索 ----------
 
