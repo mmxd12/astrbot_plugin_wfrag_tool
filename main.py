@@ -805,6 +805,7 @@ class WFRagTool(Star):
                 weapon_name=parsed["weapon_name"],
                 attrs=parsed["attrs"],
                 riven_type=parsed.get("riven_type"),
+                riven_name=riven_name,
             )
             result["success"] = True
             if parsed.get("weapon_en"):
