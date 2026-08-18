@@ -26,6 +26,10 @@ import urllib.request
 
 from astrbot.api import logger
 from astrbot.api.event import AstrMessageEvent, filter
+import sys
+sys.path.insert(0, "/AstrBot/data/tools")
+from riven_analyse import parse_ocr_text, analyse_riven
+
 from astrbot.api.star import Context, Star, register
 
 # 默认服务地址（可用 _conf_schema.json 里的配置覆盖）
@@ -585,7 +589,49 @@ class WFRagTool(Star):
             })
         return json.dumps({"success": True, "data": out}, ensure_ascii=False)
 
-    # ---------- 工具 5：词库/黑话 ----------
+    
+    # ---------- 工具 5.5：紫卡分析（riven-analyse） ----------
+
+    @filter.llm_tool(name="wf_riven_analyse")
+    async def wf_riven_analyse(self, event: AstrMessageEvent, **kwargs) -> str:
+        """分析紫卡（Riven）品质
+
+        当用户展示紫卡截图或输入词条数值要求分析紫卡品质时使用。
+        根据词条数值和紫卡倾向计算理论区间和偏差百分比，帮助判断紫卡好坏。
+
+        Args:
+            weapon_name(string): 武器名，如 "食人女魔" "Ogris"
+            stats_text(string): 词条文本，如 "暴击几率 +119.2% 暴击伤害 +185.6% 触发几率 -7.6%"
+
+        返回:
+            JSON: {success, summary(分析结果), weapon_name, riven_type, omega, dot, attrs:[{name,value,positive,low,high,mid,diff}]}
+        """
+        weapon_name = str(kwargs.get("weapon_name", "")).strip()
+        stats_text = str(kwargs.get("stats_text", "")).strip()
+        if not stats_text:
+            return json.dumps({"success": False, "message": "缺少参数 stats_text（词条文本）"}, ensure_ascii=False)
+        if not weapon_name:
+            # 尝试从词条文本中提取武器名
+            parsed = parse_ocr_text(stats_text)
+            weapon_name = parsed.get("weapon_name", "")
+        else:
+            parsed = parse_ocr_text(stats_text)
+            parsed["weapon_name"] = weapon_name
+
+        if not parsed["attrs"]:
+            return json.dumps({"success": False, "message": "未识别到词条数据，请检查格式（如：暴击几率 +119.2%）"}, ensure_ascii=False)
+
+        try:
+            result = analyse_riven(
+                weapon_name=parsed["weapon_name"],
+                attrs=parsed["attrs"],
+            )
+            result["success"] = True
+            return self._trim(json.dumps(result, ensure_ascii=False), 3500)
+        except Exception as e:
+            return json.dumps({"success": False, "message": f"分析失败: {type(e).__name__}: {e}"}, ensure_ascii=False)
+
+# ---------- 工具 5：词库/黑话 ----------
 
     @filter.llm_tool(name="wf_dict")
     async def wf_dict(self, event: AstrMessageEvent, **kwargs) -> str:
@@ -799,7 +845,7 @@ class WFRagTool(Star):
                 "  wf_lich_price(item, page)         - 玄骸/姐妹武器市场价（wmw）\n"
                 "  wf_world_state(type)              - 世界状态（电波/突击/裂缝/钢裂/九重天/奸商/赏金…）\n"
                 "  wf_arbitration_essence(days)      - 仲裁精华表（精华/小时、品质）\n"
-                "  wf_dict(keyword)                  - 黑话/词库解析\n\n"
+                "  wf_riven_analyse(weapon_name, stats_text) - 紫卡分析（词条数值+倾向计算）\n  wf_dict(keyword)                  - 黑话/词库解析\n\n"
                 "测试：/wfllm rag 电击异常 | price 奶妈P | riven 食人女魔 | lich 食人女魔 | ws 电波 | arb | dict 三傻"
             )
             return
@@ -818,6 +864,8 @@ class WFRagTool(Star):
             elif tool in ("arb", "arbitration", "essence", "精华"):
                 days = int(arg) if arg.isdigit() else 7
                 res = await self.wf_arbitration_essence(event, days=days)
+            elif tool in ("riven", "ra", "analyse"):
+                res = await self.wf_riven_analyse(event, weapon_name=arg.split()[0] if len(arg.split())>0 else "", stats_text=arg)
             elif tool in ("dict", "d"):
                 res = await self.wf_dict(event, keyword=arg)
             else:
