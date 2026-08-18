@@ -1,6 +1,6 @@
 name: astrbot_plugin_wfrag_tool
 display_name: Warframe LLM 工具
-version: 1.4.1
+version: 1.4.2
 author: mmxd
 desc: 注册 7 个 LLM 工具：Wiki RAG 检索、市价查询（黑话）、紫卡拍卖(wmr)、玄骸/姐妹武器市场(wmw)、世界状态、仲裁精华、词库解析。依赖本地 wf-api(3000) 与 wf-rag(8765) 服务。
 repo: https://github.com/mmxd12/astrbot_plugin_wfrag_tool
