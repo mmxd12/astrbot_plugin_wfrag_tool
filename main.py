@@ -28,7 +28,7 @@ from astrbot.api import logger
 from astrbot.api.event import AstrMessageEvent, filter
 import sys
 sys.path.insert(0, "/AstrBot/data/tools")
-from riven_analyse import parse_ocr_text, analyse_riven
+from riven_analyse import parse_ocr_text, analyse_riven, resolve_weapon
 
 from astrbot.api.star import Context, Star, register
 
@@ -599,24 +599,39 @@ class WFRagTool(Star):
         当用户展示紫卡截图或输入词条数值要求分析紫卡品质时使用。
         根据词条数值和紫卡倾向计算理论区间和偏差百分比，帮助判断紫卡好坏。
 
+        OCR 识别紫卡截图时：**武器英文名比中文名可靠**，若卡面同时可见英文，
+        优先把英文名填进 weapon_name。注意卡面上形如 "Vexi-critadra"
+        的连字符英文是紫卡随机后缀名，不是武器名，不要填。
+
         Args:
-            weapon_name(string): 武器名，如 "食人女魔" "Ogris"
+            weapon_name(string): 武器名，中英文皆可，如 "食人女魔" "Ogris"。中文有错字也会自动纠正
             stats_text(string): 词条文本，如 "暴击几率 +119.2% 暴击伤害 +185.6% 触发几率 -7.6%"
 
         返回:
-            JSON: {success, summary(分析结果), weapon_name, riven_type, omega, dot, attrs:[{name,value,positive,low,high,mid,diff}]}
+            JSON: {success, summary(分析结果), weapon_name, weapon_en, riven_type, omega, dot,
+                   weapon_match(纠错信息，含 ambiguous 时说明武器名有歧义需向用户确认),
+                   attrs:[{name,value,positive,low,high,mid,diff}]}
         """
         weapon_name = str(kwargs.get("weapon_name", "")).strip()
         stats_text = str(kwargs.get("stats_text", "")).strip()
         if not stats_text:
             return json.dumps({"success": False, "message": "缺少参数 stats_text（词条文本）"}, ensure_ascii=False)
-        if not weapon_name:
-            # 尝试从词条文本中提取武器名
-            parsed = parse_ocr_text(stats_text)
-            weapon_name = parsed.get("weapon_name", "")
-        else:
-            parsed = parse_ocr_text(stats_text)
-            parsed["weapon_name"] = weapon_name
+
+        parsed = parse_ocr_text(stats_text)
+        if weapon_name:
+            # 显式给的武器名也过一遍武器表：OCR/用户输入的中文可能有错字
+            hit = resolve_weapon(weapon_name)
+            if hit:
+                parsed["weapon_name"] = hit["zh"]
+                parsed["weapon_en"] = hit["en"]
+                parsed["riven_type"] = hit["rivenType"]
+                parsed["weapon_match"] = {
+                    "input": weapon_name, "by": hit["matched_by"], "score": hit["score"],
+                }
+                if hit.get("ambiguous"):
+                    parsed["weapon_match"]["ambiguous"] = hit["ambiguous"]
+            else:
+                parsed["weapon_name"] = weapon_name
 
         if not parsed["attrs"]:
             return json.dumps({"success": False, "message": "未识别到词条数据，请检查格式（如：暴击几率 +119.2%）"}, ensure_ascii=False)
@@ -625,8 +640,13 @@ class WFRagTool(Star):
             result = analyse_riven(
                 weapon_name=parsed["weapon_name"],
                 attrs=parsed["attrs"],
+                riven_type=parsed.get("riven_type"),
             )
             result["success"] = True
+            if parsed.get("weapon_en"):
+                result["weapon_en"] = parsed["weapon_en"]
+            if parsed.get("weapon_match"):
+                result["weapon_match"] = parsed["weapon_match"]
             return self._trim(json.dumps(result, ensure_ascii=False), 3500)
         except Exception as e:
             return json.dumps({"success": False, "message": f"分析失败: {type(e).__name__}: {e}"}, ensure_ascii=False)
