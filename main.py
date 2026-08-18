@@ -179,6 +179,7 @@ class WFRagTool(Star):
         return "\n".join(lines)
 
     @staticmethod
+    @staticmethod
     def _format_ocr_text(raw: str) -> str:
         """把 OCR 原始文本转成 parse_ocr_text 能解析的格式。
 
