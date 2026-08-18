@@ -121,6 +121,71 @@ class WFRagTool(Star):
     def _trim(s: str, n: int = 3000) -> str:
         return s if len(s) <= n else s[:n] + f"\n...（已截断，共 {len(s)} 字符）"
 
+    # ---------- 图片识别（紫卡截图 → 词条文本） ----------
+
+    @staticmethod
+    async def _collect_images(event: AstrMessageEvent) -> list[str]:
+        """取出消息里的图片本地路径，含引用消息里的图片。"""
+        from astrbot.api.message_components import Image, Reply
+
+        comps = list(event.get_messages() or [])
+        # 回复某条带图消息时，图片在 Reply.chain 里
+        for c in list(comps):
+            if isinstance(c, Reply) and c.chain:
+                comps.extend(c.chain)
+
+        paths = []
+        for c in comps:
+            if not isinstance(c, Image):
+                continue
+            try:
+                paths.append(await c.convert_to_file_path())
+            except Exception as e:
+                logger.warning(f"[wfrag_tool] 图片转本地路径失败: {e}")
+        return paths
+
+    # 让视觉模型只吐结构化文本，点评交给主对话的 LLM
+    _OCR_PROMPT = (
+        "这是一张 Warframe 紫卡（Riven Mod）截图。请只读出卡面文字，按下面格式输出，"
+        "不要解释、不要点评、不要加任何多余内容：
+"
+        "第一行：武器名（卡面上武器名后面形如 Vexi-critadra 的连字符英文是紫卡随机后缀名，"
+        "不是武器名，必须丢掉；若卡面能看到武器英文名则优先输出英文名）
+"
+        "之后每行一条词条，格式为 符号+数值% 词条名，例如：
+"
+        "Sobek
+"
+        "+72% 电击伤害
+"
+        "+68.5% 暴击几率
+"
+        "-71.2% 冲击伤害
+"
+        "注意保留正负号与小数，忽略段位/循环次数/极性等非词条信息。"
+    )
+
+    async def _ocr_riven(self, event: AstrMessageEvent, paths: list[str]) -> str:
+        """用当前会话的多模态 LLM 读紫卡截图，返回词条文本。"""
+        prov = await self.context.get_using_provider_async(
+            umo=event.unified_msg_origin,
+        )
+        if prov is None:
+            raise RuntimeError("当前会话没有可用的 LLM Provider，无法识别图片")
+        resp = await prov.text_chat(
+            prompt=self._OCR_PROMPT,
+            image_urls=paths[:1],  # 一张卡就够，多图只取第一张
+        )
+        text = (getattr(resp, "completion_text", None) or "").strip()
+        if not text:
+            raise RuntimeError("视觉模型没有返回可用文本")
+        if text.startswith("```"):  # 去掉模型可能套上的代码块
+            text = "
+".join(
+                ln for ln in text.splitlines() if not ln.strip().startswith("```")
+            ).strip()
+        return text
+
     # ---------- 工具 1：RAG 检索 ----------
 
     @filter.llm_tool(name="wf_rag_search")
@@ -928,7 +993,18 @@ class WFRagTool(Star):
                 days = int(arg) if arg.isdigit() else 7
                 res = await self.wf_arbitration_essence(event, days=days)
             elif tool in ("riven", "ra", "analyse"):
-                res = await self.wf_riven_analyse(event, weapon_name=arg.split()[0] if len(arg.split())>0 else "", stats_text=arg)
+                # 支持 /wfllm analyse [武器名] 直接带图：武器名可省略（OCR 自动读卡面）
+                paths = await self._collect_images(event)
+                weapon_arg = arg.split()[0] if arg.split() else ""
+                if paths:
+                    ocr_text = await self._ocr_riven(event, paths)
+                    res = await self.wf_riven_analyse(
+                        event, weapon_name=weapon_arg or "", stats_text=ocr_text,
+                    )
+                else:
+                    res = await self.wf_riven_analyse(
+                        event, weapon_name=weapon_arg, stats_text=arg,
+                    )
             elif tool in ("dict", "d"):
                 res = await self.wf_dict(event, keyword=arg)
             else:
