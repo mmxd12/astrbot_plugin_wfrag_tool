@@ -1,0 +1,3096 @@
+{
+ "Kulstar": {
+  "en": "Kulstar",
+  "zh": "杀星",
+  "rivenType": "pistol",
+  "disposition": 1.3,
+  "slug": "kulstar"
+ },
+ "Heliocor": {
+  "en": "Heliocor",
+  "zh": "赫利俄光锤",
+  "rivenType": "melee",
+  "disposition": 1.35,
+  "slug": "heliocor"
+ },
+ "Nagantaka": {
+  "en": "Nagantaka",
+  "zh": "噬蛇弩",
+  "rivenType": "rifle",
+  "disposition": 1.3,
+  "slug": "nagantaka"
+ },
+ "Ocucor": {
+  "en": "Ocucor",
+  "zh": "视使之触",
+  "rivenType": "pistol",
+  "disposition": 1.2,
+  "slug": "ocucor"
+ },
+ "Falcor": {
+  "en": "Falcor",
+  "zh": "猎鹰轮",
+  "rivenType": "melee",
+  "disposition": 1.3,
+  "slug": "falcor"
+ },
+ "Paracesis": {
+  "en": "Paracesis",
+  "zh": "心智之殁",
+  "rivenType": "melee",
+  "disposition": 0.65,
+  "slug": "paracesis"
+ },
+ "Exergis": {
+  "en": "Exergis",
+  "zh": "晶能放射器",
+  "rivenType": "shotgun",
+  "disposition": 1.1,
+  "slug": "exergis"
+ },
+ "Battacor": {
+  "en": "Battacor",
+  "zh": "武使之力",
+  "rivenType": "rifle",
+  "disposition": 1.1,
+  "slug": "battacor"
+ },
+ "Euphona Prime": {
+  "en": "Euphona Prime",
+  "zh": "悦音 Prime",
+  "rivenType": "shotgun",
+  "disposition": 0.95,
+  "slug": "euphona_prime"
+ },
+ "Fusilai": {
+  "en": "Fusilai",
+  "zh": "齐射玻刃",
+  "rivenType": "pistol",
+  "disposition": 1.35,
+  "slug": "fusilai"
+ },
+ "Lato": {
+  "en": "Lato",
+  "zh": "拉托",
+  "rivenType": "pistol",
+  "disposition": 1.4,
+  "slug": "lato"
+ },
+ "Magnus": {
+  "en": "Magnus",
+  "zh": "麦格努斯",
+  "rivenType": "pistol",
+  "disposition": 1.53,
+  "slug": "magnus"
+ },
+ "Ack & Brunt": {
+  "en": "Ack & Brunt",
+  "zh": "认知 & 冲击",
+  "rivenType": "melee",
+  "disposition": 1.35,
+  "slug": "ack_and_brunt"
+ },
+ "Amphis": {
+  "en": "Amphis",
+  "zh": "双头蛇",
+  "rivenType": "melee",
+  "disposition": 1.5,
+  "slug": "amphis"
+ },
+ "Anku": {
+  "en": "Anku",
+  "zh": "夺魂死神",
+  "rivenType": "melee",
+  "disposition": 1.46,
+  "slug": "anku"
+ },
+ "Arca Titron": {
+  "en": "Arca Titron",
+  "zh": "弧电振子锤",
+  "rivenType": "melee",
+  "disposition": 1.3,
+  "slug": "arca_titron"
+ },
+ "Balla": {
+  "en": "Balla",
+  "zh": "宝拉",
+  "rivenType": "zaw",
+  "disposition": 0.8,
+  "slug": "balla"
+ },
+ "Boltace": {
+  "en": "Boltace",
+  "zh": "螺钉拐刃",
+  "rivenType": "melee",
+  "disposition": 1.25,
+  "slug": "boltace"
+ },
+ "Broken War": {
+  "en": "Broken War",
+  "zh": "破碎的战争之剑",
+  "rivenType": "melee",
+  "disposition": 1.15,
+  "slug": "broken_war"
+ },
+ "Caustacyst": {
+  "en": "Caustacyst",
+  "zh": "灼蚀变体镰",
+  "rivenType": "melee",
+  "disposition": 1.3,
+  "slug": "caustacyst"
+ },
+ "Cerata": {
+  "en": "Cerata",
+  "zh": "裸鳃刃",
+  "rivenType": "melee",
+  "disposition": 1.25,
+  "slug": "cerata"
+ },
+ "Hate": {
+  "en": "Hate",
+  "zh": "憎恨",
+  "rivenType": "melee",
+  "disposition": 1.1,
+  "slug": "hate"
+ },
+ "Soma": {
+  "en": "Soma",
+  "zh": "月神",
+  "rivenType": "rifle",
+  "disposition": 1.15,
+  "slug": "soma"
+ },
+ "Synapse": {
+  "en": "Synapse",
+  "zh": "突触生化枪",
+  "rivenType": "rifle",
+  "disposition": 1.31,
+  "slug": "synapse"
+ },
+ "Tigris": {
+  "en": "Tigris",
+  "zh": "猛虎",
+  "rivenType": "shotgun",
+  "disposition": 1.1,
+  "slug": "tigris"
+ },
+ "Tonkor": {
+  "en": "Tonkor",
+  "zh": "征服榴炮",
+  "rivenType": "rifle",
+  "disposition": 1.3,
+  "slug": "tonkor"
+ },
+ "Torid": {
+  "en": "Torid",
+  "zh": "托里德",
+  "rivenType": "rifle",
+  "disposition": 1.3,
+  "slug": "torid"
+ },
+ "Vectis": {
+  "en": "Vectis",
+  "zh": "守望者",
+  "rivenType": "rifle",
+  "disposition": 1.15,
+  "slug": "vectis"
+ },
+ "Veldt": {
+  "en": "Veldt",
+  "zh": "草原猎手",
+  "rivenType": "rifle",
+  "disposition": 1.3,
+  "slug": "veldt"
+ },
+ "Vulkar": {
+  "en": "Vulkar",
+  "zh": "金工火神",
+  "rivenType": "rifle",
+  "disposition": 1.45,
+  "slug": "vulkar"
+ },
+ "Zarr": {
+  "en": "Zarr",
+  "zh": "沙皇",
+  "rivenType": "rifle",
+  "disposition": 1.15,
+  "slug": "zarr"
+ },
+ "Zenith": {
+  "en": "Zenith",
+  "zh": "天穹之顶",
+  "rivenType": "rifle",
+  "disposition": 1.1,
+  "slug": "zenith"
+ },
+ "Zhuge": {
+  "en": "Zhuge",
+  "zh": "诸葛连弩",
+  "rivenType": "rifle",
+  "disposition": 1.2,
+  "slug": "zhuge"
+ },
+ "Acrid": {
+  "en": "Acrid",
+  "zh": "阿克里德",
+  "rivenType": "pistol",
+  "disposition": 1.33,
+  "slug": "acrid"
+ },
+ "Afuris": {
+  "en": "Afuris",
+  "zh": "盗贼双枪",
+  "rivenType": "pistol",
+  "disposition": 1.45,
+  "slug": "afuris"
+ },
+ "Akbolto": {
+  "en": "Akbolto",
+  "zh": "螺钉双枪",
+  "rivenType": "pistol",
+  "disposition": 1.3,
+  "slug": "akbolto"
+ },
+ "Akbronco": {
+  "en": "Akbronco",
+  "zh": "野马双枪",
+  "rivenType": "shotgun",
+  "disposition": 1.35,
+  "slug": "akbronco"
+ },
+ "Akjagara": {
+  "en": "Akjagara",
+  "zh": "觉醒双枪",
+  "rivenType": "pistol",
+  "disposition": 1.1,
+  "slug": "akjagara"
+ },
+ "Aklato": {
+  "en": "Aklato",
+  "zh": "拉托双枪",
+  "rivenType": "pistol",
+  "disposition": 1.52,
+  "slug": "aklato"
+ },
+ "Arca Scisco": {
+  "en": "Arca Scisco",
+  "zh": "弧电探知者",
+  "rivenType": "pistol",
+  "disposition": 1.1,
+  "slug": "arca_scisco"
+ },
+ "Cycron": {
+  "en": "Cycron",
+  "zh": "循环离子枪",
+  "rivenType": "pistol",
+  "disposition": 1.2,
+  "slug": "cycron"
+ },
+ "Detron": {
+  "en": "Detron",
+  "zh": "德特昂",
+  "rivenType": "shotgun",
+  "disposition": 1.15,
+  "slug": "detron"
+ },
+ "Embolist": {
+  "en": "Embolist",
+  "zh": "安柏勒斯",
+  "rivenType": "pistol",
+  "disposition": 1.4,
+  "slug": "embolist"
+ },
+ "Dual Kamas": {
+  "en": "Dual Kamas",
+  "zh": "双短柄战镰",
+  "rivenType": "melee",
+  "disposition": 1.35,
+  "slug": "dual_kamas"
+ },
+ "Kuva Shildeg": {
+  "en": "Kuva Shildeg",
+  "zh": "赤毒·希尔德",
+  "rivenType": "rifle",
+  "disposition": 1.0,
+  "slug": "kuva_shildeg"
+ },
+ "Kuva Ayanga": {
+  "en": "Kuva Ayanga",
+  "zh": "赤毒·怒雷",
+  "rivenType": "rifle",
+  "disposition": 1.0,
+  "slug": "kuva_ayanga"
+ },
+ "Vermisplicer": {
+  "en": "Vermisplicer",
+  "zh": "虫置",
+  "rivenType": "kitgun",
+  "disposition": 1.15,
+  "slug": "vermisplicer"
+ },
+ "Sporelacer": {
+  "en": "Sporelacer",
+  "zh": "孢射",
+  "rivenType": "kitgun",
+  "disposition": 0.6,
+  "slug": "sporelacer"
+ },
+ "Argonak": {
+  "en": "Argonak",
+  "zh": "氩格纳克",
+  "rivenType": "rifle",
+  "disposition": 1.25,
+  "slug": "argonak"
+ },
+ "Castanas": {
+  "en": "Castanas",
+  "zh": "雷爆信镖",
+  "rivenType": "pistol",
+  "disposition": 1.4,
+  "slug": "castanas"
+ },
+ "Cestra": {
+  "en": "Cestra",
+  "zh": "锡斯特",
+  "rivenType": "pistol",
+  "disposition": 1.52,
+  "slug": "cestra"
+ },
+ "Dual Toxocyst": {
+  "en": "Dual Toxocyst",
+  "zh": "毒囊双枪",
+  "rivenType": "pistol",
+  "disposition": 1.35,
+  "slug": "dual_toxocyst"
+ },
+ "Hystrix": {
+  "en": "Hystrix",
+  "zh": "豪猪",
+  "rivenType": "pistol",
+  "disposition": 1.2,
+  "slug": "hystrix"
+ },
+ "Fragor": {
+  "en": "Fragor",
+  "zh": "重击巨锤",
+  "rivenType": "melee",
+  "disposition": 1.2,
+  "slug": "fragor"
+ },
+ "Galatine": {
+  "en": "Galatine",
+  "zh": "迦伦提恩",
+  "rivenType": "melee",
+  "disposition": 1.05,
+  "slug": "galatine"
+ },
+ "Gazal Machete": {
+  "en": "Gazal Machete",
+  "zh": "加扎勒反曲刀",
+  "rivenType": "melee",
+  "disposition": 1.4,
+  "slug": "gazal_machete"
+ },
+ "Gram": {
+  "en": "Gram",
+  "zh": "格拉姆",
+  "rivenType": "melee",
+  "disposition": 1.44,
+  "slug": "gram"
+ },
+ "Guandao": {
+  "en": "Guandao",
+  "zh": "关刀",
+  "rivenType": "melee",
+  "disposition": 1.05,
+  "slug": "guandao"
+ },
+ "Gunsen": {
+  "en": "Gunsen",
+  "zh": "军扇",
+  "rivenType": "melee",
+  "disposition": 1.35,
+  "slug": "gunsen"
+ },
+ "Dual Skana": {
+  "en": "Dual Skana",
+  "zh": "空刃双刀",
+  "rivenType": "melee",
+  "disposition": 1.48,
+  "slug": "dual_skana"
+ },
+ "Jaw Sword": {
+  "en": "Jaw Sword",
+  "zh": "蛇颚刀",
+  "rivenType": "melee",
+  "disposition": 1.4,
+  "slug": "jaw_sword"
+ },
+ "Kesheg": {
+  "en": "Kesheg",
+  "zh": "怯薛",
+  "rivenType": "melee",
+  "disposition": 1.35,
+  "slug": "kesheg"
+ },
+ "Kestrel": {
+  "en": "Kestrel",
+  "zh": "红隼",
+  "rivenType": "melee",
+  "disposition": 1.45,
+  "slug": "kestrel"
+ },
+ "Kronsh": {
+  "en": "Kronsh",
+  "zh": "客隆什",
+  "rivenType": "zaw",
+  "disposition": 1.3,
+  "slug": "kronsh"
+ },
+ "Ballistica": {
+  "en": "Ballistica",
+  "zh": "布里斯提卡",
+  "rivenType": "pistol",
+  "disposition": 1.25,
+  "slug": "ballistica"
+ },
+ "Heat Dagger": {
+  "en": "Heat Dagger",
+  "zh": "烈焰匕首",
+  "rivenType": "melee",
+  "disposition": 1.44,
+  "slug": "heat_dagger"
+ },
+ "Jat Kittag": {
+  "en": "Jat Kittag",
+  "zh": "喷射战锤",
+  "rivenType": "melee",
+  "disposition": 1.35,
+  "slug": "jat_kittag"
+ },
+ "Sonicor": {
+  "en": "Sonicor",
+  "zh": "超音波冲击枪",
+  "rivenType": "pistol",
+  "disposition": 1.15,
+  "slug": "sonicor"
+ },
+ "Tombfinger": {
+  "en": "Tombfinger",
+  "zh": "墓指",
+  "rivenType": "kitgun",
+  "disposition": 0.85,
+  "slug": "tombfinger"
+ },
+ "Gaze": {
+  "en": "Gaze",
+  "zh": "凝目",
+  "rivenType": "kitgun",
+  "disposition": 1,
+  "slug": "gaze"
+ },
+ "Pupacyst": {
+  "en": "Pupacyst",
+  "zh": "毒囊骨茧",
+  "rivenType": "melee",
+  "disposition": 1.35,
+  "slug": "pupacyst"
+ },
+ "Arca Plasmor": {
+  "en": "Arca Plasmor",
+  "zh": "弧电离子枪",
+  "rivenType": "shotgun",
+  "disposition": 0.95,
+  "slug": "arca_plasmor"
+ },
+ "Galvacord": {
+  "en": "Galvacord",
+  "zh": "电流刺索",
+  "rivenType": "melee",
+  "disposition": 1.35,
+  "slug": "galvacord"
+ },
+ "Bronco": {
+  "en": "Bronco",
+  "zh": "野马",
+  "rivenType": "shotgun",
+  "disposition": 1.45,
+  "slug": "bronco"
+ },
+ "Dual Cestra": {
+  "en": "Dual Cestra",
+  "zh": "锡斯特双枪",
+  "rivenType": "pistol",
+  "disposition": 1.35,
+  "slug": "dual_cestra"
+ },
+ "Furis": {
+  "en": "Furis",
+  "zh": "盗贼",
+  "rivenType": "pistol",
+  "disposition": 1.35,
+  "slug": "furis"
+ },
+ "Ankyros": {
+  "en": "Ankyros",
+  "zh": "甲龙双拳",
+  "rivenType": "melee",
+  "disposition": 1.5,
+  "slug": "ankyros"
+ },
+ "Atterax": {
+  "en": "Atterax",
+  "zh": "阿特拉克斯",
+  "rivenType": "melee",
+  "disposition": 1.15,
+  "slug": "atterax"
+ },
+ "Bo": {
+  "en": "Bo",
+  "zh": "玻之武杖",
+  "rivenType": "melee",
+  "disposition": 1.35,
+  "slug": "bo"
+ },
+ "Cassowar": {
+  "en": "Cassowar",
+  "zh": "鹤鸵长戟",
+  "rivenType": "melee",
+  "disposition": 1.35,
+  "slug": "cassowar"
+ },
+ "Ceramic Dagger": {
+  "en": "Ceramic Dagger",
+  "zh": "陶瓷匕首",
+  "rivenType": "melee",
+  "disposition": 1.43,
+  "slug": "ceramic_dagger"
+ },
+ "Halikar": {
+  "en": "Halikar",
+  "zh": "哈利卡",
+  "rivenType": "melee",
+  "disposition": 1.44,
+  "slug": "halikar"
+ },
+ "Hirudo": {
+  "en": "Hirudo",
+  "zh": "蚂蟥",
+  "rivenType": "melee",
+  "disposition": 1.15,
+  "slug": "hirudo"
+ },
+ "Mire": {
+  "en": "Mire",
+  "zh": "米尔",
+  "rivenType": "melee",
+  "disposition": 1.3,
+  "slug": "mire"
+ },
+ "Twin Krohkur": {
+  "en": "Twin Krohkur",
+  "zh": "双子克鲁古尔",
+  "rivenType": "melee",
+  "disposition": 1.2,
+  "slug": "twin_krohkur"
+ },
+ "Latron": {
+  "en": "Latron",
+  "zh": "拉特昂",
+  "rivenType": "rifle",
+  "disposition": 1.4,
+  "slug": "latron"
+ },
+ "Lenz": {
+  "en": "Lenz",
+  "zh": "楞次弓",
+  "rivenType": "rifle",
+  "disposition": 1.05,
+  "slug": "lenz"
+ },
+ "Miter": {
+  "en": "Miter",
+  "zh": "米特尔",
+  "rivenType": "rifle",
+  "disposition": 1.5,
+  "slug": "miter"
+ },
+ "Mutalist Cernos": {
+  "en": "Mutalist Cernos",
+  "zh": "异融西诺斯",
+  "rivenType": "rifle",
+  "disposition": 1.35,
+  "slug": "mutalist_cernos"
+ },
+ "Mutalist Quanta": {
+  "en": "Mutalist Quanta",
+  "zh": "异融量子枪",
+  "rivenType": "rifle",
+  "disposition": 1.5,
+  "slug": "mutalist_quanta"
+ },
+ "Opticor": {
+  "en": "Opticor",
+  "zh": "奥堤克光子枪",
+  "rivenType": "rifle",
+  "disposition": 1.15,
+  "slug": "opticor"
+ },
+ "Panthera": {
+  "en": "Panthera",
+  "zh": "猎豹",
+  "rivenType": "rifle",
+  "disposition": 1.4,
+  "slug": "panthera"
+ },
+ "Penta": {
+  "en": "Penta",
+  "zh": "潘塔",
+  "rivenType": "rifle",
+  "disposition": 1.35,
+  "slug": "penta"
+ },
+ "Phage": {
+  "en": "Phage",
+  "zh": "噬菌者",
+  "rivenType": "shotgun",
+  "disposition": 1.46,
+  "slug": "phage"
+ },
+ "Phantasma": {
+  "en": "Phantasma",
+  "zh": "幻离子",
+  "rivenType": "shotgun",
+  "disposition": 1.1,
+  "slug": "phantasma"
+ },
+ "Quanta": {
+  "en": "Quanta",
+  "zh": "量子切割器",
+  "rivenType": "rifle",
+  "disposition": 1.4,
+  "slug": "quanta"
+ },
+ "Rubico": {
+  "en": "Rubico",
+  "zh": "绝路",
+  "rivenType": "rifle",
+  "disposition": 0.95,
+  "slug": "rubico"
+ },
+ "Simulor": {
+  "en": "Simulor",
+  "zh": "重力奇点拟成枪",
+  "rivenType": "rifle",
+  "disposition": 1.25,
+  "slug": "simulor"
+ },
+ "Snipetron": {
+  "en": "Snipetron",
+  "zh": "狙击特昂",
+  "rivenType": "rifle",
+  "disposition": 1.3,
+  "slug": "snipetron"
+ },
+ "Sobek": {
+  "en": "Sobek",
+  "zh": "鳄神",
+  "rivenType": "shotgun",
+  "disposition": 1.33,
+  "slug": "sobek"
+ },
+ "Stradavar": {
+  "en": "Stradavar",
+  "zh": "斯特拉迪瓦",
+  "rivenType": "rifle",
+  "disposition": 1.1,
+  "slug": "stradavar"
+ },
+ "Strun": {
+  "en": "Strun",
+  "zh": "斯特朗",
+  "rivenType": "shotgun",
+  "disposition": 1.4,
+  "slug": "strun"
+ },
+ "Sybaris": {
+  "en": "Sybaris",
+  "zh": "席芭莉丝",
+  "rivenType": "rifle",
+  "disposition": 1.3,
+  "slug": "sybaris"
+ },
+ "Tetra": {
+  "en": "Tetra",
+  "zh": "特拉",
+  "rivenType": "rifle",
+  "disposition": 1.5,
+  "slug": "tetra"
+ },
+ "Gammacor": {
+  "en": "Gammacor",
+  "zh": "咖玛腕甲枪",
+  "rivenType": "pistol",
+  "disposition": 1.15,
+  "slug": "gammacor"
+ },
+ "Nukor": {
+  "en": "Nukor",
+  "zh": "努寇微波枪",
+  "rivenType": "pistol",
+  "disposition": 1.45,
+  "slug": "nukor"
+ },
+ "Pandero": {
+  "en": "Pandero",
+  "zh": "手鼓",
+  "rivenType": "pistol",
+  "disposition": 1.2,
+  "slug": "pandero"
+ },
+ "Pox": {
+  "en": "Pox",
+  "zh": "脓痘",
+  "rivenType": "pistol",
+  "disposition": 1.2,
+  "slug": "pox"
+ },
+ "Pyrana": {
+  "en": "Pyrana",
+  "zh": "食人鱼",
+  "rivenType": "shotgun",
+  "disposition": 0.95,
+  "slug": "pyrana"
+ },
+ "Sicarus": {
+  "en": "Sicarus",
+  "zh": "暗杀者",
+  "rivenType": "pistol",
+  "disposition": 1.2,
+  "slug": "sicarus"
+ },
+ "Spira": {
+  "en": "Spira",
+  "zh": "旋刃飞刀",
+  "rivenType": "pistol",
+  "disposition": 1.35,
+  "slug": "spira"
+ },
+ "Dehtat": {
+  "en": "Dehtat",
+  "zh": "德塔特",
+  "rivenType": "zaw",
+  "disposition": 1.25,
+  "slug": "dehtat"
+ },
+ "Destreza": {
+  "en": "Destreza",
+  "zh": "技巧之剑",
+  "rivenType": "melee",
+  "disposition": 1.25,
+  "slug": "destreza"
+ },
+ "Dex Dakra": {
+  "en": "Dex Dakra",
+  "zh": "Dex 达克拉双剑",
+  "rivenType": "melee",
+  "disposition": 1.35,
+  "slug": "dex_dakra"
+ },
+ "Dokrahm": {
+  "en": "Dokrahm",
+  "zh": "多克拉姆",
+  "rivenType": "zaw",
+  "disposition": 0.75,
+  "slug": "dokrahm"
+ },
+ "Dragon Nikana": {
+  "en": "Dragon Nikana",
+  "zh": "龙之侍刃",
+  "rivenType": "melee",
+  "disposition": 1.15,
+  "slug": "dragon_nikana"
+ },
+ "Dual Cleavers": {
+  "en": "Dual Cleavers",
+  "zh": "斩肉双刀",
+  "rivenType": "melee",
+  "disposition": 1.2,
+  "slug": "dual_cleavers"
+ },
+ "Dual Ether": {
+  "en": "Dual Ether",
+  "zh": "苍穹双剑",
+  "rivenType": "melee",
+  "disposition": 1.45,
+  "slug": "dual_ether"
+ },
+ "Dual Heat Swords": {
+  "en": "Dual Heat Swords",
+  "zh": "烈焰双剑",
+  "rivenType": "melee",
+  "disposition": 1.44,
+  "slug": "dual_heat_swords"
+ },
+ "Dual Ichor": {
+  "en": "Dual Ichor",
+  "zh": "恶脓双斧",
+  "rivenType": "melee",
+  "disposition": 1.25,
+  "slug": "dual_ichor"
+ },
+ "Dual Keres": {
+  "en": "Dual Keres",
+  "zh": "凯瑞斯双刀",
+  "rivenType": "melee",
+  "disposition": 1.1,
+  "slug": "dual_keres"
+ },
+ "Kama": {
+  "en": "Kama",
+  "zh": "短柄战镰",
+  "rivenType": "melee",
+  "disposition": 1.47,
+  "slug": "kama"
+ },
+ "Kogake": {
+  "en": "Kogake",
+  "zh": "科加基",
+  "rivenType": "melee",
+  "disposition": 1.46,
+  "slug": "kogake"
+ },
+ "Multron": {
+  "en": "Multron",
+  "zh": "多连穿甲枪",
+  "rivenType": "rifle",
+  "disposition": 1,
+  "slug": "multron"
+ },
+ "Vulcax": {
+  "en": "Vulcax",
+  "zh": "金工火舌",
+  "rivenType": "rifle",
+  "disposition": 1,
+  "slug": "vulcax"
+ },
+ "Masseter": {
+  "en": "Masseter",
+  "zh": "咀嚼金杖",
+  "rivenType": "melee",
+  "disposition": 1.25,
+  "slug": "masseter"
+ },
+ "Pathocyst": {
+  "en": "Pathocyst",
+  "zh": "病囊飞刃",
+  "rivenType": "melee",
+  "disposition": 1.35,
+  "slug": "pathocyst"
+ },
+ "Kuva Chakkhurr": {
+  "en": "Kuva Chakkhurr",
+  "zh": "赤毒·邪眼",
+  "rivenType": "rifle",
+  "disposition": 1.0,
+  "slug": "kuva_chakkhurr"
+ },
+ "Lecta": {
+  "en": "Lecta",
+  "zh": "勒克塔",
+  "rivenType": "melee",
+  "disposition": 1.25,
+  "slug": "lecta"
+ },
+ "Machete": {
+  "en": "Machete",
+  "zh": "马谢特砍刀",
+  "rivenType": "melee",
+  "disposition": 1.45,
+  "slug": "machete"
+ },
+ "Magistar": {
+  "en": "Magistar",
+  "zh": "执法者",
+  "rivenType": "melee",
+  "disposition": 1.35,
+  "slug": "magistar"
+ },
+ "Mewan": {
+  "en": "Mewan",
+  "zh": "密丸",
+  "rivenType": "zaw",
+  "disposition": 1.15,
+  "slug": "mewan"
+ },
+ "Mios": {
+  "en": "Mios",
+  "zh": "牡狮神",
+  "rivenType": "melee",
+  "disposition": 1.3,
+  "slug": "mios"
+ },
+ "Rabvee": {
+  "en": "Rabvee",
+  "zh": "拉比威",
+  "rivenType": "zaw",
+  "disposition": 1.3,
+  "slug": "rabvee"
+ },
+ "War": {
+  "en": "War",
+  "zh": "战争之剑",
+  "rivenType": "melee",
+  "disposition": 1.05,
+  "slug": "war"
+ },
+ "Artax": {
+  "en": "Artax",
+  "zh": "阿塔克斯",
+  "rivenType": "rifle",
+  "disposition": 1,
+  "slug": "artax"
+ },
+ "Burst Laser": {
+  "en": "Burst Laser",
+  "zh": "激光点发",
+  "rivenType": "pistol",
+  "disposition": 1.45,
+  "slug": "burst_laser"
+ },
+ "Deth Machine Rifle": {
+  "en": "Deth Machine Rifle",
+  "zh": "死亡机枪",
+  "rivenType": "rifle",
+  "disposition": 1.46,
+  "slug": "deth_machine_rifle"
+ },
+ "Laser Rifle": {
+  "en": "Laser Rifle",
+  "zh": "激光步枪",
+  "rivenType": "rifle",
+  "disposition": 1.21,
+  "slug": "laser_rifle"
+ },
+ "Astilla": {
+  "en": "Astilla",
+  "zh": "碎裂者",
+  "rivenType": "shotgun",
+  "disposition": 1.3,
+  "slug": "astilla"
+ },
+ "Baza": {
+  "en": "Baza",
+  "zh": "苍鹰",
+  "rivenType": "rifle",
+  "disposition": 1.05,
+  "slug": "baza"
+ },
+ "Boar": {
+  "en": "Boar",
+  "zh": "野猪",
+  "rivenType": "shotgun",
+  "disposition": 1.45,
+  "slug": "boar"
+ },
+ "Flux Rifle": {
+  "en": "Flux Rifle",
+  "zh": "通量步枪",
+  "rivenType": "rifle",
+  "disposition": 1.55,
+  "slug": "flux_rifle"
+ },
+ "Cronus": {
+  "en": "Cronus",
+  "zh": "克洛诺斯",
+  "rivenType": "melee",
+  "disposition": 1.48,
+  "slug": "cronus"
+ },
+ "Endura": {
+  "en": "Endura",
+  "zh": "三叶坚韧",
+  "rivenType": "melee",
+  "disposition": 1.4,
+  "slug": "endura"
+ },
+ "Glaive": {
+  "en": "Glaive",
+  "zh": "战刃",
+  "rivenType": "melee",
+  "disposition": 1.3,
+  "slug": "glaive"
+ },
+ "Heat Sword": {
+  "en": "Heat Sword",
+  "zh": "烈焰长剑",
+  "rivenType": "melee",
+  "disposition": 1.48,
+  "slug": "heat_sword"
+ },
+ "Jat Kusar": {
+  "en": "Jat Kusar",
+  "zh": "喷射锁镰",
+  "rivenType": "melee",
+  "disposition": 1.2,
+  "slug": "jat_kusar"
+ },
+ "Nami Skyla": {
+  "en": "Nami Skyla",
+  "zh": "海波斯库拉对剑",
+  "rivenType": "melee",
+  "disposition": 1.3,
+  "slug": "nami_skyla"
+ },
+ "Nami Solo": {
+  "en": "Nami Solo",
+  "zh": "海波单剑",
+  "rivenType": "melee",
+  "disposition": 1.43,
+  "slug": "nami_solo"
+ },
+ "Nikana": {
+  "en": "Nikana",
+  "zh": "侍刃",
+  "rivenType": "melee",
+  "disposition": 0.95,
+  "slug": "nikana"
+ },
+ "Ninkondi": {
+  "en": "Ninkondi",
+  "zh": "降灵追猎者",
+  "rivenType": "melee",
+  "disposition": 1.41,
+  "slug": "ninkondi"
+ },
+ "Obex": {
+  "en": "Obex",
+  "zh": "奥比克斯",
+  "rivenType": "melee",
+  "disposition": 1.3,
+  "slug": "obex"
+ },
+ "Ohma": {
+  "en": "Ohma",
+  "zh": "欧玛",
+  "rivenType": "melee",
+  "disposition": 1.25,
+  "slug": "ohma"
+ },
+ "Okina": {
+  "en": "Okina",
+  "zh": "翁",
+  "rivenType": "melee",
+  "disposition": 1.4,
+  "slug": "okina"
+ },
+ "Ooltha": {
+  "en": "Ooltha",
+  "zh": "乌尔萨",
+  "rivenType": "zaw",
+  "disposition": 1.3,
+  "slug": "ooltha"
+ },
+ "Orthos": {
+  "en": "Orthos",
+  "zh": "欧特鲁斯",
+  "rivenType": "melee",
+  "disposition": 1,
+  "slug": "orthos"
+ },
+ "Orvius": {
+  "en": "Orvius",
+  "zh": "灵枢",
+  "rivenType": "melee",
+  "disposition": 1.35,
+  "slug": "orvius"
+ },
+ "Pangolin Sword": {
+  "en": "Pangolin Sword",
+  "zh": "鲮鲤剑",
+  "rivenType": "melee",
+  "disposition": 1.47,
+  "slug": "pangolin_sword"
+ },
+ "Plague Keewar": {
+  "en": "Plague Keewar",
+  "zh": "瘟疫 奇沃",
+  "rivenType": "zaw",
+  "disposition": 0.85,
+  "slug": "plague_keewar"
+ },
+ "Plague Kripath": {
+  "en": "Plague Kripath",
+  "zh": "瘟疫 克里帕丝",
+  "rivenType": "zaw",
+  "disposition": 0.65,
+  "slug": "plague_kripath"
+ },
+ "Plasma Sword": {
+  "en": "Plasma Sword",
+  "zh": "等离子长剑",
+  "rivenType": "melee",
+  "disposition": 1.48,
+  "slug": "plasma_sword"
+ },
+ "Prova": {
+  "en": "Prova",
+  "zh": "普罗沃",
+  "rivenType": "melee",
+  "disposition": 1.4,
+  "slug": "prova"
+ },
+ "Redeemer": {
+  "en": "Redeemer",
+  "zh": "救赎者",
+  "rivenType": "melee",
+  "disposition": 1.05,
+  "slug": "redeemer"
+ },
+ "Skana": {
+  "en": "Skana",
+  "zh": "空刃",
+  "rivenType": "melee",
+  "disposition": 1.3,
+  "slug": "skana"
+ },
+ "Harpak": {
+  "en": "Harpak",
+  "zh": "哈帕克",
+  "rivenType": "rifle",
+  "disposition": 1.55,
+  "slug": "harpak"
+ },
+ "Hema": {
+  "en": "Hema",
+  "zh": "血肢",
+  "rivenType": "rifle",
+  "disposition": 1.3,
+  "slug": "hema"
+ },
+ "Hind": {
+  "en": "Hind",
+  "zh": "雌鹿",
+  "rivenType": "rifle",
+  "disposition": 1.42,
+  "slug": "hind"
+ },
+ "Ignis": {
+  "en": "Ignis",
+  "zh": "伊格尼斯",
+  "rivenType": "rifle",
+  "disposition": 0.7,
+  "slug": "ignis"
+ },
+ "Javlok": {
+  "en": "Javlok",
+  "zh": "燃焰标枪",
+  "rivenType": "rifle",
+  "disposition": 1.3,
+  "slug": "javlok"
+ },
+ "Karak": {
+  "en": "Karak",
+  "zh": "卡拉克",
+  "rivenType": "rifle",
+  "disposition": 1.35,
+  "slug": "karak"
+ },
+ "Kohm": {
+  "en": "Kohm",
+  "zh": "寇恩热能枪",
+  "rivenType": "shotgun",
+  "disposition": 1.3,
+  "slug": "kohm"
+ },
+ "Lanka": {
+  "en": "Lanka",
+  "zh": "兰卡",
+  "rivenType": "rifle",
+  "disposition": 1.05,
+  "slug": "lanka"
+ },
+ "Paris": {
+  "en": "Paris",
+  "zh": "帕里斯",
+  "rivenType": "rifle",
+  "disposition": 1.4,
+  "slug": "paris"
+ },
+ "Quartakk": {
+  "en": "Quartakk",
+  "zh": "夸塔克",
+  "rivenType": "rifle",
+  "disposition": 1.25,
+  "slug": "quartakk"
+ },
+ "Scourge": {
+  "en": "Scourge",
+  "zh": "祸根",
+  "rivenType": "rifle",
+  "disposition": 1.2,
+  "slug": "scourge"
+ },
+ "Spectra": {
+  "en": "Spectra",
+  "zh": "光谱切割器",
+  "rivenType": "pistol",
+  "disposition": 1.49,
+  "slug": "spectra"
+ },
+ "Staticor": {
+  "en": "Staticor",
+  "zh": "静电能量导引枪",
+  "rivenType": "pistol",
+  "disposition": 0.9,
+  "slug": "staticor"
+ },
+ "Stubba": {
+  "en": "Stubba",
+  "zh": "史度巴",
+  "rivenType": "pistol",
+  "disposition": 1.35,
+  "slug": "stubba"
+ },
+ "Stug": {
+  "en": "Stug",
+  "zh": "史特克",
+  "rivenType": "pistol",
+  "disposition": 1.48,
+  "slug": "stug"
+ },
+ "Talons": {
+  "en": "Talons",
+  "zh": "鹰爪",
+  "rivenType": "pistol",
+  "disposition": 1.44,
+  "slug": "talons"
+ },
+ "Twin Grakatas": {
+  "en": "Twin Grakatas",
+  "zh": "双子葛拉卡达",
+  "rivenType": "pistol",
+  "disposition": 1.2,
+  "slug": "twin_grakatas"
+ },
+ "Twin Gremlins": {
+  "en": "Twin Gremlins",
+  "zh": "双子小精灵",
+  "rivenType": "pistol",
+  "disposition": 1.2,
+  "slug": "twin_gremlins"
+ },
+ "Twin Kohmak": {
+  "en": "Twin Kohmak",
+  "zh": "双子寇恩霰机枪",
+  "rivenType": "shotgun",
+  "disposition": 1.25,
+  "slug": "twin_kohmak"
+ },
+ "Twin Rogga": {
+  "en": "Twin Rogga",
+  "zh": "双子罗格",
+  "rivenType": "shotgun",
+  "disposition": 1.3,
+  "slug": "twin_rogga"
+ },
+ "Twin Vipers": {
+  "en": "Twin Vipers",
+  "zh": "双子蝰蛇",
+  "rivenType": "pistol",
+  "disposition": 1.45,
+  "slug": "twin_vipers"
+ },
+ "Tysis": {
+  "en": "Tysis",
+  "zh": "啐沫者",
+  "rivenType": "pistol",
+  "disposition": 1.45,
+  "slug": "tysis"
+ },
+ "Vasto": {
+  "en": "Vasto",
+  "zh": "瓦斯托",
+  "rivenType": "pistol",
+  "disposition": 1.4,
+  "slug": "vasto"
+ },
+ "Viper": {
+  "en": "Viper",
+  "zh": "蝰蛇",
+  "rivenType": "pistol",
+  "disposition": 1.45,
+  "slug": "viper"
+ },
+ "Zylok": {
+  "en": "Zylok",
+  "zh": "席尔火枪",
+  "rivenType": "pistol",
+  "disposition": 1.25,
+  "slug": "zylok"
+ },
+ "Dakra Prime": {
+  "en": "Dakra Prime",
+  "zh": "达克拉 Prime",
+  "rivenType": "melee",
+  "disposition": 1.1,
+  "slug": "dakra_prime"
+ },
+ "Dark Dagger": {
+  "en": "Dark Dagger",
+  "zh": "暗黑匕首",
+  "rivenType": "melee",
+  "disposition": 1.1,
+  "slug": "dark_dagger"
+ },
+ "Kuva Twin Stubbas": {
+  "en": "Kuva Twin Stubbas",
+  "zh": "赤毒·双子史度巴",
+  "rivenType": "rifle",
+  "disposition": 1.0,
+  "slug": "kuva_twin_stubbas"
+ },
+ "Pennant": {
+  "en": "Pennant",
+  "zh": "尖幡",
+  "rivenType": "melee",
+  "disposition": 0.95,
+  "slug": "pennant"
+ },
+ "Kuva Bramma": {
+  "en": "Kuva Bramma",
+  "zh": "赤毒·布拉玛",
+  "rivenType": "rifle",
+  "disposition": 1.0,
+  "slug": "kuva_bramma"
+ },
+ "Stropha": {
+  "en": "Stropha",
+  "zh": "诡计之刃",
+  "rivenType": "melee",
+  "disposition": 0.65,
+  "slug": "stropha"
+ },
+ "Morgha": {
+  "en": "Morgha",
+  "zh": "置灵者",
+  "rivenType": "rifle",
+  "disposition": 1,
+  "slug": "morgha"
+ },
+ "Catabolyst": {
+  "en": "Catabolyst",
+  "zh": "异化者",
+  "rivenType": "pistol",
+  "disposition": 1.2,
+  "slug": "catabolyst"
+ },
+ "Hikou": {
+  "en": "Hikou",
+  "zh": "飞扬",
+  "rivenType": "pistol",
+  "disposition": 1.3,
+  "slug": "hikou"
+ },
+ "Knell": {
+  "en": "Knell",
+  "zh": "丧钟",
+  "rivenType": "pistol",
+  "disposition": 1.25,
+  "slug": "knell"
+ },
+ "Kohmak": {
+  "en": "Kohmak",
+  "zh": "寇恩霰机枪",
+  "rivenType": "shotgun",
+  "disposition": 1.35,
+  "slug": "kohmak"
+ },
+ "Kraken": {
+  "en": "Kraken",
+  "zh": "北海巨妖",
+  "rivenType": "pistol",
+  "disposition": 1.53,
+  "slug": "kraken"
+ },
+ "Kunai": {
+  "en": "Kunai",
+  "zh": "苦无",
+  "rivenType": "pistol",
+  "disposition": 1.51,
+  "slug": "kunai"
+ },
+ "Lex": {
+  "en": "Lex",
+  "zh": "雷克斯",
+  "rivenType": "pistol",
+  "disposition": 1.25,
+  "slug": "lex"
+ },
+ "Marelok": {
+  "en": "Marelok",
+  "zh": "玛瑞火枪",
+  "rivenType": "pistol",
+  "disposition": 1.2,
+  "slug": "marelok"
+ },
+ "Broken Scepter": {
+  "en": "Broken Scepter",
+  "zh": "破损珽杖",
+  "rivenType": "melee",
+  "disposition": 1.4,
+  "slug": "broken_scepter"
+ },
+ "Dual Zoren": {
+  "en": "Dual Zoren",
+  "zh": "佐伦双斧",
+  "rivenType": "melee",
+  "disposition": 1.44,
+  "slug": "dual_zoren"
+ },
+ "Ether Daggers": {
+  "en": "Ether Daggers",
+  "zh": "苍穹匕首",
+  "rivenType": "melee",
+  "disposition": 1.49,
+  "slug": "ether_daggers"
+ },
+ "Ether Reaper": {
+  "en": "Ether Reaper",
+  "zh": "苍穹死神",
+  "rivenType": "melee",
+  "disposition": 1.45,
+  "slug": "ether_reaper"
+ },
+ "Ether Sword": {
+  "en": "Ether Sword",
+  "zh": "苍穹之剑",
+  "rivenType": "melee",
+  "disposition": 1.44,
+  "slug": "ether_sword"
+ },
+ "Fang": {
+  "en": "Fang",
+  "zh": "狼牙",
+  "rivenType": "melee",
+  "disposition": 1.36,
+  "slug": "fang"
+ },
+ "Furax": {
+  "en": "Furax",
+  "zh": "弗拉克斯",
+  "rivenType": "melee",
+  "disposition": 1.38,
+  "slug": "furax"
+ },
+ "Karyst": {
+  "en": "Karyst",
+  "zh": "凯洛斯特",
+  "rivenType": "melee",
+  "disposition": 1.35,
+  "slug": "karyst"
+ },
+ "Stinger": {
+  "en": "Stinger",
+  "zh": "毒刺",
+  "rivenType": "rifle",
+  "disposition": 1.32,
+  "slug": "stinger"
+ },
+ "Vulklok": {
+  "en": "Vulklok",
+  "zh": "金工火枪",
+  "rivenType": "rifle",
+  "disposition": 1.25,
+  "slug": "vulklok"
+ },
+ "Catchmoon": {
+  "en": "Catchmoon",
+  "zh": "捕月",
+  "rivenType": "kitgun",
+  "disposition": 0.75,
+  "slug": "catchmoon"
+ },
+ "Plinx": {
+  "en": "Plinx",
+  "zh": "漫射者",
+  "rivenType": "pistol",
+  "disposition": 1.2,
+  "slug": "plinx"
+ },
+ "Korrudo": {
+  "en": "Korrudo",
+  "zh": "库鲁多",
+  "rivenType": "melee",
+  "disposition": 1.35,
+  "slug": "korrudo"
+ },
+ "Fulmin": {
+  "en": "Fulmin",
+  "zh": "雷霆",
+  "rivenType": "rifle",
+  "disposition": 1,
+  "slug": "fulmin"
+ },
+ "Cobra & Crane": {
+  "en": "Cobra & Crane",
+  "zh": "眼镜蛇 & 鹤",
+  "rivenType": "melee",
+  "disposition": 1.35,
+  "slug": "cobra_and_crane"
+ },
+ "Komorex": {
+  "en": "Komorex",
+  "zh": "猛毒",
+  "rivenType": "rifle",
+  "disposition": 1.15,
+  "slug": "komorex"
+ },
+ "Cyanex": {
+  "en": "Cyanex",
+  "zh": "氰毒",
+  "rivenType": "pistol",
+  "disposition": 1,
+  "slug": "cyanex"
+ },
+ "Tatsu": {
+  "en": "Tatsu",
+  "zh": "龙辰",
+  "rivenType": "melee",
+  "disposition": 1.05,
+  "slug": "tatsu"
+ },
+ "Cyngas": {
+  "en": "Cyngas",
+  "zh": "合成燃气炮",
+  "rivenType": "rifle",
+  "disposition": 1.3,
+  "slug": "cyngas"
+ },
+ "Larkspur": {
+  "en": "Larkspur",
+  "zh": "翠雀",
+  "rivenType": "rifle",
+  "disposition": 1.05,
+  "slug": "larkspur"
+ },
+ "Imperator": {
+  "en": "Imperator",
+  "zh": "凯旋将军",
+  "rivenType": "rifle",
+  "disposition": 1.1,
+  "slug": "imperator"
+ },
+ "Corvas": {
+  "en": "Corvas",
+  "zh": "黑鸦",
+  "rivenType": "rifle",
+  "disposition": 1.2,
+  "slug": "corvas"
+ },
+ "Phaedra": {
+  "en": "Phaedra",
+  "zh": "菲德菈",
+  "rivenType": "rifle",
+  "disposition": 1.25,
+  "slug": "phaedra"
+ },
+ "Grattler": {
+  "en": "Grattler",
+  "zh": "葛拉特勒",
+  "rivenType": "rifle",
+  "disposition": 1.1,
+  "slug": "grattler"
+ },
+ "Dual Decurion": {
+  "en": "Dual Decurion",
+  "zh": "什长双枪",
+  "rivenType": "rifle",
+  "disposition": 1.3,
+  "slug": "dual_decurion"
+ },
+ "Attica": {
+  "en": "Attica",
+  "zh": "阿提卡",
+  "rivenType": "rifle",
+  "disposition": 1.42,
+  "slug": "attica"
+ },
+ "Boltor": {
+  "en": "Boltor",
+  "zh": "螺钉步枪",
+  "rivenType": "rifle",
+  "disposition": 1.3,
+  "slug": "boltor"
+ },
+ "Braton": {
+  "en": "Braton",
+  "zh": "布莱顿",
+  "rivenType": "rifle",
+  "disposition": 1.35,
+  "slug": "braton"
+ },
+ "Corinth": {
+  "en": "Corinth",
+  "zh": "科林斯",
+  "rivenType": "shotgun",
+  "disposition": 1.15,
+  "slug": "corinth"
+ },
+ "Ferrox": {
+  "en": "Ferrox",
+  "zh": "铁晶磁轨炮",
+  "rivenType": "rifle",
+  "disposition": 1.25,
+  "slug": "ferrox"
+ },
+ "Hek": {
+  "en": "Hek",
+  "zh": "海克",
+  "rivenType": "shotgun",
+  "disposition": 1.2,
+  "slug": "hek"
+ },
+ "Ogris": {
+  "en": "Ogris",
+  "zh": "食人女魔",
+  "rivenType": "rifle",
+  "disposition": 1.3,
+  "slug": "ogris"
+ },
+ "Paracyst": {
+  "en": "Paracyst",
+  "zh": "附肢寄生者",
+  "rivenType": "rifle",
+  "disposition": 1.31,
+  "slug": "paracyst"
+ },
+ "Supra": {
+  "en": "Supra",
+  "zh": "苏普拉",
+  "rivenType": "rifle",
+  "disposition": 1.1,
+  "slug": "supra"
+ },
+ "Tenora": {
+  "en": "Tenora",
+  "zh": "双簧管",
+  "rivenType": "rifle",
+  "disposition": 1.1,
+  "slug": "tenora"
+ },
+ "Tiberon": {
+  "en": "Tiberon",
+  "zh": "狂鲨",
+  "rivenType": "rifle",
+  "disposition": 1.1,
+  "slug": "tiberon"
+ },
+ "Aklex": {
+  "en": "Aklex",
+  "zh": "雷克斯双枪",
+  "rivenType": "pistol",
+  "disposition": 1.05,
+  "slug": "aklex"
+ },
+ "Akmagnus": {
+  "en": "Akmagnus",
+  "zh": "麦格努斯双枪",
+  "rivenType": "pistol",
+  "disposition": 1.35,
+  "slug": "akmagnus"
+ },
+ "Aksomati": {
+  "en": "Aksomati",
+  "zh": "轻灵月神双枪",
+  "rivenType": "pistol",
+  "disposition": 1.25,
+  "slug": "aksomati"
+ },
+ "Akstiletto": {
+  "en": "Akstiletto",
+  "zh": "史提托双枪",
+  "rivenType": "pistol",
+  "disposition": 0.95,
+  "slug": "akstiletto"
+ },
+ "Akvasto": {
+  "en": "Akvasto",
+  "zh": "瓦斯托双枪",
+  "rivenType": "pistol",
+  "disposition": 1.25,
+  "slug": "akvasto"
+ },
+ "Akzani": {
+  "en": "Akzani",
+  "zh": "荒谬双枪",
+  "rivenType": "pistol",
+  "disposition": 1.52,
+  "slug": "akzani"
+ },
+ "Angstrum": {
+  "en": "Angstrum",
+  "zh": "安格斯壮",
+  "rivenType": "pistol",
+  "disposition": 1.35,
+  "slug": "angstrum"
+ },
+ "Atomos": {
+  "en": "Atomos",
+  "zh": "原子矿融炮",
+  "rivenType": "pistol",
+  "disposition": 0.95,
+  "slug": "atomos"
+ },
+ "Azima": {
+  "en": "Azima",
+  "zh": "方位角",
+  "rivenType": "pistol",
+  "disposition": 1.25,
+  "slug": "azima"
+ },
+ "Bolto": {
+  "en": "Bolto",
+  "zh": "螺钉手枪",
+  "rivenType": "pistol",
+  "disposition": 1.51,
+  "slug": "bolto"
+ },
+ "Brakk": {
+  "en": "Brakk",
+  "zh": "布拉克",
+  "rivenType": "shotgun",
+  "disposition": 1.25,
+  "slug": "brakk"
+ },
+ "Despair": {
+  "en": "Despair",
+  "zh": "绝望",
+  "rivenType": "pistol",
+  "disposition": 1.3,
+  "slug": "despair"
+ },
+ "Dual Raza": {
+  "en": "Dual Raza",
+  "zh": "锋月双斧",
+  "rivenType": "melee",
+  "disposition": 1.4,
+  "slug": "dual_raza"
+ },
+ "Reaper Prime": {
+  "en": "Reaper Prime",
+  "zh": "收割者 Prime",
+  "rivenType": "melee",
+  "disposition": 0.8,
+  "slug": "reaper_prime"
+ },
+ "Ripkas": {
+  "en": "Ripkas",
+  "zh": "锐卡斯",
+  "rivenType": "melee",
+  "disposition": 1.3,
+  "slug": "ripkas"
+ },
+ "Dark Sword": {
+  "en": "Dark Sword",
+  "zh": "暗黑长剑",
+  "rivenType": "melee",
+  "disposition": 1.48,
+  "slug": "dark_sword"
+ },
+ "Kreska": {
+  "en": "Kreska",
+  "zh": "直镐",
+  "rivenType": "melee",
+  "disposition": 1.35,
+  "slug": "kreska"
+ },
+ "Velocitus": {
+  "en": "Velocitus",
+  "zh": "极速电磁步枪",
+  "rivenType": "rifle",
+  "disposition": 1.1,
+  "slug": "velocitus"
+ },
+ "Fluctus": {
+  "en": "Fluctus",
+  "zh": "巨浪",
+  "rivenType": "rifle",
+  "disposition": 1.1,
+  "slug": "fluctus"
+ },
+ "Quatz": {
+  "en": "Quatz",
+  "zh": "夸兹",
+  "rivenType": "pistol",
+  "disposition": 1.2,
+  "slug": "quatz"
+ },
+ "Acceltra": {
+  "en": "Acceltra",
+  "zh": "迅发电浆炮",
+  "rivenType": "rifle",
+  "disposition": 0.65,
+  "slug": "acceltra"
+ },
+ "Akarius": {
+  "en": "Akarius",
+  "zh": "阿利乌双枪",
+  "rivenType": "pistol",
+  "disposition": 1.05,
+  "slug": "akarius"
+ },
+ "Tazicor": {
+  "en": "Tazicor",
+  "zh": "泰瑟步枪",
+  "rivenType": "rifle",
+  "disposition": 1,
+  "slug": "tazicor"
+ },
+ "Cryotra": {
+  "en": "Cryotra",
+  "zh": "急冻喷枪",
+  "rivenType": "rifle",
+  "disposition": 1,
+  "slug": "cryotra"
+ },
+ "Shedu": {
+  "en": "Shedu",
+  "zh": "舍杜",
+  "rivenType": "rifle",
+  "disposition": 0.75,
+  "slug": "shedu"
+ },
+ "Cortege": {
+  "en": "Cortege",
+  "zh": "送葬者",
+  "rivenType": "rifle",
+  "disposition": 1,
+  "slug": "cortege"
+ },
+ "Vitrica": {
+  "en": "Vitrica",
+  "zh": "金璃剑",
+  "rivenType": "melee",
+  "disposition": 1.1,
+  "slug": "vitrica"
+ },
+ "Pulmonars": {
+  "en": "Pulmonars",
+  "zh": "感染连枷",
+  "rivenType": "melee",
+  "disposition": 1.2,
+  "slug": "pulmonars"
+ },
+ "Bubonico": {
+  "en": "Bubonico",
+  "zh": "横痃重炮",
+  "rivenType": "rifle",
+  "disposition": 0.75,
+  "slug": "bubonico"
+ },
+ "Proboscis Cernos": {
+  "en": "Proboscis Cernos",
+  "zh": "刺吸西诺斯",
+  "rivenType": "rifle",
+  "disposition": 0.9,
+  "slug": "proboscis_cernos"
+ },
+ "Sporothrix": {
+  "en": "Sporothrix",
+  "zh": "孢丝感染枪",
+  "rivenType": "rifle",
+  "disposition": 1.3,
+  "slug": "sporothrix"
+ },
+ "Arum Spinosa": {
+  "en": "Arum Spinosa",
+  "zh": "疆南星刺",
+  "rivenType": "melee",
+  "disposition": 1.25,
+  "slug": "arum_spinosa"
+ },
+ "Sarpa": {
+  "en": "Sarpa",
+  "zh": "蛇刃",
+  "rivenType": "melee",
+  "disposition": 1.2,
+  "slug": "sarpa"
+ },
+ "Scindo": {
+  "en": "Scindo",
+  "zh": "分裂斩斧",
+  "rivenType": "melee",
+  "disposition": 1.35,
+  "slug": "scindo"
+ },
+ "Scoliac": {
+  "en": "Scoliac",
+  "zh": "脊椎节鞭",
+  "rivenType": "melee",
+  "disposition": 1.3,
+  "slug": "scoliac"
+ },
+ "Sepfahn": {
+  "en": "Sepfahn",
+  "zh": "瑟普梵",
+  "rivenType": "zaw",
+  "disposition": 0.7,
+  "slug": "sepfahn"
+ },
+ "Serro": {
+  "en": "Serro",
+  "zh": "电能斩锯",
+  "rivenType": "melee",
+  "disposition": 1.38,
+  "slug": "serro"
+ },
+ "Shaku": {
+  "en": "Shaku",
+  "zh": "双节尺棍",
+  "rivenType": "melee",
+  "disposition": 1.35,
+  "slug": "shaku"
+ },
+ "Sheev": {
+  "en": "Sheev",
+  "zh": "希芙",
+  "rivenType": "melee",
+  "disposition": 1.35,
+  "slug": "sheev"
+ },
+ "Sibear": {
+  "en": "Sibear",
+  "zh": "西伯利亚冰锤",
+  "rivenType": "melee",
+  "disposition": 1.35,
+  "slug": "sibear"
+ },
+ "Sigma & Octantis": {
+  "en": "Sigma & Octantis",
+  "zh": "西格玛 & 南极座",
+  "rivenType": "melee",
+  "disposition": 1.1,
+  "slug": "sigma_and_octantis"
+ },
+ "Silva & Aegis": {
+  "en": "Silva & Aegis",
+  "zh": "席瓦 & 神盾",
+  "rivenType": "melee",
+  "disposition": 1.15,
+  "slug": "silva_and_aegis"
+ },
+ "Skiajati": {
+  "en": "Skiajati",
+  "zh": "影生",
+  "rivenType": "melee",
+  "disposition": 0.9,
+  "slug": "skiajati"
+ },
+ "Sydon": {
+  "en": "Sydon",
+  "zh": "恶龙",
+  "rivenType": "melee",
+  "disposition": 1.35,
+  "slug": "sydon"
+ },
+ "Tekko": {
+  "en": "Tekko",
+  "zh": "铁钩手甲",
+  "rivenType": "melee",
+  "disposition": 1.4,
+  "slug": "tekko"
+ },
+ "Tipedo": {
+  "en": "Tipedo",
+  "zh": "提佩多",
+  "rivenType": "melee",
+  "disposition": 1.31,
+  "slug": "tipedo"
+ },
+ "Tonbo": {
+  "en": "Tonbo",
+  "zh": "蜻蛉薙",
+  "rivenType": "melee",
+  "disposition": 1.38,
+  "slug": "tonbo"
+ },
+ "Twin Basolk": {
+  "en": "Twin Basolk",
+  "zh": "双子巴萨克",
+  "rivenType": "melee",
+  "disposition": 1.3,
+  "slug": "twin_basolk"
+ },
+ "Amprex": {
+  "en": "Amprex",
+  "zh": "安培克斯",
+  "rivenType": "rifle",
+  "disposition": 0.85,
+  "slug": "amprex"
+ },
+ "Burston": {
+  "en": "Burston",
+  "zh": "伯斯顿",
+  "rivenType": "rifle",
+  "disposition": 1.45,
+  "slug": "burston"
+ },
+ "Buzlok": {
+  "en": "Buzlok",
+  "zh": "巴兹火枪",
+  "rivenType": "rifle",
+  "disposition": 1.45,
+  "slug": "buzlok"
+ },
+ "Cernos": {
+  "en": "Cernos",
+  "zh": "西诺斯",
+  "rivenType": "rifle",
+  "disposition": 1.3,
+  "slug": "cernos"
+ },
+ "Convectrix": {
+  "en": "Convectrix",
+  "zh": "导热聚焦枪",
+  "rivenType": "shotgun",
+  "disposition": 1.46,
+  "slug": "convectrix"
+ },
+ "Daikyu": {
+  "en": "Daikyu",
+  "zh": "大久和弓",
+  "rivenType": "rifle",
+  "disposition": 1.3,
+  "slug": "daikyu"
+ },
+ "Dera": {
+  "en": "Dera",
+  "zh": "德拉",
+  "rivenType": "rifle",
+  "disposition": 1.4,
+  "slug": "dera"
+ },
+ "Drakgoon": {
+  "en": "Drakgoon",
+  "zh": "龙骑兵",
+  "rivenType": "shotgun",
+  "disposition": 1.4,
+  "slug": "drakgoon"
+ },
+ "Dread": {
+  "en": "Dread",
+  "zh": "恐惧",
+  "rivenType": "rifle",
+  "disposition": 1.3,
+  "slug": "dread"
+ },
+ "Glaxion": {
+  "en": "Glaxion",
+  "zh": "冷冻光束步枪",
+  "rivenType": "rifle",
+  "disposition": 1.3,
+  "slug": "glaxion"
+ },
+ "Gorgon": {
+  "en": "Gorgon",
+  "zh": "蛇发女妖",
+  "rivenType": "rifle",
+  "disposition": 1.4,
+  "slug": "gorgon"
+ },
+ "Grakata": {
+  "en": "Grakata",
+  "zh": "葛拉卡达",
+  "rivenType": "rifle",
+  "disposition": 1.35,
+  "slug": "grakata"
+ },
+ "Grinlok": {
+  "en": "Grinlok",
+  "zh": "葛恩火枪",
+  "rivenType": "rifle",
+  "disposition": 1.3,
+  "slug": "grinlok"
+ },
+ "Seer": {
+  "en": "Seer",
+  "zh": "预言者",
+  "rivenType": "pistol",
+  "disposition": 1.5,
+  "slug": "seer"
+ },
+ "Zakti": {
+  "en": "Zakti",
+  "zh": "毒芽",
+  "rivenType": "pistol",
+  "disposition": 1.25,
+  "slug": "zakti"
+ },
+ "Cyath": {
+  "en": "Cyath",
+  "zh": "西亚什",
+  "rivenType": "zaw",
+  "disposition": 1,
+  "slug": "cyath"
+ },
+ "Dark Split-Sword": {
+  "en": "Dark Split-Sword",
+  "zh": "暗黑分合剑",
+  "rivenType": "melee",
+  "disposition": 1.3,
+  "slug": "dark_split_sword_(dual_swords)"
+ },
+ "Krohkur": {
+  "en": "Krohkur",
+  "zh": "克鲁古尔",
+  "rivenType": "melee",
+  "disposition": 1.35,
+  "slug": "krohkur"
+ },
+ "Kronen": {
+  "en": "Kronen",
+  "zh": "皇家拐刃",
+  "rivenType": "melee",
+  "disposition": 1.43,
+  "slug": "kronen"
+ },
+ "Lacera": {
+  "en": "Lacera",
+  "zh": "悲痛之刃",
+  "rivenType": "melee",
+  "disposition": 1.31,
+  "slug": "lacera"
+ },
+ "Lesion": {
+  "en": "Lesion",
+  "zh": "病变",
+  "rivenType": "melee",
+  "disposition": 0.85,
+  "slug": "lesion"
+ },
+ "Venka": {
+  "en": "Venka",
+  "zh": "凯旋之爪",
+  "rivenType": "melee",
+  "disposition": 1.1,
+  "slug": "venka"
+ },
+ "Volnus": {
+  "en": "Volnus",
+  "zh": "创伤",
+  "rivenType": "melee",
+  "disposition": 1.4,
+  "slug": "volnus"
+ },
+ "Zenistar": {
+  "en": "Zenistar",
+  "zh": "天顶之星",
+  "rivenType": "melee",
+  "disposition": 1.15,
+  "slug": "zenistar"
+ },
+ "Deconstructor": {
+  "en": "Deconstructor",
+  "zh": "分离",
+  "rivenType": "melee",
+  "disposition": 1.25,
+  "slug": "deconstructor"
+ },
+ "Sweeper": {
+  "en": "Sweeper",
+  "zh": "扫除者",
+  "rivenType": "shotgun",
+  "disposition": 1,
+  "slug": "sweeper"
+ },
+ "Rattleguts": {
+  "en": "Rattleguts",
+  "zh": "响胆",
+  "rivenType": "kitgun",
+  "disposition": 1,
+  "slug": "rattleguts"
+ },
+ "Wolf Sledge": {
+  "en": "Wolf Sledge",
+  "zh": "恶狼战锤",
+  "rivenType": "melee",
+  "disposition": 1.25,
+  "slug": "wolf_sledge"
+ },
+ "Quellor": {
+  "en": "Quellor",
+  "zh": "压制者",
+  "rivenType": "rifle",
+  "disposition": 1.15,
+  "slug": "quellor"
+ },
+ "Basmu": {
+  "en": "Basmu",
+  "zh": "巴什穆",
+  "rivenType": "rifle",
+  "disposition": 1.2,
+  "slug": "basmu"
+ },
+ "Stahlta": {
+  "en": "Stahlta",
+  "zh": "钢刃步枪",
+  "rivenType": "rifle",
+  "disposition": 1.05,
+  "slug": "stahlta"
+ },
+ "Velox": {
+  "en": "Velox",
+  "zh": "逐电",
+  "rivenType": "pistol",
+  "disposition": 1.25,
+  "slug": "velox"
+ },
+ "Helstrum": {
+  "en": "Helstrum",
+  "zh": "赫尔斯壮",
+  "rivenType": "rifle",
+  "disposition": 1,
+  "slug": "helstrum"
+ },
+ "Xoris": {
+  "en": "Xoris",
+  "zh": "驱魔之刃",
+  "rivenType": "melee",
+  "disposition": 0.65,
+  "slug": "xoris"
+ },
+ "Athodai": {
+  "en": "Athodai",
+  "zh": "阿索代",
+  "rivenType": "pistol",
+  "disposition": 1.05,
+  "slug": "athodai"
+ },
+ "Sepulcrum": {
+  "en": "Sepulcrum",
+  "zh": "追击者",
+  "rivenType": "pistol",
+  "disposition": 1.1,
+  "slug": "sepulcrum"
+ },
+ "Quassus": {
+  "en": "Quassus",
+  "zh": "威震武扇",
+  "rivenType": "melee",
+  "disposition": 1.15,
+  "slug": "quassus"
+ },
+ "Trumna": {
+  "en": "Trumna",
+  "zh": "灭杀者",
+  "rivenType": "rifle",
+  "disposition": 0.85,
+  "slug": "trumna"
+ },
+ "Zymos": {
+  "en": "Zymos",
+  "zh": "邪莫斯",
+  "rivenType": "pistol",
+  "disposition": 1.2,
+  "slug": "zymos"
+ },
+ "Keratinos": {
+  "en": "Keratinos",
+  "zh": "卡提努之爪",
+  "rivenType": "melee",
+  "disposition": 1.05,
+  "slug": "keratinos"
+ },
+ "Mausolon": {
+  "en": "Mausolon",
+  "zh": "惩戒者",
+  "rivenType": "rifle",
+  "disposition": 0.5,
+  "slug": "mausolon"
+ },
+ "Cedo": {
+  "en": "Cedo",
+  "zh": "塞多",
+  "rivenType": "shotgun",
+  "disposition": 0.65,
+  "slug": "cedo"
+ },
+ "Verglas": {
+  "en": "Verglas",
+  "zh": "冰凇",
+  "rivenType": "rifle",
+  "disposition": 1.3,
+  "slug": "verglas"
+ },
+ "Epitaph": {
+  "en": "Epitaph",
+  "zh": "葬铭",
+  "rivenType": "pistol",
+  "disposition": 0.6,
+  "slug": "epitaph"
+ },
+ "Tenet Envoy": {
+  "en": "Tenet Envoy",
+  "zh": "信条·典客",
+  "rivenType": "rifle",
+  "disposition": 1.0,
+  "slug": "tenet_envoy"
+ },
+ "Tenet Spirex": {
+  "en": "Tenet Spirex",
+  "zh": "信条·斯派克斯",
+  "rivenType": "rifle",
+  "disposition": 1.0,
+  "slug": "tenet_spirex"
+ },
+ "Kompressa": {
+  "en": "Kompressa",
+  "zh": "卡帕压力枪",
+  "rivenType": "pistol",
+  "disposition": 1.15,
+  "slug": "kompressa"
+ },
+ "Tenet Exec": {
+  "en": "Tenet Exec",
+  "zh": "信条·枢密",
+  "rivenType": "melee",
+  "disposition": 0.8,
+  "slug": "tenet_exec"
+ },
+ "Tenet Grigori": {
+  "en": "Tenet Grigori",
+  "zh": "信条·格里高利",
+  "rivenType": "melee",
+  "disposition": 0.95,
+  "slug": "tenet_grigori"
+ },
+ "Ambassador": {
+  "en": "Ambassador",
+  "zh": "使节",
+  "rivenType": "rifle",
+  "disposition": 1.15,
+  "slug": "ambassador"
+ },
+ "Cadus": {
+  "en": "Cadus",
+  "zh": "卡德斯",
+  "rivenType": "melee",
+  "disposition": 1.29,
+  "slug": "cadus"
+ },
+ "Tenet Livia": {
+  "en": "Tenet Livia",
+  "zh": "信条·莉薇娅",
+  "rivenType": "melee",
+  "disposition": 0.95,
+  "slug": "tenet_livia"
+ },
+ "Tenet Diplos": {
+  "en": "Tenet Diplos",
+  "zh": "信条·纵横双枪",
+  "rivenType": "rifle",
+  "disposition": 1.0,
+  "slug": "tenet_diplos"
+ },
+ "Tenet Agendus": {
+  "en": "Tenet Agendus",
+  "zh": "信条·集议",
+  "rivenType": "melee",
+  "disposition": 0.9,
+  "slug": "tenet_agendus"
+ },
+ "Lacerten": {
+  "en": "Lacerten",
+  "zh": "莱斯腾",
+  "rivenType": "melee",
+  "disposition": 1,
+  "slug": "lacerten"
+ },
+ "Akaten": {
+  "en": "Akaten",
+  "zh": "阿卡腾",
+  "rivenType": "melee",
+  "disposition": 1,
+  "slug": "akaten"
+ },
+ "Batoten": {
+  "en": "Batoten",
+  "zh": "巴托腾",
+  "rivenType": "melee",
+  "disposition": 1,
+  "slug": "batoten"
+ },
+ "Vastilok": {
+  "en": "Vastilok",
+  "zh": "瓦斯提枪刃",
+  "rivenType": "melee",
+  "disposition": 0.9,
+  "slug": "vastilok"
+ },
+ "Ghoulsaw": {
+  "en": "Ghoulsaw",
+  "zh": "尸鬼电锯",
+  "rivenType": "melee",
+  "disposition": 1.25,
+  "slug": "ghoulsaw"
+ },
+ "Verdilac": {
+  "en": "Verdilac",
+  "zh": "蝰首骨妖",
+  "rivenType": "melee",
+  "disposition": 1.1,
+  "slug": "verdilac"
+ },
+ "Nepheri": {
+  "en": "Nepheri",
+  "zh": "赤炎流星",
+  "rivenType": "melee",
+  "disposition": 1,
+  "slug": "nepheri"
+ },
+ "Rumblejack": {
+  "en": "Rumblejack",
+  "zh": "电匕怪杰",
+  "rivenType": "melee",
+  "disposition": 1.2,
+  "slug": "rumblejack"
+ },
+ "Korumm": {
+  "en": "Korumm",
+  "zh": "雷霆暴君",
+  "rivenType": "melee",
+  "disposition": 1.1,
+  "slug": "korumm"
+ },
+ "Venato": {
+  "en": "Venato",
+  "zh": "脉纹",
+  "rivenType": "melee",
+  "disposition": 1.3,
+  "slug": "venato"
+ },
+ "Nataruk": {
+  "en": "Nataruk",
+  "zh": "太始弓",
+  "rivenType": "rifle",
+  "disposition": 0.65,
+  "slug": "nataruk"
+ },
+ "Hespar": {
+  "en": "Hespar",
+  "zh": "暮斩",
+  "rivenType": "melee",
+  "disposition": 1.05,
+  "slug": "hespar"
+ },
+ "Alternox": {
+  "en": "Alternox",
+  "zh": "电幻步枪",
+  "rivenType": "rifle",
+  "disposition": 1.15,
+  "slug": "alternox"
+ },
+ "Aeolak": {
+  "en": "Aeolak",
+  "zh": "风鸣",
+  "rivenType": "rifle",
+  "disposition": 1.2,
+  "slug": "aeolak"
+ },
+ "Phenmor": {
+  "en": "Phenmor",
+  "zh": "凤殁",
+  "rivenType": "rifle",
+  "disposition": 0.6,
+  "slug": "phenmor"
+ },
+ "Laetum": {
+  "en": "Laetum",
+  "zh": "奏凯",
+  "rivenType": "pistol",
+  "disposition": 0.5,
+  "slug": "laetum"
+ },
+ "Praedos": {
+  "en": "Praedos",
+  "zh": "双雄",
+  "rivenType": "melee",
+  "disposition": 0.6,
+  "slug": "praedos"
+ },
+ "Innodem": {
+  "en": "Innodem",
+  "zh": "清刚",
+  "rivenType": "melee",
+  "disposition": 0.65,
+  "slug": "innodem"
+ },
+ "Felarx": {
+  "en": "Felarx",
+  "zh": "逐枭",
+  "rivenType": "shotgun",
+  "disposition": 0.6,
+  "slug": "felarx"
+ },
+ "Vericres": {
+  "en": "Vericres",
+  "zh": "真月武扇",
+  "rivenType": "melee",
+  "disposition": 1.15,
+  "slug": "vericres"
+ },
+ "Slaytra": {
+  "en": "Slaytra",
+  "zh": "屠煞",
+  "rivenType": "melee",
+  "disposition": 1.05,
+  "slug": "slaytra"
+ },
+ "Aegrit": {
+  "en": "Aegrit",
+  "zh": "骇敌榴弹",
+  "rivenType": "pistol",
+  "disposition": 1,
+  "slug": "aegrit"
+ },
+ "Afentis": {
+  "en": "Afentis",
+  "zh": "圣英",
+  "rivenType": "rifle",
+  "disposition": 1.05,
+  "slug": "afentis"
+ },
+ "Sarofang": {
+  "en": "Sarofang",
+  "zh": "沙罗之牙",
+  "rivenType": "melee",
+  "disposition": 1.15,
+  "slug": "sarofang"
+ },
+ "Perigale": {
+  "en": "Perigale",
+  "zh": "月面狂风",
+  "rivenType": "rifle",
+  "disposition": 1.15,
+  "slug": "perigale"
+ },
+ "Corufell": {
+  "en": "Corufell",
+  "zh": "闪劫",
+  "rivenType": "melee",
+  "disposition": 1.05,
+  "slug": "corufell"
+ },
+ "Steflos": {
+  "en": "Steflos",
+  "zh": "石晶之花",
+  "rivenType": "shotgun",
+  "disposition": 1.25,
+  "slug": "steflos"
+ },
+ "Sampotes": {
+  "en": "Sampotes",
+  "zh": "三宝聚",
+  "rivenType": "melee",
+  "disposition": 1,
+  "slug": "sampotes"
+ },
+ "Azothane": {
+  "en": "Azothane",
+  "zh": "溶灵尊",
+  "rivenType": "melee",
+  "disposition": 1.1,
+  "slug": "azothane"
+ },
+ "Syam": {
+  "en": "Syam",
+  "zh": "业珀",
+  "rivenType": "melee",
+  "disposition": 0.75,
+  "slug": "syam"
+ },
+ "Cinta": {
+  "en": "Cinta",
+  "zh": "遂心",
+  "rivenType": "rifle",
+  "disposition": 1.25,
+  "slug": "cinta"
+ },
+ "Sun & Moon": {
+  "en": "Sun & Moon",
+  "zh": "赤阳 & 幽月",
+  "rivenType": "melee",
+  "disposition": 0.8,
+  "slug": "sun_and_moon"
+ },
+ "Edun": {
+  "en": "Edun",
+  "zh": "雷石祭",
+  "rivenType": "melee",
+  "disposition": 1.15,
+  "slug": "edun"
+ },
+ "Rauta": {
+  "en": "Rauta",
+  "zh": "锐铁",
+  "rivenType": "shotgun",
+  "disposition": 1.1,
+  "slug": "rauta"
+ },
+ "Argo & Vel": {
+  "en": "Argo & Vel",
+  "zh": "星舟 & 帆",
+  "rivenType": "melee",
+  "disposition": 1.15,
+  "slug": "argo_and_vel"
+ },
+ "Gotva Prime": {
+  "en": "Gotva Prime",
+  "zh": "骨葬 Prime",
+  "rivenType": "rifle",
+  "disposition": 0.85,
+  "slug": "gotva_prime"
+ },
+ "Dorrclave": {
+  "en": "Dorrclave",
+  "zh": "怒斩",
+  "rivenType": "melee",
+  "disposition": 1.1,
+  "slug": "dorrclave"
+ },
+ "Ekhein": {
+  "en": "Ekhein",
+  "zh": "映声战锤",
+  "rivenType": "melee",
+  "disposition": 1.2,
+  "slug": "ekhein"
+ },
+ "Mandonel": {
+  "en": "Mandonel",
+  "zh": "辐光弩炮",
+  "rivenType": "rifle",
+  "disposition": 1.1,
+  "slug": "mandonel"
+ },
+ "Grimoire": {
+  "en": "Grimoire",
+  "zh": "魔典",
+  "rivenType": "pistol",
+  "disposition": 0.6,
+  "slug": "grimoire"
+ },
+ "Onos": {
+  "en": "Onos",
+  "zh": "赘骨",
+  "rivenType": "pistol",
+  "disposition": 0.8,
+  "slug": "onos"
+ },
+ "Ruvox": {
+  "en": "Ruvox",
+  "zh": "古声",
+  "rivenType": "melee",
+  "disposition": 0.9,
+  "slug": "ruvox"
+ },
+ "Dex Nikana": {
+  "en": "Dex Nikana",
+  "zh": "Dex 侍刃",
+  "rivenType": "melee",
+  "disposition": 1.1,
+  "slug": "dex_nikana"
+ },
+ "Cantare": {
+  "en": "Cantare",
+  "zh": "歌颂",
+  "rivenType": "pistol",
+  "disposition": 1.05,
+  "slug": "cantare"
+ },
+ "Evensong": {
+  "en": "Evensong",
+  "zh": "晚祷",
+  "rivenType": "rifle",
+  "disposition": 1.2,
+  "slug": "evensong"
+ },
+ "Harmony": {
+  "en": "Harmony",
+  "zh": "和谐",
+  "rivenType": "melee",
+  "disposition": 0.6,
+  "slug": "harmony"
+ },
+ "AX-52": {
+  "en": "AX-52",
+  "zh": "AX-52",
+  "rivenType": "rifle",
+  "disposition": 0.85,
+  "slug": "ax_52"
+ },
+ "Higasa": {
+  "en": "Higasa",
+  "zh": "晴日伞",
+  "rivenType": "rifle",
+  "disposition": 1.25,
+  "slug": "higasa"
+ },
+ "Amanata": {
+  "en": "Amanata",
+  "zh": "天薙刀",
+  "rivenType": "melee",
+  "disposition": 0.85,
+  "slug": "amanata"
+ },
+ "Vesper 77": {
+  "en": "Vesper 77",
+  "zh": "夜语者 77",
+  "rivenType": "pistol",
+  "disposition": 0.8,
+  "slug": "vesper_77"
+ },
+ "Reconifex": {
+  "en": "Reconifex",
+  "zh": "侦察者",
+  "rivenType": "rifle",
+  "disposition": 1,
+  "slug": "reconifex"
+ },
+ "Riot-848": {
+  "en": "Riot-848",
+  "zh": "暴乱-848",
+  "rivenType": "pistol",
+  "disposition": 1,
+  "slug": "riot_848"
+ },
+ "Purgator 1": {
+  "en": "Purgator 1",
+  "zh": "净化者 1",
+  "rivenType": "rifle",
+  "disposition": 1.15,
+  "slug": "purgator_1"
+ },
+ "Dual Viciss": {
+  "en": "Dual Viciss",
+  "zh": "双子恶行",
+  "rivenType": "melee",
+  "disposition": 0.8,
+  "slug": "dual_viciss"
+ },
+ "EFV-8 Mars": {
+  "en": "EFV-8 Mars",
+  "zh": "艾弗旺-8 火星",
+  "rivenType": "pistol",
+  "disposition": 1.05,
+  "slug": "efv_8_mars"
+ },
+ "EFV-5 Jupiter": {
+  "en": "EFV-5 Jupiter",
+  "zh": "艾弗旺-5 木星",
+  "rivenType": "rifle",
+  "disposition": 1.05,
+  "slug": "efv_5_jupiter"
+ },
+ "Dual Coda Torxica": {
+  "en": "Dual Coda Torxica",
+  "zh": "终幕·孢蚀双枪",
+  "rivenType": "pistol",
+  "disposition": 0.55,
+  "slug": "dual_coda_torxica"
+ },
+ "Coda Motovore": {
+  "en": "Coda Motovore",
+  "zh": "终幕·噬轮",
+  "rivenType": "melee",
+  "disposition": 0.8,
+  "slug": "coda_motovore"
+ },
+ "Coda Bassocyst": {
+  "en": "Coda Bassocyst",
+  "zh": "终幕·低音爆囊",
+  "rivenType": "shotgun",
+  "disposition": 0.6,
+  "slug": "coda_bassocyst"
+ },
+ "Tak & Lug": {
+  "en": "Tak & Lug",
+  "zh": "塔克 & 卢格",
+  "rivenType": "melee",
+  "disposition": 0.95,
+  "slug": "tak_and_lug"
+ },
+ "Tonkkatt": {
+  "en": "Tonkkatt",
+  "zh": "通卡拐刃",
+  "rivenType": "melee",
+  "disposition": 0.85,
+  "slug": "tonkkatt"
+ },
+ "Thalys": {
+  "en": "Thalys",
+  "zh": "大力士",
+  "rivenType": "melee",
+  "disposition": 0.6,
+  "slug": "thalys"
+ },
+ "Scyotid": {
+  "en": "Scyotid",
+  "zh": "镰刃刺",
+  "rivenType": "pistol",
+  "disposition": 0.7,
+  "slug": "scyotid"
+ },
+ "Spinnerex": {
+  "en": "Spinnerex",
+  "zh": "丝蛛皇",
+  "rivenType": "melee",
+  "disposition": 0.75,
+  "slug": "spinnerex"
+ },
+ "Vadarya Prime": {
+  "en": "Vadarya Prime",
+  "zh": "瓦德雅 Prime",
+  "rivenType": "rifle",
+  "disposition": 0.75,
+  "slug": "vadarya_prime"
+ },
+ "Arbucep": {
+  "en": "Arbucep",
+  "zh": "蕈菇",
+  "rivenType": "rifle",
+  "disposition": 0.7,
+  "slug": "arbucep"
+ },
+ "Thornbak": {
+  "en": "Thornbak",
+  "zh": "棘背",
+  "rivenType": "rifle",
+  "disposition": 1.15,
+  "slug": "thornbak"
+ },
+ "Vinquibus": {
+  "en": "Vinquibus",
+  "zh": "制胜者",
+  "rivenType": "rifle",
+  "disposition": 0.6,
+  "slug": "vinquibus"
+ },
+ "Galariak Prime": {
+  "en": "Galariak Prime",
+  "zh": "加拉亚 Prime",
+  "rivenType": "melee",
+  "disposition": 0.8,
+  "slug": "galariak_prime"
+ },
+ "Sagek Prime": {
+  "en": "Sagek Prime",
+  "zh": "杀格 Prime",
+  "rivenType": "pistol",
+  "disposition": 0.8,
+  "slug": "sagek_prime"
+ },
+ "Vinquibus (Melee)": {
+  "en": "Vinquibus (Melee)",
+  "zh": "制胜者 (近战)",
+  "rivenType": "melee",
+  "disposition": 0.5,
+  "slug": "vinquibus_melee"
+ },
+ "Enkaus": {
+  "en": "Enkaus",
+  "zh": "绘墨",
+  "rivenType": "rifle",
+  "disposition": 0.7,
+  "slug": "enkaus"
+ },
+ "Wrath": {
+  "en": "Wrath",
+  "zh": "愤怒",
+  "rivenType": "melee",
+  "disposition": 0.5,
+  "slug": "wrath"
+ },
+ "Pride": {
+  "en": "Pride",
+  "zh": "骄傲",
+  "rivenType": "melee",
+  "disposition": 0.5,
+  "slug": "pride"
+ },
+ "Haalvu": {
+  "en": "Haalvu",
+  "zh": "哈尔武",
+  "rivenType": "rifle",
+  "disposition": 0.5,
+  "slug": "haalvu"
+ },
+ "Kuva Drakgoon": {
+  "en": "Kuva Drakgoon",
+  "zh": "赤毒·龙骑兵",
+  "rivenType": "rifle",
+  "disposition": 1.0,
+  "slug": "kuva_drakgoon"
+ },
+ "Kuva Brakk": {
+  "en": "Kuva Brakk",
+  "zh": "赤毒·布拉克",
+  "rivenType": "rifle",
+  "disposition": 1.0,
+  "slug": "kuva_brakk"
+ },
+ "Kuva Karak": {
+  "en": "Kuva Karak",
+  "zh": "赤毒·卡拉克",
+  "rivenType": "rifle",
+  "disposition": 1.0,
+  "slug": "kuva_karak"
+ },
+ "Kuva Nukor": {
+  "en": "Kuva Nukor",
+  "zh": "赤毒·努寇微波枪",
+  "rivenType": "rifle",
+  "disposition": 1.0,
+  "slug": "kuva_nukor"
+ },
+ "Kuva Tonkor": {
+  "en": "Kuva Tonkor",
+  "zh": "赤毒·征服榴炮",
+  "rivenType": "rifle",
+  "disposition": 1.0,
+  "slug": "kuva_tonkor"
+ },
+ "Kuva Kraken": {
+  "en": "Kuva Kraken",
+  "zh": "赤毒·北海巨妖",
+  "rivenType": "rifle",
+  "disposition": 1.0,
+  "slug": "kuva_kraken"
+ },
+ "Kuva Hind": {
+  "en": "Kuva Hind",
+  "zh": "赤毒·雌鹿",
+  "rivenType": "rifle",
+  "disposition": 1.0,
+  "slug": "kuva_hind"
+ },
+ "Kuva Seer": {
+  "en": "Kuva Seer",
+  "zh": "赤毒·预言者",
+  "rivenType": "rifle",
+  "disposition": 1.0,
+  "slug": "kuva_seer"
+ },
+ "Kuva Quartakk": {
+  "en": "Kuva Quartakk",
+  "zh": "赤毒·夸塔克",
+  "rivenType": "rifle",
+  "disposition": 1.0,
+  "slug": "kuva_quartakk"
+ },
+ "Kuva Kohm": {
+  "en": "Kuva Kohm",
+  "zh": "赤毒·寇恩热能枪",
+  "rivenType": "rifle",
+  "disposition": 1.0,
+  "slug": "kuva_kohm"
+ },
+ "Kuva Ogris": {
+  "en": "Kuva Ogris",
+  "zh": "赤毒·食人女魔",
+  "rivenType": "rifle",
+  "disposition": 1.0,
+  "slug": "kuva_ogris"
+ },
+ "Kuva Zarr": {
+  "en": "Kuva Zarr",
+  "zh": "赤毒·沙皇",
+  "rivenType": "rifle",
+  "disposition": 1.0,
+  "slug": "kuva_zarr"
+ },
+ "Kuva Grattler": {
+  "en": "Kuva Grattler",
+  "zh": "赤毒·葛拉特勒",
+  "rivenType": "rifle",
+  "disposition": 1.0,
+  "slug": "kuva_grattler"
+ },
+ "Kuva Hek": {
+  "en": "Kuva Hek",
+  "zh": "赤毒·海克",
+  "rivenType": "rifle",
+  "disposition": 1.0,
+  "slug": "kuva_hek"
+ },
+ "Kuva Sobek": {
+  "en": "Kuva Sobek",
+  "zh": "赤毒·鳄神",
+  "rivenType": "rifle",
+  "disposition": 1.0,
+  "slug": "kuva_sobek"
+ },
+ "Kuva Ghoulsaw": {
+  "en": "Kuva Ghoulsaw",
+  "zh": "赤毒·尸鬼电锯",
+  "rivenType": "rifle",
+  "disposition": 1.0,
+  "slug": "kuva_ghoulsaw"
+ },
+ "Tenet Tetra": {
+  "en": "Tenet Tetra",
+  "zh": "信条·特拉",
+  "rivenType": "rifle",
+  "disposition": 1.0,
+  "slug": "tenet_tetra"
+ },
+ "Tenet Arca Plasmor": {
+  "en": "Tenet Arca Plasmor",
+  "zh": "信条·弧电离子枪",
+  "rivenType": "rifle",
+  "disposition": 1.0,
+  "slug": "tenet_arca_plasmor"
+ },
+ "Tenet Detron": {
+  "en": "Tenet Detron",
+  "zh": "信条·德特昂",
+  "rivenType": "rifle",
+  "disposition": 1.0,
+  "slug": "tenet_detron"
+ },
+ "Tenet Flux Rifle": {
+  "en": "Tenet Flux Rifle",
+  "zh": "信条·通量步枪",
+  "rivenType": "rifle",
+  "disposition": 1.0,
+  "slug": "tenet_flux_rifle"
+ },
+ "Tenet Cycron": {
+  "en": "Tenet Cycron",
+  "zh": "信条·循环离子枪",
+  "rivenType": "rifle",
+  "disposition": 1.0,
+  "slug": "tenet_cycron"
+ },
+ "Tenet Plinx": {
+  "en": "Tenet Plinx",
+  "zh": "信条·漫射者",
+  "rivenType": "rifle",
+  "disposition": 1.0,
+  "slug": "tenet_plinx"
+ },
+ "Tenet Glaxion": {
+  "en": "Tenet Glaxion",
+  "zh": "信条·冷冻光束步枪",
+  "rivenType": "rifle",
+  "disposition": 1.0,
+  "slug": "tenet_glaxion"
+ },
+ "Tenet Quanta": {
+  "en": "Tenet Quanta",
+  "zh": "信条·量子切割器",
+  "rivenType": "rifle",
+  "disposition": 1.0,
+  "slug": "tenet_quanta"
+ }
+}
