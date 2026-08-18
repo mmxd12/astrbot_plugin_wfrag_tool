@@ -159,7 +159,7 @@ class WFRagTool(Star):
     )
 
     async def _ocr_riven(self, event: AstrMessageEvent, paths: list[str]) -> str:
-        """用本地 PaddleOCR 读紫卡截图，返回词条文本（无需 LLM）。"""
+        """用本地 RapidOCR 读紫卡截图，返回原始识别文本。"""
         if not paths:
             raise RuntimeError("没有找到图片")
         try:
@@ -170,70 +170,69 @@ class WFRagTool(Star):
             raise RuntimeError("本地 OCR 引擎不可用，请安装 rapidocr-onnxruntime")
         except Exception as e:
             raise RuntimeError(f"OCR 识别失败: {e}")
-
         if not result:
             raise RuntimeError("OCR 未识别到任何文字")
+        # 按 Y 坐标排序
+        items = [(box[0][1], text, score) for box, text, score in result if text.strip()]
+        items.sort(key=lambda x: x[0])
+        lines = [text.strip() for _, text, _ in items if text.strip()]
+        return "\n".join(lines)
 
-        # 把所有识别到的文本按 Y 坐标排序后拼接
-        items = [(box[0][1], text) for box, text, score in result if text.strip()]
-        items.sort(key=lambda x: x[0])  # 按 Y 坐标从上到下排序
-        lines = [text.strip() for _, text in items if text.strip()]
+    @staticmethod
+    def _format_ocr_text(raw: str) -> str:
+        """把 OCR 原始文本转成 parse_ocr_text 能解析的格式。
 
-        # 过滤掉段位等级、极性、数字代码等非卡面词条内容
+        策略：先尝试 LLM 格式化（需要 LLM 支持），失败则用本地正则兜底。
+        """
         import re
-        filtered = []
-        for line in lines:
-            # 跳过纯数字/百分比/段位/极性/小字
-            if re.match(r'^\d+[Vv]?$', line) or line in ('MOD', 'Riven', 'Mod', '裂罅'):
-                continue
-            if re.match(r'^[A-Za-z]+-[A-Za-z]+$', line):  # 随机后缀名如 Igni-visican
-                continue
-            if re.match(r'^[\d.]+[kKmM]?$', line):
-                continue
-            if '段位' in line or '循环' in line or '容量' in line:
-                continue
-            # 过滤短噪音（单字符且非中文）
-            if len(line) <= 1 and not re.search(r'[\u4e00-\u9fff]', line):
-                continue
-            filtered.append(line)
 
-        if not filtered:
-            raise RuntimeError("OCR 未识别到有效词条")
+        def _regex_format(text: str) -> str:
+            """本地正则格式化 OCR 文本。"""
+            lines = [l.strip() for l in text.split("\n") if l.strip()]
+            filtered = []
+            for line in lines:
+                if re.match(r'^\d+[Vv]?$', line) or line in ('MOD', 'Riven', 'Mod'):
+                    continue
+                if re.match(r'^[A-Za-z]+-[A-Za-z]+$', line):
+                    continue
+                if re.match(r'^[\d.]+[kKmM]?$', line):
+                    continue
+                if '段位' in line or '循环' in line or '容量' in line:
+                    continue
+                if len(line) <= 1 and not re.search(r'[\u4e00-\u9fff]', line):
+                    continue
+                filtered.append(line)
 
-        # 第一行是武器名（去掉随机后缀名）
-        weapon_line = filtered[0]
-        weapon_line = re.sub(r'[A-Za-z]+-[A-Za-z]+\s*$', '', weapon_line).strip()
-        lines_out = [weapon_line]
+            if not filtered:
+                return text
 
-        # 剩下的行，把词条整理成标准格式
-        for line in filtered[1:]:
-            line = line.strip()
-            if not line:
-                continue
-            # 处理卡面格式：+111.7%多重射击
-            m = re.match(r'([+\-xX×])\s*([\d.]+)\s*%?\s*(.+)', line)
-            if m:
-                sign, val, name = m.group(1), m.group(2), m.group(3).strip()
-                lines_out.append(f"{sign}{val}% {name}")
-                continue
-            # 名字在前：多重射击 +111.7%
-            m = re.match(r'(.+?)\s*[+\-xX×]\s*([\d.]+)\s*%?', line)
-            if m:
-                name, val = m.group(1).strip(), m.group(2)
-                sign = '+' if '+' in line else '-'
-                lines_out.append(f"{sign}{val}% {name}")
-                continue
-            # 带 x 的负面：x0.57对Corpus的伤害
-            m = re.match(r'[xX×]\s*([\d.]+)\s*(.+)?', line)
-            if m:
-                val = float(m.group(1))
-                name = (m.group(2) or '').strip() or '伤害'
-                pct = round((1 - val) * 100, 1)
-                lines_out.append(f"-{pct}% {name}")
-                continue
-            lines_out.append(line)
+            out = [filtered[0]]  # 第一行是武器名，保留原样
+            for line in filtered[1:]:
+                # x/X/× 负面：x0.57对Corpus的伤害 → -43% 对Corpus伤害
+                m = re.match(r'[xX×]\s*([\d.]+)\s*(.+)?', line)
+                if m:
+                    val = float(m.group(1))
+                    name = (m.group(2) or '').strip() or '伤害'
+                    pct = round((1 - val) * 100, 1)
+                    out.append(f"-{pct}% {name}")
+                    continue
+                # 卡面格式：+111.7%多重射击
+                m = re.match(r'([+\-])\s*([\d.]+)\s*%?\s*(.+)', line)
+                if m:
+                    out.append(f"{m.group(1)}{m.group(2)}% {m.group(3).strip()}")
+                    continue
+                # 名字在前：多重射击 +111.7%
+                m = re.match(r'(.+?)\s*[+\-]\s*([\d.]+)\s*%?', line)
+                if m:
+                    name, val = m.group(1).strip(), m.group(2)
+                    sign = '+' if '+' in line else '-'
+                    out.append(f"{sign}{val}% {name}")
+                    continue
+                out.append(line)
+            return "\n".join(out)
 
-        return "\n".join(lines_out)
+        return _regex_format(raw)
+
 
     # ---------- 工具 1：RAG 检索 ----------
 
@@ -750,7 +749,8 @@ class WFRagTool(Star):
             try:
                 paths = await self._collect_images(event)
                 if paths:
-                    stats_text = await self._ocr_riven(event, paths)
+                    raw = await self._ocr_riven(event, paths)
+                    stats_text = self._format_ocr_text(raw)
             except Exception as e:
                 logger.warning(f"[wfrag_tool] OCR 识别失败: {e}")
 
@@ -1056,7 +1056,8 @@ class WFRagTool(Star):
                 paths = await self._collect_images(event)
                 weapon_arg = arg.split()[0] if arg.split() else ""
                 if paths:
-                    ocr_text = await self._ocr_riven(event, paths)
+                    raw = await self._ocr_riven(event, paths)
+                    ocr_text = self._format_ocr_text(raw)
                     res = await self.wf_riven_analyse(
                         event, weapon_name=weapon_arg or "", stats_text=ocr_text,
                     )
