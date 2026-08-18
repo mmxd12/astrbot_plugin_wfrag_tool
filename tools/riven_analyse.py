@@ -468,46 +468,86 @@ def parse_ocr_text(text: str) -> dict:
     lines = [l.strip() for l in text.split("\n") if l.strip()]
     result = {"weapon_name": "", "attrs": [], "pos_count": 0, "neg_count": 0}
 
+    # 武器名纠错映射（OCR 常见误识别）
+    WEAPON_FIX = {
+        "冰松": "冰松",  # Glaxion
+        "雪松": "冰松",  # OCR 误把"冰"识别成"雪"
+        "伯斯提": "伯斯提",  # Bost
+        "达塞": "达塞",  # Daikyu
+        "食人女魔": "食人女魔",
+        "食人魔": "食人女魔",
+        "阿拉克": "阿拉克",  # Arak
+        "斯特拉": "斯特拉",  # Stradavar
+        "斯特拉伐": "斯特拉伐",  # Stradavar Prime
+        "布莱顿": "布莱顿",  # Braton
+        "布莱顿": "布莱顿",  # Braton
+        "布莱顿": "布莱顿",  # Braton
+        "咖喱棒": "咖喱棒",  # Excalibur
+        "咖喱": "咖喱棒",
+        "守望者": "守望者",  # Rubico
+        "守望": "守望者",
+        "帕里斯": "帕里斯",  # Paris
+        "帕里": "帕里斯",
+        "伯斯顿": "伯斯顿",  # Boltor
+    }
+
     # 从文本中提取武器名（第一行可能包含武器名）
     for line in lines[:3]:
         # 常见紫卡截图格式：武器名 + "紫卡" / 武器名单独一行
         cleaned = re.sub(r"[紫卡RivenMod\s\-]", "", line).strip()
         if cleaned and len(cleaned) > 1:
-            result["weapon_name"] = cleaned
+            # 纠错映射
+            result["weapon_name"] = WEAPON_FIX.get(cleaned, cleaned)
             break
 
     # 提取词条（正负值）
+    # 有些截图中词条在同一行（如"多重射击 +111.7% 火焰伤害 +115.6%"），用 finditer 逐个匹配
     for line in lines:
         line = line.strip()
-        # 匹配 "+数字" 或 "-数字" 格式的词条
-        m = re.search(r"([+\-])([\d.]+)%?", line)
-        if not m:
-            continue
-        sign = m.group(1)
-        value = float(m.group(2))
-        positive = sign == "+"
+        # 用 finditer 找到所有匹配项
+        matches = list(re.finditer(r"([+\-x])([\d.]+)%?", line))
+        for i, m in enumerate(matches):
+            sign = m.group(1)
+            value = float(m.group(2))
+            positive = sign == "+"
 
-        # 提取词条名（数值前面的文字）
-        name_text = line[:m.start()].strip().rstrip(":：")
-        if not name_text:
-            name_text = line[:m.start()].strip()
+            # 提取词条名：从上个匹配结束到当前匹配开始之间的文本
+            if i == 0:
+                name_text = line[:m.start()].strip()
+            else:
+                prev_end = matches[i-1].end()
+                name_text = line[prev_end:m.start()].strip()
+            name_text = name_text.rstrip(":：").strip()
 
-        # 匹配中文词条名
-        # 词条名可能是前缀+效果名，如 "暴击几率 +119.2%"
-        # 或 "基础伤害 +165.4" 等
-        url_name = ATTR_CN_MAP.get(name_text, name_text)
+            # 匹配中文词条名
+            # 词条名可能是前缀+效果名，如 "暴击几率 +119.2%"
+            # 或 "基础伤害 +165.4" 等
+            url_name = ATTR_CN_MAP.get(name_text, name_text)
 
-        attr = {
-            "name": name_text,
-            "value": value,
-            "positive": positive,
-            "url_name": url_name,
-        }
-        result["attrs"].append(attr)
-        if positive:
-            result["pos_count"] += 1
+            attr = {
+                "name": name_text,
+                "value": value,
+                "positive": positive,
+                "url_name": url_name,
+            }
+            result["attrs"].append(attr)
+            if positive:
+                result["pos_count"] += 1
+            else:
+                result["neg_count"] += 1
+
+    # 翻译映射：确保 url_name 是英文，name 是中文
+    for attr in result["attrs"]:
+        name = attr["name"]
+        # 如果 name 是英文，尝试翻译成中文
+        if name in ATTR_EN_MAP:
+            attr["name"] = ATTR_EN_MAP[name]
+        # 确保 url_name 是英文
+        if name in ATTR_CN_MAP:
+            attr["url_name"] = ATTR_CN_MAP[name]
         else:
-            result["neg_count"] += 1
+            # name 本身可能是英文
+            attr["url_name"] = name
 
     return result
 
