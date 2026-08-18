@@ -769,6 +769,12 @@ class WFRagTool(Star):
         if not stats_text:
             return json.dumps({"success": False, "message": "缺少参数 stats_text（词条文本）"}, ensure_ascii=False)
 
+        # 提取原始紫卡名称（含后缀名，如"冰淞Igni-visican"）
+        riven_name = ""
+        first_line = stats_text.strip().split("\n")[0] if stats_text else ""
+        if first_line:
+            riven_name = first_line.strip()
+
         parsed = parse_ocr_text(stats_text)
         if weapon_name:
             # 显式给的武器名也过一遍武器表：OCR/用户输入的中文可能有错字
@@ -788,6 +794,12 @@ class WFRagTool(Star):
         if not parsed["attrs"]:
             return json.dumps({"success": False, "message": "未识别到词条数据，请检查格式（如：暴击几率 +119.2%）"}, ensure_ascii=False)
 
+        # 把原始紫卡名称和倾向加入结果
+        if riven_name:
+            result["riven_name"] = riven_name
+        if "omega" in result:
+            result["disposition"] = result["omega"]
+
         try:
             result = analyse_riven(
                 weapon_name=parsed["weapon_name"],
@@ -799,6 +811,10 @@ class WFRagTool(Star):
                 result["weapon_en"] = parsed["weapon_en"]
             if parsed.get("weapon_match"):
                 result["weapon_match"] = parsed["weapon_match"]
+            if riven_name:
+                result["riven_name"] = riven_name
+            if "omega" in result:
+                result["disposition"] = result["omega"]
             return self._trim(json.dumps(result, ensure_ascii=False), 3500)
         except Exception as e:
             return json.dumps({"success": False, "message": f"分析失败: {type(e).__name__}: {e}"}, ensure_ascii=False)
