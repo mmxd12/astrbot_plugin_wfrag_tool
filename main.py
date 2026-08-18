@@ -192,6 +192,9 @@ class WFRagTool(Star):
                 continue
             if '段位' in line or '循环' in line or '容量' in line:
                 continue
+            # 过滤短噪音（单字符且非中文）
+            if len(line) <= 1 and not re.search(r'[\u4e00-\u9fff]', line):
+                continue
             filtered.append(line)
 
         if not filtered:
@@ -199,7 +202,7 @@ class WFRagTool(Star):
 
         # 第一行是武器名（去掉随机后缀名）
         weapon_line = filtered[0]
-        weapon_line = re.sub(r'\s*[A-Za-z]+-[A-Za-z]+\s*$', '', weapon_line).strip()
+        weapon_line = re.sub(r'[A-Za-z]+-[A-Za-z]+\s*$', '', weapon_line).strip()
         lines_out = [weapon_line]
 
         # 剩下的行，把词条整理成标准格式
