@@ -173,8 +173,7 @@ class WFRagTool(Star):
         if not text:
             raise RuntimeError("视觉模型没有返回可用文本")
         if text.startswith("```"):  # 去掉模型可能套上的代码块
-            text = "
-".join(
+            text = "\n".join(
                 ln for ln in text.splitlines() if not ln.strip().startswith("```")
             ).strip()
         return text
