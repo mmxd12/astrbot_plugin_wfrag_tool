@@ -687,6 +687,16 @@ class WFRagTool(Star):
         """
         weapon_name = str(kwargs.get("weapon_name", "")).strip()
         stats_text = str(kwargs.get("stats_text", "")).strip()
+
+        # 没传文字词条时，尝试从消息图片中 OCR 识别
+        if not stats_text:
+            try:
+                paths = await self._collect_images(event)
+                if paths:
+                    stats_text = await self._ocr_riven(event, paths)
+            except Exception as e:
+                logger.warning(f"[wfrag_tool] OCR 识别失败: {e}")
+
         if not stats_text:
             return json.dumps({"success": False, "message": "缺少参数 stats_text（词条文本）"}, ensure_ascii=False)
 
