@@ -653,9 +653,36 @@ class WFRagTool(Star):
         if not r["__ok"]:
             return json.dumps({"success": False, "message": f"wf-api 服务不可用: {r['__err']}"}, ensure_ascii=False)
         d = r["__data"]
-        if not isinstance(d, list) or not d:
-            return json.dumps({"success": False, "message": f"词库未找到「{kw}」"}, ensure_ascii=False)
-        hits = [{
+        if isinstance(d, list) and d:
+            hits = [{
+                "key": it.get("key"),
+                "en": it.get("en"),
+                "zh": it.get("zh"),
+                "acc": it.get("acc"),
+                "ducats": it.get("ducats"),
+                "tags": it.get("tags"),
+                "alias": it.get("alias"),
+            } for it in d[:6]]
+            return json.dumps({"success": True, "hits": hits}, ensure_ascii=False)
+
+        # Fallback: /dict 没结果，用 /wmr 查武器名翻译
+        try:
+            url2 = self.api + "/wmr/" + urllib.parse.quote(kw)
+            r2 = await self._get(url2)
+            if r2["__ok"]:
+                wd = r2["__data"]
+                word = wd.get("word") or {}
+                en = word.get("slug", "")
+                zh = word.get("i18n", {}).get("zh-hans", {}).get("name", kw)
+                rtype = word.get("rivenType", word.get("type", "?"))
+                disp = word.get("disposition", "?")
+                hits = [{"key": kw, "en": en, "zh": zh, "tags": [rtype], "acc": disp, "ducats": None, "alias": None}]
+                return json.dumps({"success": True, "hits": hits}, ensure_ascii=False)
+        except Exception:
+            pass
+
+        return json.dumps({"success": False, "message": f"词库未找到「{kw}」，/dict 和 /wmr 均无结果"}, ensure_ascii=False)
+        hits = [{  # unreachable but keeps syntax valid
             "key": it.get("key"),
             "en": it.get("en"),
             "zh": it.get("zh"),
