@@ -795,12 +795,6 @@ class WFRagTool(Star):
         if not parsed["attrs"]:
             return json.dumps({"success": False, "message": "未识别到词条数据，请检查格式（如：暴击几率 +119.2%）"}, ensure_ascii=False)
 
-        # 把原始紫卡名称和倾向加入结果
-        if riven_name:
-            result["riven_name"] = riven_name
-        if "omega" in result:
-            result["disposition"] = result["omega"]
-
         try:
             result = analyse_riven(
                 weapon_name=parsed["weapon_name"],
@@ -815,8 +809,8 @@ class WFRagTool(Star):
                 result["weapon_match"] = parsed["weapon_match"]
             if riven_name:
                 result["riven_name"] = riven_name
-            if "omega" in result:
-                result["disposition"] = result["omega"]
+            if "dot" in result:
+                result["disposition"] = result["dot"]
             return self._trim(json.dumps(result, ensure_ascii=False), 3500)
         except Exception as e:
             return json.dumps({"success": False, "message": f"分析失败: {type(e).__name__}: {e}"}, ensure_ascii=False)
