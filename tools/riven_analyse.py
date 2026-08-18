@@ -658,7 +658,7 @@ RIVEN_TYPE_MAP = {
 }
 
 
-def analyse_riven(weapon_name: str, attrs: list, riven_type: str = None, omega: float = None) -> dict:
+def analyse_riven(weapon_name: str, attrs: list, riven_type: str = None, omega: float = None, riven_name: str = None) -> dict:
     """分析紫卡属性
     返回: {weapon_name, riven_type, omega, dot, attrs_analysis, summary}
     """
@@ -731,17 +731,22 @@ def analyse_riven(weapon_name: str, attrs: list, riven_type: str = None, omega: 
     dot = dot_from_omega(omega)
     rtype_cn = RIVEN_TYPE_MAP.get(riven_type, riven_type)
 
-    # 生成概要（简约版）
-    lines = [f"🔫 {weapon_name}（{rtype_cn}紫卡） | 倾向 {omega} {dot}"]
+    # 生成概要
+    # 第一行显示武器名+原名称（如有）
+    # riven_name 从参数传入
+    title = f"🔫 {weapon_name}（{riven_name}）" if riven_name else f"🔫 {weapon_name}（{rtype_cn}紫卡）"
+    lines = [title]
+    lines.append(f"倾向 {omega} | {dot}")
+    lines.append("")
     for a in attrs_analysis:
         sign = "+" if a["positive"] else "-"
         cn = ATTR_EN_MAP.get(a["url_name"], a["name"])
-        diff = a["diff"]
-        lines.append(f"  {sign}{cn} {a['value']} [{diff}]")
+        lines.append(f"  {sign}{cn} {a['value']}")
+        lines.append(f"    区间 {a['low']}~{a['high']} | 中位 {a['mid']} | 偏差 {a['diff']}")
+    lines.append("")
     if has_neg:
-        lines.append(f"  💡 {pos_count}正1负 | 负面提升上限")
-    else:
-        lines.append(f"  💡 {pos_count}正0负")
+        lines.append("💡 负面词条会提升正面词条的上限！")
+    lines.append(f"📊 参考：{rtype_cn}紫卡 {pos_count}正{'1负' if has_neg else '0负'}")
 
     return {
         "weapon_name": weapon_name,
