@@ -206,7 +206,19 @@ class WFRagTool(Star):
             if not filtered:
                 return text
 
-            out = [filtered[0]]  # 第一行是武器名，保留原样
+            first = filtered[0]
+            # 武器名纠错：如 OCR 读成"雪淞"则自动纠正为"冰凇"，保留后缀名
+            sys.path.insert(0, '/AstrBot/data/plugins/astrbot_plugin_wfrag_tool/tools')
+            from riven_analyse import resolve_weapon
+            # 分离武器名和随机后缀名（如 Igni-visican）
+            m_suffix = re.search(r'([A-Za-z]+-[A-Za-z]+)\s*$', first)
+            suffix = m_suffix.group(1) if m_suffix else ''
+            base_name = re.sub(r'[A-Za-z]+-[A-Za-z]+\s*$', '', first).strip()
+            hit = resolve_weapon(base_name)
+            if hit:
+                base_name = hit['zh']  # 纠正武器名
+            first = f"{base_name}{suffix}" if suffix else base_name
+            out = [first]
             for line in filtered[1:]:
                 # x/X/× 负面：x0.57对Corpus的伤害 → -43% 对Corpus伤害
                 m = re.match(r'[xX×]\s*([\d.]+)\s*(.+)?', line)
