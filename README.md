@@ -8,7 +8,7 @@
 | `wf_market_price(item)` | Warframe Market 市价查询，**支持玩家黑话**（奶妈P/福马/三傻…） | wf-api (3000) |
 | `wf_riven_price(item, page)` | **紫卡（Riven）拍卖行情**（wmr 接口，中英文武器名均可） | wf-api (3000) |
 | `wf_lich_price(item, element, percent, max_price)` | **玄骸/姐妹武器（Kuva/Tenet）市场价**（wmw 接口），支持按元素/百分比/最高价多属性筛选，如 `wmw 食人女魔 毒 60%` | wf-api (3000) |
-| `wf_riven_analyse(weapon_name, stats_text)` | **紫卡分析**：根据词条数值和倾向计算理论区间与偏差百分比，帮助判断紫卡品质（输入如"暴击几率 +119.2% 暴击伤害 +185.6%"） | wf-api (3000) + 本地OCR |
+| `wf_riven_analyse(weapon_name, stats_text)` | **紫卡分析**：根据词条数值和倾向计算理论区间与偏差百分比，帮助判断紫卡品质。**v1.4.3 起支持发图分析**——直接贴紫卡截图即可，工具会调用当前会话的多模态 LLM 自动读出武器名+词条（OCR 错字也会按 442 把紫卡武器表自动纠正） | wf-api (3000) + 本地武器表 + 多模态 LLM |
 | `wf_world_state(type)` | 世界状态：电波/突击/裂缝/钢铁裂缝/九重天/奸商/达尔沃/钢铁之路/执刑官/仲裁/赏金(科维兽/1999)… | wf-api (3000) |
 | `wf_arbitration_essence(days)` | 仲裁精华表：精华/小时、品质、节点 | wf-api (3000) |
 | `wf_dict(keyword)` | 词库/黑话解析：黑话 → 正式英文名 | wf-api (3000) |
@@ -72,13 +72,34 @@ RAG 检索（Wiki 知识库）依赖 [wf-rag-pack](https://github.com/mmxd12/wf-
 | `wf_rag_url` | `http://127.0.0.1:8765` | 与 AstrBot 同机 Docker 时填 `http://172.17.0.1:8765` |
 | `timeout` | 30 | HTTP 超时（秒） |
 
+## 紫卡分析（v1.4.0+）
+
+直接贴紫卡截图并说「紫卡分析」，AI 会自动：
+
+1. **图片识别** — 调用当前会话的多模态 LLM 读出卡面武器名与词条
+2. **数值偏差** — 理论区间 vs 实际值，偏差百分比
+3. **词条评价** — 正面词条对该武器的实战价值、负面词条选得好不好、缺不缺核心词条
+4. **市场对照** — 挂单价区间 + 相近词条挂单对比 + 自用/出售建议
+
+OCR 识别的中文名可能有错字（如鳄神→鲲神），会按本地 442 把紫卡武器表自动模糊纠正。
+
 ## 测试
 
 - `/wfllm` — 查看工具清单与后端在线状态
 - `/wfllm rag 电击异常` — 测试 RAG 检索
 - `/wfllm price 奶妈P` — 测试市价
+- `/wfllm analyse 鳄神 +72% 电击伤害 +68.5% 暴击几率 -71.2% 冲击伤害` — 测试紫卡分析（纯文本）
+- `/wfllm analyse`（同时贴一张紫卡图）— 测试紫卡分析（图片识别）
 - `/wfllm ws 电波` — 测试世界状态
 - `/wfllm dict 三傻` — 测试词库
+
+## v1.4.3 changelog
+
+- **紫卡截图分析**：`/wfllm analyse` 支持直接带图，自动调用多模态 LLM OCR
+- **指令串台修复**：`r` → 紫卡价格，`ra`/`analyse` → 紫卡分析，`rag` → 知识库
+- **紫卡分析输出规范**（写入工具 docstring，全群生效）：数值偏差 + 词条评价 + 市场对照三段式
+- **OCR 武器名纠错**（v1.4.1）：新增 `resolve_weapon()` 按 442 把紫卡武器表模糊纠正
+- **词条名解析修复**（v1.4.1）：支持卡面「数值在前」排版（游戏内截图就是这种）
 
 源码同步维护在 `wf-rag/llm_tool.py`（本目录 main.py 为其副本）。
 自测脚本：`wf-rag/test_llm_tool.py` —— **零依赖**（mock 掉 AstrBot 装饰器），
