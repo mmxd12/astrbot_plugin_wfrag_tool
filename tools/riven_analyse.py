@@ -322,6 +322,24 @@ ATTR_CN_MAP.update({
     "范围": "range", "穿透": "punch_through",
     "变焦": "zoom", "弹速": "projectile_speed",
     "对G": "damage_vs_grineer", "对C": "damage_vs_corpus", "对I": "damage_vs_infested",
+    # 游戏内卡面全称（TION_DATA 用的是简称，OCR 读到的是这些）
+    "暴击几率": "critical_chance",
+    "滑行攻击暴击几率": "critical_chance_on_slide_attack",
+    "触发几率": "status_chance",
+    "触发时间": "status_duration",
+    "多重射击": "multishot",
+    "射击速度": "fire_rate_/_attack_speed",
+    "攻击速度": "fire_rate_/_attack_speed",
+    "换弹速度": "reload_speed",
+    "弹匣容量": "magazine_capacity",
+    "弹药最大值": "ammo_maximum",
+    "投射物速度": "projectile_speed",
+    "后坐力": "recoil",
+    "后座力": "recoil",
+    "毒素伤害": "toxin_damage",
+    "火焰伤害": "heat_damage",
+    "寒冷伤害": "cold_damage",
+    "冰冻伤害": "cold_damage",
 })
 
 # 反向映射（url_name → 中文名，用于展示）
@@ -358,6 +376,81 @@ def get_base_value(attr_name: str, riven_type: str) -> float:
 
 
 
+# ── 紫卡武器表（en/zh/rivenType/disposition，442 把） ──
+# OCR 对中文常认错字（鳄神→鲲神、冰凇→冰淞），靠这张表做模糊纠正 +
+# 直接拿到倾向值，省掉一次网络请求。用 tools/refresh_riven_weapons.py 刷新。
+WEAPONS_FILE = Path(__file__).parent / "riven_weapons.json"
+_WEAPONS: dict | None = None
+
+
+def _weapons() -> dict:
+    global _WEAPONS
+    if _WEAPONS is None:
+        try:
+            with open(WEAPONS_FILE, encoding="utf-8") as f:
+                _WEAPONS = json.load(f)
+        except Exception:
+            _WEAPONS = {}
+    return _WEAPONS
+
+
+def resolve_weapon(name: str, riven_type_hint: str | None = None) -> dict | None:
+    """把 OCR 出来的武器名（中文可能有错字，英文一般准）解析成武器表条目。
+
+    顺序：英文精确 → 中文精确 → 英文模糊 → 中文模糊。
+    riven_type_hint 用来消歧同名候选（鳄神 shotgun vs 月神 rifle）。
+    返回 {en, zh, rivenType, disposition, slug, matched_by, score} 或 None。
+    """
+    if not name:
+        return None
+    table = _weapons()
+    if not table:
+        return None
+    q = name.strip()
+
+    # 英文精确（大小写不敏感）
+    for en, v in table.items():
+        if en.lower() == q.lower():
+            return {**v, "matched_by": "en", "score": 1.0}
+    # 中文精确
+    for v in table.values():
+        if v["zh"] == q:
+            return {**v, "matched_by": "zh", "score": 1.0}
+
+    # 英文子串：Ignis Wraith / Boltor Prime 这类变体不单列紫卡条目，
+    # 与基础武器共用紫卡，取最长匹配的基础名。
+    subs = [v for v in table.values()
+            if len(v["en"]) >= 4 and v["en"].lower() in q.lower()]
+    if subs:
+        hit = max(subs, key=lambda v: len(v["en"]))
+        return {**hit, "matched_by": "en:sub", "score": 1.0}
+
+    # 模糊：英文优先（OCR 对英文准），中文兜底
+    import difflib
+
+    def best(field: str):
+        scored = []
+        for v in table.values():
+            if riven_type_hint and v.get("rivenType") != riven_type_hint:
+                continue
+            s = difflib.SequenceMatcher(None, q.lower(), v[field].lower()).ratio()
+            scored.append((s, v))
+        if not scored:
+            return 0.0, []
+        top = max(s for s, _ in scored)
+        return top, [v for s, v in scored if s == top]
+
+    for field, floor in (("en", 0.6), ("zh", 0.45)):
+        score, hits = best(field)
+        if hits and score >= floor:
+            out = {**hits[0], "matched_by": f"{field}~", "score": round(score, 3)}
+            if len(hits) > 1:
+                # 中文单字错认常出现平票（鲲神 → 鳄神/月神 同分），交给调用方提示用户
+                out["ambiguous"] = [h["zh"] for h in hits]
+            return out
+    return None
+
+
 # ── 倾向值缓存（本地 JSON，避免重复请求） ──
 CACHE_FILE = Path(__file__).parent / "riven_disposition_cache.json"
 
@@ -378,7 +471,10 @@ def _save_cache(data: dict):
         pass
 
 def fetch_disposition(weapon_name: str) -> float | None:
-    """带缓存的紫卡倾向值查询"""
+    """带缓存的紫卡倾向值查询（先查本地武器表，再走网络）"""
+    hit = resolve_weapon(weapon_name)
+    if hit and hit.get("disposition"):
+        return hit["disposition"]
     cache = _load_cache()
     key = weapon_name.strip().lower()
     if key in cache:
@@ -400,7 +496,10 @@ def fetch_disposition(weapon_name: str) -> float | None:
 
 
 def get_riven_type(weapon_name: str) -> str | None:
-    """带缓存的紫卡类型查询"""
+    """带缓存的紫卡类型查询（先查本地武器表，再走网络）"""
+    hit = resolve_weapon(weapon_name)
+    if hit and hit.get("rivenType"):
+        return hit["rivenType"]
     cache = _load_cache()
     key = weapon_name.strip().lower()
     if key in cache:
@@ -460,6 +559,11 @@ def dot_from_omega(omega: float) -> str:
         return "●●●●●"
 
 
+def _clean_attr_name(s: str) -> str:
+    """清掉词条名周围的标点/残留百分号，空白视为无名。"""
+    return (s or "").strip().strip("%:：,，.。、|/ ").strip()
+
+
 def parse_ocr_text(text: str) -> dict:
     """
     解析 OCR 识别文本，提取武器名和词条
@@ -468,60 +572,54 @@ def parse_ocr_text(text: str) -> dict:
     lines = [l.strip() for l in text.split("\n") if l.strip()]
     result = {"weapon_name": "", "attrs": [], "pos_count": 0, "neg_count": 0}
 
-    # 武器名纠错映射（OCR 常见误识别）
-    WEAPON_FIX = {
-        "冰松": "冰松",  # Glaxion
-        "雪松": "冰松",  # OCR 误把"冰"识别成"雪"
-        "伯斯提": "伯斯提",  # Bost
-        "达塞": "达塞",  # Daikyu
-        "食人女魔": "食人女魔",
-        "食人魔": "食人女魔",
-        "阿拉克": "阿拉克",  # Arak
-        "斯特拉": "斯特拉",  # Stradavar
-        "斯特拉伐": "斯特拉伐",  # Stradavar Prime
-        "布莱顿": "布莱顿",  # Braton
-        "布莱顿": "布莱顿",  # Braton
-        "布莱顿": "布莱顿",  # Braton
-        "咖喱棒": "咖喱棒",  # Excalibur
-        "咖喱": "咖喱棒",
-        "守望者": "守望者",  # Rubico
-        "守望": "守望者",
-        "帕里斯": "帕里斯",  # Paris
-        "帕里": "帕里斯",
-        "伯斯顿": "伯斯顿",  # Boltor
-    }
-
-    # 从文本中提取武器名（第一行可能包含武器名）
+    # 从文本中提取武器名。卡面第一行形如「鳄神 Vexi-critadra」——
+    # 后半是紫卡的随机后缀名（由词条词根拼成），跟武器英文名无关，直接丢掉。
+    # OCR 认中文常错字（鳄神→鲲神、冰凇→冰淞），交给 resolve_weapon 按 442
+    # 把紫卡武器表模糊纠正。
     for line in lines[:3]:
-        # 常见紫卡截图格式：武器名 + "紫卡" / 武器名单独一行
-        cleaned = re.sub(r"[紫卡RivenMod\s\-]", "", line).strip()
-        if cleaned and len(cleaned) > 1:
-            # 纠错映射
-            result["weapon_name"] = WEAPON_FIX.get(cleaned, cleaned)
-            break
+        cleaned = re.sub(r"紫卡|Riven\s*Mod", "", line, flags=re.I).strip()
+        # 掐掉随机后缀名：连字符英文词（Vexi-critadra / Igni-visican）
+        cleaned = re.sub(r"\s*[A-Za-z]+-[A-Za-z]+\s*$", "", cleaned).strip()
+        if not cleaned or len(cleaned) < 2:
+            continue
+        hit = resolve_weapon(cleaned)
+        if hit:
+            result["weapon_name"] = hit["zh"]
+            result["weapon_en"] = hit["en"]
+            result["riven_type"] = hit["rivenType"]
+            result["weapon_match"] = {
+                "input": cleaned, "by": hit["matched_by"], "score": hit["score"],
+            }
+            if hit.get("ambiguous"):
+                result["weapon_match"]["ambiguous"] = hit["ambiguous"]
+        else:
+            result["weapon_name"] = cleaned
+        break
 
-    # 提取词条（正负值）
-    # 有些截图中词条在同一行（如"多重射击 +111.7% 火焰伤害 +115.6%"），用 finditer 逐个匹配
+    # 提取词条（正负值）。两种排版都要支持：
+    #   卡面（游戏内）：「+72% 电击伤害」——数值在前
+    #   手输/列表：「暴击几率 +119.2%」——名字在前
+    # 一行里也可能挤多条，用 finditer 逐个切片。
     for line in lines:
         line = line.strip()
-        # 用 finditer 找到所有匹配项
-        matches = list(re.finditer(r"([+\-x])([\d.]+)%?", line))
+        matches = list(re.finditer(r"([+\-x])\s*([\d.]+)%?", line))
+        # 先定行的排版：首个数值前面有文字 = 名字在前（手输/列表），
+        # 否则 = 数值在前（游戏卡面）。整行统一，避免「多重射击 +111.7% 火焰伤害 +115.6%」
+        # 这种一行多条时把名字错配给相邻词条。
+        name_first = bool(matches) and bool(_clean_attr_name(line[:matches[0].start()]))
         for i, m in enumerate(matches):
             sign = m.group(1)
             value = float(m.group(2))
             positive = sign == "+"
 
-            # 提取词条名：从上个匹配结束到当前匹配开始之间的文本
-            if i == 0:
-                name_text = line[:m.start()].strip()
+            if name_first:
+                seg = (line[:m.start()] if i == 0
+                       else line[matches[i - 1].end():m.start()])
             else:
-                prev_end = matches[i-1].end()
-                name_text = line[prev_end:m.start()].strip()
-            name_text = name_text.rstrip(":：").strip()
+                seg = (line[m.end():] if i == len(matches) - 1
+                       else line[m.end():matches[i + 1].start()])
+            name_text = _clean_attr_name(seg)
 
-            # 匹配中文词条名
-            # 词条名可能是前缀+效果名，如 "暴击几率 +119.2%"
-            # 或 "基础伤害 +165.4" 等
             url_name = ATTR_CN_MAP.get(name_text, name_text)
 
             attr = {
