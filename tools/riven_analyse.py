@@ -521,8 +521,7 @@ RIVEN_TYPE_MAP = {
 
 
 def analyse_riven(weapon_name: str, attrs: list, riven_type: str = None, omega: float = None) -> dict:
-    """
-    分析紫卡属性
+    """分析紫卡属性
     返回: {weapon_name, riven_type, omega, dot, attrs_analysis, summary}
     """
     if omega is None:
@@ -535,38 +534,68 @@ def analyse_riven(weapon_name: str, attrs: list, riven_type: str = None, omega: 
 
     attrs_analysis = []
     for attr in attrs:
-        if attr["positive"]:
-            base_val = get_base_value(attr["name"], riven_type)
-            low, high = compute_low_high(base_val, omega, pos_count, has_neg)
-            mid = (low + high) / 2
-            if mid > 0:
-                diff = round((attr["value"] - mid) / mid * 100, 1)
-            else:
-                diff = 0
-            attrs_analysis.append({
-                **attr,
-                "low": low, "high": high, "mid": round(mid, 2),
-                "diff": f"{diff:+.1f}%",
-            })
+        # 每個詞條單獨獲取 base_val
+        base_val = get_base_value(attr["name"], riven_type)
+        
+        # 計算 low/high (參考 nyxbot _compute_low_high)
+        if pos_count == 2 and not has_neg:
+            factor = 0.99
+        elif pos_count == 2 and has_neg:
+            factor = 1.2375 if attr["positive"] else -0.495
+        elif pos_count == 3 and not has_neg:
+            factor = 0.75
+        elif pos_count == 3 and has_neg:
+            factor = 0.9375 if attr["positive"] else -0.75
         else:
-            low, high = compute_neg_low_high(pos_count, has_neg)
-            mid = (low + high) / 2
-            if mid != 0:
-                diff = round((attr["value"] - abs(mid)) / abs(mid) * 100, 1)
+            # 4 詞條或其他情況，保守處理
+            factor = 1.0 if attr["positive"] else -0.5
+        
+        low = round(0.9 * base_val * omega * factor, 4)
+        high = round(1.1 * base_val * omega * factor, 4)
+        
+        # 計算偏差 (參考 nyxbot _attr_diff)
+        median = (low + high) / 2
+        attr_value = attr["value"]
+        
+        # 特殊處理歧視詞條（對Corpus伤害等）
+        if any(k in attr["name"] for k in ["对Corpus伤害", "对Grineer伤害", "对Infested伤害"]):
+            # x1.39 对Grineer伤害 这类歧视词条走 (abs-1)*100 特殊公式
+            abs_attr = abs(attr_value)
+            if abs_attr > 1:
+                adjusted_value = (abs_attr - 1) * 100
             else:
-                diff = 0
-            attrs_analysis.append({
-                **attr,
-                "low": low, "high": high, "mid": round(mid, 2),
-                "diff": f"{diff:+.1f}%",
-            })
+                adjusted_value = 100 - abs_attr * 100
+            # 計算偏差時用調整後的值
+            if median != 0:
+                diff_pct = round((adjusted_value - median) / median * 100, 2)
+            else:
+                diff_pct = 0
+            diff_str = f"{diff_pct:+.2f}%"
+        else:
+            # 普通詞條
+            if median != 0:
+                diff_pct = round((attr_value - median) / median * 100, 2)
+            else:
+                diff_pct = 0
+            diff_str = f"{diff_pct:+.2f}%"
+        
+        attrs_analysis.append({
+            "name": attr["name"],
+            "url_name": attr.get("url_name", attr["name"]),
+            "value": attr_value,
+            "positive": attr["positive"],
+            "low": round(low, 2),
+            "high": round(high, 2),
+            "mid": round(median, 2),
+            "diff": diff_str,
+        })
 
     dot = dot_from_omega(omega)
     rtype_cn = RIVEN_TYPE_MAP.get(riven_type, riven_type)
 
     # 生成概要
     lines = [f"🔫 {weapon_name}（{rtype_cn}紫卡）"]
-    lines.append(f"倾向 {omega} | {dot} | 基础系数 {base_val}")
+    lines.append(f"倾向 {omega} | {dot}")
     lines.append("")
     for a in attrs_analysis:
         sign = "+" if a["positive"] else "-"
@@ -583,12 +612,10 @@ def analyse_riven(weapon_name: str, attrs: list, riven_type: str = None, omega: 
         "riven_type": riven_type,
         "omega": omega,
         "dot": dot,
-        "base_val": base_val,
+        "base_val": get_base_value(list(attrs_analysis)[0]["name"], riven_type) if attrs_analysis else 0,  # 取第一個詞條的 base_val 作為概要顯示
         "attrs": attrs_analysis,
         "summary": "\n".join(lines),
     }
-
-
 def main():
     """命令行入口"""
     import argparse
