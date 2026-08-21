@@ -982,16 +982,13 @@ class WFRagTool(Star):
                 days = int(arg) if arg.isdigit() else 7
                 res = await self.wf_arbitration_essence(event, days=days)
             elif tool in ("ra", "analyse"):
-                # 分析紫卡：支持 /wfllm analyse + 截图
+                # 纯文本分析（不走 LLM），和 #紫卡分析 的区别仅在于输出格式
                 paths = await self._collect_images(event)
                 if not paths:
                     yield event.plain_result("📷 请发送紫卡截图，或用 #紫卡分析 指令")
                     return
-                prompt, err = await self._do_analyse(event, paths)
-                if err:
-                    yield event.plain_result(err)
-                    return
-                yield event.request_llm(prompt=prompt)
+                text, err = await self._analyse_text(event, paths)
+                yield event.plain_result(err if err else text)
                 return
             elif tool in ("dict", "d"):
                 res = await self.wf_dict(event, keyword=arg)
@@ -1053,6 +1050,50 @@ class WFRagTool(Star):
         except TimeoutError:
             yield event.plain_result("⏰ 等待超时，请重新发送 #紫卡分析")
 
+
+    async def _analyse_text(self, event, paths):
+        """纯文本分析（不走 LLM），返回 (文本, None) 或 (None, 错误信息)"""
+        import json
+        try:
+            raw = await self._ocr_riven(event, paths)
+            stats_text = self._format_ocr_text(raw)
+        except Exception as e:
+            return None, f"❌ OCR 识别失败: {e}"
+        if not stats_text:
+            return None, "❌ 未能识别出紫卡词条"
+        parsed = parse_ocr_text(stats_text)
+        if not parsed["attrs"]:
+            return None, f"❌ 未能解析出紫卡属性词条"
+        weapon_name = parsed.get("weapon_name", "?")
+        weapon_en = parsed.get("weapon_en", "")
+        riven_type = parsed.get("riven_type", "")
+        try:
+            result = analyse_riven(
+                weapon_name=weapon_name,
+                attrs=parsed["attrs"], riven_type=riven_type,
+                riven_name=stats_text.strip().split("\n")[0] if stats_text else "",
+            )
+        except Exception as e:
+            return None, f"❌ 品质分析异常: {e}"
+        lines = [f"🔮 {weapon_name} 紫卡分析"]
+        summary = result.get("summary", "")
+        if summary:
+            lines.append(summary)
+        if weapon_en or weapon_name:
+            try:
+                price_res = await self.wf_riven_price(event, item=weapon_en or weapon_name)
+                price_data = json.loads(price_res) if isinstance(price_res, str) else price_res
+                if price_data.get("success"):
+                    raw_data = price_data.get("raw", [])
+                    if raw_data:
+                        lines.append("\n📋 市场挂单：")
+                        for item in raw_data[:5]:
+                            price = item.get("price", "?")
+                            attrs = item.get("attrs", "")[:60]
+                            lines.append(f"  {price}p | {attrs}")
+            except Exception:
+                pass
+        return "\n".join(lines), None
 
     async def _do_analyse(self, event, paths):
         """OCR 识别 + 品质分析 + 市场行情，返回 (LLM prompt, None) 或 (None, 错误信息)"""
