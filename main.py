@@ -981,8 +981,17 @@ class WFRagTool(Star):
                 days = int(arg) if arg.isdigit() else 7
                 res = await self.wf_arbitration_essence(event, days=days)
             elif tool in ("ra", "analyse"):
-                # 已迁移到 #紫卡分析 指令，请使用该指令
-                res = json.dumps({"success": False, "message": "请使用 #紫卡分析 指令并发送截图"})
+                # 分析紫卡：支持 /wfllm analyse + 截图
+                paths = await self._collect_images(event)
+                if not paths:
+                    yield event.plain_result("📷 请发送紫卡截图，或用 #紫卡分析 指令")
+                    return
+                prompt, err = await self._do_analyse(event, paths)
+                if err:
+                    yield event.plain_result(err)
+                    return
+                yield event.request_llm(prompt=prompt)
+                return
             elif tool in ("dict", "d"):
                 res = await self.wf_dict(event, keyword=arg)
             else:
