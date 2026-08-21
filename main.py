@@ -28,6 +28,7 @@ from astrbot.api import logger
 from astrbot.api.event import AstrMessageEvent, filter
 import sys
 sys.path.insert(0, "/AstrBot/data/tools")
+if 'riven_analyse' in sys.modules: del sys.modules['riven_analyse']
 from riven_analyse import parse_ocr_text, analyse_riven, resolve_weapon
 
 from astrbot.api.star import Context, Star, register
