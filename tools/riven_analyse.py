@@ -365,6 +365,8 @@ def get_base_value(attr_name: str, riven_type: str) -> float:
     """获取词条基础系数（按词条名 + 武器类型）"""
     if riven_type == "melee":
         riven_type = "melle"
+    if riven_type == "kitgun":
+        riven_type = "rifle"
     if attr_name in TREND_DATA:
         return TREND_DATA[attr_name].get(riven_type, 0)
     for key, val in TREND_DATA.items():
@@ -670,6 +672,7 @@ RIVEN_TYPE_MAP = {
     "rifle": "步枪", "pistol": "手枪", "shotgun": "霰弹枪",
     "melle": "近战",
     "melee": "近战", "archwing": "Archwing",
+    "kitgun": "组合枪",
 }
 
 
