@@ -1024,10 +1024,23 @@ class WFRagTool(Star):
         async def wait_shot(controller: SessionController, ev: AstrMessageEvent):
             try:
                 paths2 = await self._collect_images(ev)
-                if not paths2:
-                    return  # 无图，继续等
-                # 取到图了，用 event.request_llm 需要 yield，但这里不能 yield
-                # 所以把图片信息塞回队列重新触发 #紫卡分析
+                if not paths2 or not paths2[0]:
+                    return
+                # 图片 temp 文件可能被清理，复制到持久路径
+                import shutil, os, hashlib
+                src = paths2[0]
+                if not os.path.exists(src):
+                    return
+                dst = f"/tmp/riven_{hashlib.md5(src.encode()).hexdigest()[:8]}.jpg"
+                shutil.copy2(src, dst)
+                # 修改事件消息指向新路径
+                from astrbot.api.message_components import Image
+                for i, c in enumerate(ev.get_messages()):
+                    if isinstance(c, Image):
+                        new_img = Image(file=dst)
+                        new_img.type = "image"
+                        ev.message_obj.message[i] = new_img
+                        break
                 new_ev = copy.copy(ev)
                 new_ev.message_str = "#紫卡分析"
                 self.context.get_event_queue().put_nowait(new_ev)
