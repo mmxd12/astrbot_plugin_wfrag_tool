@@ -363,6 +363,8 @@ ATTR_EN_MAP.update({
 
 def get_base_value(attr_name: str, riven_type: str) -> float:
     """获取词条基础系数（按词条名 + 武器类型）"""
+    if riven_type == "melee":
+        riven_type = "melle"
     if attr_name in TREND_DATA:
         return TREND_DATA[attr_name].get(riven_type, 0)
     for key, val in TREND_DATA.items():
@@ -654,7 +656,8 @@ def parse_ocr_text(text: str) -> dict:
 # 武器类型中文名映射
 RIVEN_TYPE_MAP = {
     "rifle": "步枪", "pistol": "手枪", "shotgun": "霰弹枪",
-    "melle": "近战", "archwing": "Archwing",
+    "melle": "近战",
+    "melee": "近战", "archwing": "Archwing",
 }
 
 
