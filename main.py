@@ -31,7 +31,6 @@ sys.path.insert(0, "/AstrBot/data/tools")
 from riven_analyse import parse_ocr_text, analyse_riven, resolve_weapon
 
 from astrbot.api.star import Context, Star, register
-from astrbot.core.utils.session_waiter import session_waiter, SessionController, DefaultSessionFilter
 
 # 默认服务地址（可用 _conf_schema.json 里的配置覆盖）
 WF_API = "http://127.0.0.1:3000"
@@ -1004,7 +1003,7 @@ class WFRagTool(Star):
 
     @filter.command("紫卡分析", alias={"rivenanalyse"})
     async def riven_analyse_cmd(self, event: AstrMessageEvent):
-        """分析紫卡品质：发 #紫卡分析，60秒内发截图"""
+        """分析紫卡品质：发 #紫卡分析 + 紫卡截图（同一消息或分两次发）"""
         # 检查当前消息是否有截图
         try:
             paths = await self._collect_images(event)
@@ -1019,29 +1018,9 @@ class WFRagTool(Star):
                 return
             yield event.request_llm(prompt=prompt)
             return
-        # 无图，等待用户 60 秒内发截图
-        yield event.plain_result("📷 请在 60 秒内发送紫卡截图，我会帮你分析品质")
-        @session_waiter(60)
-        async def wait_screenshot(controller: SessionController, ev: AstrMessageEvent):
-            try:
-                paths2 = await self._collect_images(ev)
-                if not paths2:
-                    yield ev.plain_result("⏰ 未检测到图片，请重新发送 #紫卡分析")
-                    controller.stop()
-                    return
-                prompt, err = await self._do_analyse(ev, paths2)
-                if err:
-                    yield ev.plain_result(err)
-                    controller.stop()
-                    return
-                yield ev.request_llm(prompt=prompt)
-            except Exception as e:
-                yield ev.plain_result(f"❌ 分析异常: {e}")
-            controller.stop()
-        try:
-            await wait_screenshot(event, DefaultSessionFilter())
-        except TimeoutError:
-            yield event.plain_result("⏰ 等待超时，请重新发送 #紫卡分析")
+        # 无图，提示用户
+        yield event.plain_result("📷 请发送紫卡截图，格式：\n`#紫卡分析` + 紫卡截图（同一消息发送）\n或先发 `#紫卡分析`，再发截图（同样会识别）")
+
 
     async def _do_analyse(self, event, paths):
         """OCR 识别 + 品质分析 + 市场行情，返回 (LLM prompt, None) 或 (None, 错误信息)"""
