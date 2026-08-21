@@ -728,6 +728,11 @@ class WFRagTool(Star):
         当用户展示紫卡截图或输入词条数值要求分析紫卡品质时使用。
         根据词条数值和紫卡倾向计算理论区间和偏差百分比，帮助判断紫卡好坏。
 
+        【重要：OCR 识别流程】
+        当用户发送紫卡截图时，**不要手动填写 stats_text 参数**，将其留空即可。
+        本工具会自动调用 RapidOCR 从消息图片中识别词条文本。
+        识别后工具会自动提取武器名和词条数值，无需你手动填入。
+
         OCR 识别紫卡截图时：**武器英文名比中文名可靠**，若卡面同时可见英文，
         优先把英文名填进 weapon_name。注意卡面上形如 "Vexi-critadra"
         的连字符英文是紫卡随机后缀名，不是武器名，不要填。
@@ -746,8 +751,10 @@ class WFRagTool(Star):
         若卡面数值明显是未满级状态，要提醒用户满级后偏差才准。
 
         Args:
-            weapon_name(string): 武器名，中英文皆可，如 "食人女魔" "Ogris"。中文有错字也会自动纠正
+            weapon_name(string): 武器名，中英文皆可，如 "食人女魔" "Ogris"。中文有错字也会自动纠正。
+                                若用户发截图，此参数可留空，工具自动从 OCR 结果提取。
             stats_text(string): 词条文本，如 "暴击几率 +119.2% 暴击伤害 +185.6% 触发几率 -7.6%"
+                                若用户发截图，**此参数留空**，工具自动用 RapidOCR 从图片识别。
 
         返回:
             JSON: {success, summary(分析结果), weapon_name, weapon_en, riven_type, omega, dot,
@@ -1056,7 +1063,7 @@ class WFRagTool(Star):
                 "  wf_lich_price(item, page)         - 玄骸/姐妹武器市场价（wmw）\n"
                 "  wf_world_state(type)              - 世界状态（电波/突击/裂缝/钢裂/九重天/奸商/赏金…）\n"
                 "  wf_arbitration_essence(days)      - 仲裁精华表（精华/小时、品质）\n"
-                "  wf_riven_analyse(weapon_name, stats_text) - 紫卡分析（词条数值+倾向计算）\n  wf_dict(keyword)                  - 黑话/词库解析\n\n"
+                "  wf_riven_analyse(weapon_name, stats_text) - 紫卡分析（截图自动OCR，无需手动填词条）\n  wf_dict(keyword)                  - 黑话/词库解析\n\n"
                 "测试：/wfllm rag 电击异常 | price 奶妈P | riven 食人女魔 | lich 食人女魔 | ws 电波 | arb | dict 三傻"
             )
             return
@@ -1098,6 +1105,110 @@ class WFRagTool(Star):
         except Exception as e:
             logger.error(f"[wfrag_tool] 测试异常: {e}")
             yield event.plain_result(f"异常: {type(e).__name__}: {e}")
+
+    @filter.command("紫卡分析", alias={"rivenanalyse"})
+    async def riven_analyse_cmd(self, event: AstrMessageEvent):
+        """分析紫卡品质：发 #紫卡分析 + 紫卡截图"""
+        # 收集当前消息中的图片
+        try:
+            paths = await self._collect_images(event)
+        except Exception as e:
+            yield event.plain_result(f"❌ 获取图片失败: {e}")
+            return
+
+        if not paths:
+            yield event.plain_result(
+                "📷 请发送紫卡截图，格式：\n"
+                "`#紫卡分析` + 紫卡截图（在同一消息中发送）\n\n"
+                "或者直接发截图给我，我会自动分析品质"
+            )
+            return
+
+        # OCR 识别
+        try:
+            raw = await self._ocr_riven(event, paths)
+            stats_text = self._format_ocr_text(raw)
+        except Exception as e:
+            yield event.plain_result(f"❌ OCR 识别失败: {e}")
+            return
+
+        if not stats_text:
+            yield event.plain_result("❌ 未能识别出紫卡词条，请确保截图清晰")
+            return
+
+        # 解析分析
+        parsed = parse_ocr_text(stats_text)
+        if not parsed["attrs"]:
+            yield event.plain_result(
+                f"❌ 未能解析出紫卡属性词条。\n原始识别结果：\n{stats_text[:200]}"
+            )
+            return
+
+        weapon_name = parsed.get("weapon_name", "?")
+        weapon_en = parsed.get("weapon_en", "")
+        riven_type = parsed.get("riven_type", "")
+
+        # 品质分析
+        try:
+            result = analyse_riven(
+                weapon_name=weapon_name,
+                weapon_en=weapon_en,
+                attrs=parsed["attrs"],
+                riven_type=riven_type,
+                riven_name=stats_text.strip().split("\n")[0] if stats_text else "",
+            )
+        except Exception as e:
+            yield event.plain_result(f"❌ 品质分析异常: {e}")
+            return
+
+        # 市场行情查询（并发）
+        market = ""
+        if weapon_en or weapon_name:
+            try:
+                price_res = await self.wf_riven_price(event, item=weapon_en or weapon_name)
+                price_data = json.loads(price_res) if isinstance(price_res, str) else price_res
+                if price_data.get("success"):
+                    summary = price_data.get("summary", "")
+                    price_lines = []
+                    for line in summary.split("\n"):
+                        if "紫卡行情" in line or "最低" in line or "平均" in line or "中位" in line:
+                            price_lines.append(line)
+                    if price_lines:
+                        market = "\n📊 市场行情：\n" + "\n".join(price_lines)
+            except Exception:
+                pass
+
+        # 格式化输出
+        lines = [f"🔮 {weapon_name} 紫卡分析"]
+        summary = result.get("summary", "")
+        if summary:
+            lines.append(summary)
+        if market:
+            lines.append(market)
+
+        # 市场挂单对比
+        if weapon_en or weapon_name:
+            try:
+                price_res = await self.wf_riven_price(event, item=weapon_en or weapon_name)
+                price_data = json.loads(price_res) if isinstance(price_res, str) else price_res
+                if price_data.get("success"):
+                    raw = price_data.get("raw", [])
+                    if raw:
+                        lines.append("\n📋 相近挂单：")
+                        count = 0
+                        for item in raw[:5]:
+                            attrs_text = item.get("attrs", "")
+                            if weapon_name in attrs_text or weapon_en in attrs_text:
+                                continue
+                            price = item.get("price", "?")
+                            lines.append(f"  {price}p | {attrs_text[:60]}")
+                            count += 1
+                        if count == 0:
+                            lines.append("  （无相近挂单）")
+            except Exception:
+                pass
+
+        yield event.plain_result("\n".join(lines))
 
     async def terminate(self) -> None:
         logger.info("[wfrag_tool] 已卸载")
