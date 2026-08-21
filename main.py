@@ -980,7 +980,7 @@ class WFRagTool(Star):
             elif tool in ("arb", "arbitration", "essence", "精华"):
                 days = int(arg) if arg.isdigit() else 7
                 res = await self.wf_arbitration_essence(event, days=days)
-            elif tool in ("riven", "ra", "analyse"):
+            elif tool in ("ra", "analyse"):
                 # 已迁移到 #紫卡分析 指令，请使用该指令
                 res = json.dumps({"success": False, "message": "请使用 #紫卡分析 指令并发送截图"})
             elif tool in ("dict", "d"):
@@ -1004,8 +1004,11 @@ class WFRagTool(Star):
             return
         if paths:
             # 有图直接分析
-            result = await self._do_analyse(event, paths)
-            yield event.plain_result(result)
+            prompt, err = await self._do_analyse(event, paths)
+            if err:
+                yield event.plain_result(err)
+                return
+            yield event.request_llm(prompt=prompt)
             return
         # 无图，等待用户 60 秒内发截图
         yield event.plain_result("📷 请在 60 秒内发送紫卡截图，我会帮你分析品质")
@@ -1017,8 +1020,12 @@ class WFRagTool(Star):
                     yield ev.plain_result("⏰ 未检测到图片，请重新发送 #紫卡分析")
                     controller.stop()
                     return
-                result = await self._do_analyse(ev, paths2)
-                yield ev.plain_result(result)
+                prompt, err = await self._do_analyse(ev, paths2)
+                if err:
+                    yield ev.plain_result(err)
+                    controller.stop()
+                    return
+                yield ev.request_llm(prompt=prompt)
             except Exception as e:
                 yield ev.plain_result(f"❌ 分析异常: {e}")
             controller.stop()
@@ -1028,18 +1035,18 @@ class WFRagTool(Star):
             yield event.plain_result("⏰ 等待超时，请重新发送 #紫卡分析")
 
     async def _do_analyse(self, event, paths):
-        """OCR 识别 + 品质分析 + 市场行情，返回格式化文本"""
+        """OCR 识别 + 品质分析 + 市场行情，返回 (LLM prompt, None) 或 (None, 错误信息)"""
         import json
         try:
             raw = await self._ocr_riven(event, paths)
             stats_text = self._format_ocr_text(raw)
         except Exception as e:
-            return f"❌ OCR 识别失败: {e}"
+            return None, f"❌ OCR 识别失败: {e}"
         if not stats_text:
-            return "❌ 未能识别出紫卡词条，请确保截图清晰"
+            return None, "❌ 未能识别出紫卡词条，请确保截图清晰"
         parsed = parse_ocr_text(stats_text)
         if not parsed["attrs"]:
-            return f"❌ 未能解析出紫卡属性词条。\n原始识别结果：\n{stats_text[:200]}"
+            return None, f"❌ 未能解析出紫卡属性词条。\n原始识别结果：\n{stats_text[:200]}"
         weapon_name = parsed.get("weapon_name", "?")
         weapon_en = parsed.get("weapon_en", "")
         riven_type = parsed.get("riven_type", "")
@@ -1050,26 +1057,35 @@ class WFRagTool(Star):
                 riven_name=stats_text.strip().split("\n")[0] if stats_text else "",
             )
         except Exception as e:
-            return f"❌ 品质分析异常: {e}"
-        lines = [f"🔮 {weapon_name} 紫卡分析"]
-        summary = result.get("summary", "")
-        if summary:
-            lines.append(summary)
+            return None, f"❌ 品质分析异常: {e}"
+        market_data = ""
         if weapon_en or weapon_name:
             try:
                 price_res = await self.wf_riven_price(event, item=weapon_en or weapon_name)
                 price_data = json.loads(price_res) if isinstance(price_res, str) else price_res
                 if price_data.get("success"):
-                    raw_data = price_data.get("raw", [])
-                    if raw_data:
-                        lines.append("\n📋 市场挂单：")
-                        for item in raw_data[:5]:
-                            price = item.get("price", "?")
-                            attrs = item.get("attrs", "")[:60]
-                            lines.append(f"  {price}p | {attrs}")
+                    market_data = json.dumps(price_data.get("raw", []), ensure_ascii=False)[:2000]
             except Exception:
                 pass
-        return "\n".join(lines)
+        prompt = f"""你是 Warframe 紫卡分析专家。请根据以下数据，给出一份完整的紫卡分析报告。
+
+## 武器
+{weapon_name}（{weapon_en}）
+
+## 分析数据
+{result.get("summary", "")}
+
+## 市场行情
+{market_data if market_data else "暂无市场数据"}
+
+## 要求
+请输出以下内容（自然语言，不要用 JSON 格式）：
+
+1. **数值偏差**：各词条实际值 vs 理论区间与偏差百分比。
+2. **词条评价**：这套正面词条对该武器的实战价值，负面词条选得好不好，是否缺核心词条，适合什么流派（触发流/暴击流）。
+3. **市场对照**：根据市场挂单价格区间给出估价，并给出自用/出售建议。
+4. **总体评分**：如果满分 10 分，给这套紫卡打几分，并说明理由。"""
+        return prompt, None
 
 
     async def terminate(self) -> None:
