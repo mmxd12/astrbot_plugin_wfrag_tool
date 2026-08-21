@@ -1071,7 +1071,7 @@ class WFRagTool(Star):
         riven_type = parsed.get("riven_type", "")
         try:
             result = analyse_riven(
-                weapon_name=weapon_name, weapon_en=weapon_en,
+                weapon_name=weapon_name,
                 attrs=parsed["attrs"], riven_type=riven_type,
                 riven_name=stats_text.strip().split("\n")[0] if stats_text else "",
             )
