@@ -578,25 +578,37 @@ def parse_ocr_text(text: str) -> dict:
     # 后半是紫卡的随机后缀名（由词条词根拼成），跟武器英文名无关，直接丢掉。
     # OCR 认中文常错字（鳄神→鲲神、冰凇→冰淞），交给 resolve_weapon 按 442
     # 把紫卡武器表模糊纠正。
-    for line in lines[:3]:
+    # 注意：OCR 可能把卡面上方槽位/装饰文字（如 "武器18y"）误识别为武器名，
+    # 因此遍历所有行，取 resolve_weapon 匹配分最高的那一行作为武器名。
+    best_hit = None
+    best_line = ""
+    for line in lines:
         cleaned = re.sub(r"紫卡|Riven\s*Mod", "", line, flags=re.I).strip()
         # 掐掉随机后缀名：连字符英文词（Vexi-critadra / Igni-visican）
         cleaned = re.sub(r"\s*[A-Za-z]+-[A-Za-z]+\s*$", "", cleaned).strip()
         if not cleaned or len(cleaned) < 2:
             continue
         hit = resolve_weapon(cleaned)
-        if hit:
-            result["weapon_name"] = hit["zh"]
-            result["weapon_en"] = hit["en"]
-            result["riven_type"] = hit["rivenType"]
-            result["weapon_match"] = {
-                "input": cleaned, "by": hit["matched_by"], "score": hit["score"],
-            }
-            if hit.get("ambiguous"):
-                result["weapon_match"]["ambiguous"] = hit["ambiguous"]
-        else:
-            result["weapon_name"] = cleaned
-        break
+        if hit and hit.get("score", 0) >= (best_hit or {}).get("score", 0):
+            best_hit = hit
+            best_line = cleaned
+    if best_hit:
+        result["weapon_name"] = best_hit["zh"]
+        result["weapon_en"] = best_hit["en"]
+        result["riven_type"] = best_hit["rivenType"]
+        result["weapon_match"] = {
+            "input": best_line, "by": best_hit["matched_by"], "score": best_hit["score"],
+        }
+        if best_hit.get("ambiguous"):
+            result["weapon_match"]["ambiguous"] = best_hit["ambiguous"]
+    else:
+        # 兜底：第一行非空当作武器名
+        for line in lines:
+            cleaned = re.sub(r"紫卡|Riven\s*Mod", "", line, flags=re.I).strip()
+            cleaned = re.sub(r"\s*[A-Za-z]+-[A-Za-z]+\s*$", "", cleaned).strip()
+            if cleaned and len(cleaned) >= 2:
+                result["weapon_name"] = cleaned
+                break
 
     # 提取词条（正负值）。两种排版都要支持：
     #   卡面（游戏内）：「+72% 电击伤害」——数值在前
