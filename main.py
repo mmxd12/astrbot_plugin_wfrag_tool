@@ -392,7 +392,7 @@ class WFRagTool(Star):
         用户问“XX武器的紫卡多少钱”“XX紫卡什么价”“wmr XX”“紫卡行情”时调用。
         支持中文/英文武器名（如 食人女魔、Ogris、诸葛连弩）。
 
-        用户发紫卡截图求分析时，本工具应与 wf_riven_analyse **并发调用**，
+        用户发紫卡截图求分析时，请使用 #紫卡分析 指令，本工具将自动与紫卡分析并发调用。
         用挂单价给出市场对照，不要等分析结果出来再串行查。
 
         Args:
@@ -720,109 +720,6 @@ class WFRagTool(Star):
         return json.dumps({"success": True, "data": out}, ensure_ascii=False)
 
     
-    # ---------- 工具 5.5：紫卡分析（riven-analyse） ----------
-
-    @filter.llm_tool(name="wf_riven_analyse")
-    async def wf_riven_analyse(self, event: AstrMessageEvent, **kwargs) -> str:
-        """分析紫卡（Riven）品质
-
-        当用户展示紫卡截图或输入词条数值要求分析紫卡品质时使用。
-        根据词条数值和紫卡倾向计算理论区间和偏差百分比，帮助判断紫卡好坏。
-
-        【重要：OCR 识别流程】
-        当用户发送紫卡截图时，**不要手动填写 stats_text 参数**，将其留空即可。
-        本工具会自动调用 RapidOCR 从消息图片中识别词条文本。
-        识别后工具会自动提取武器名和词条数值，无需你手动填入。
-
-        OCR 识别紫卡截图时：**武器英文名比中文名可靠**，若卡面同时可见英文，
-        优先把英文名填进 weapon_name。注意卡面上形如 "Vexi-critadra"
-        的连字符英文是紫卡随机后缀名，不是武器名，不要填。
-
-        【调用方式】本工具与 wf_riven_price 应**同时并发调用**（两者互不依赖，
-        并发后总延迟等于一次调用）。不要串行，也不要为了确认公式去读源码——
-        计算已在本工具内完成。
-
-        【回复要求】拿到结果后一次性输出三段，不要只报数值：
-          1. 数值偏差：各词条实际值 vs 理论区间与偏差百分比（用 summary 即可）
-          2. 词条组合评价：这套正面词条对该武器的实战价值、负面词条选得好不好、
-             是否缺核心词条（如喷子缺多重射击）、适合什么流派（触发流/暴击流）。
-             这部分靠你自己的游戏理解判断，不需要额外调用工具。
-          3. 市场对照：用 wf_riven_price 的挂单价区间给出估价，并挑出词条方向
-             相近的挂单做对比，最后给自用/出售的建议。
-        若卡面数值明显是未满级状态，要提醒用户满级后偏差才准。
-
-        Args:
-            weapon_name(string): 武器名，中英文皆可，如 "食人女魔" "Ogris"。中文有错字也会自动纠正。
-                                若用户发截图，此参数可留空，工具自动从 OCR 结果提取。
-            stats_text(string): 词条文本，如 "暴击几率 +119.2% 暴击伤害 +185.6% 触发几率 -7.6%"
-                                若用户发截图，**此参数留空**，工具自动用 RapidOCR 从图片识别。
-
-        返回:
-            JSON: {success, summary(分析结果), weapon_name, weapon_en, riven_type, omega, dot,
-                   weapon_match(纠错信息，含 ambiguous 时说明武器名有歧义需向用户确认),
-                   attrs:[{name,value,positive,low,high,mid,diff}]}
-        """
-        weapon_name = str(kwargs.get("weapon_name", "")).strip()
-        stats_text = str(kwargs.get("stats_text", "")).strip()
-
-        # 没传文字词条时，尝试从消息图片中 OCR 识别
-        if not stats_text:
-            try:
-                paths = await self._collect_images(event)
-                if paths:
-                    raw = await self._ocr_riven(event, paths)
-                    stats_text = self._format_ocr_text(raw)
-            except Exception as e:
-                logger.warning(f"[wfrag_tool] OCR 识别失败: {e}")
-
-        if not stats_text:
-            return json.dumps({"success": False, "message": "缺少参数 stats_text（词条文本）"}, ensure_ascii=False)
-
-        # 提取原始紫卡名称（含后缀名，如"冰淞Igni-visican"）
-        riven_name = ""
-        first_line = stats_text.strip().split("\n")[0] if stats_text else ""
-        if first_line:
-            riven_name = first_line.strip()
-
-        parsed = parse_ocr_text(stats_text)
-        if weapon_name:
-            # 显式给的武器名也过一遍武器表：OCR/用户输入的中文可能有错字
-            hit = resolve_weapon(weapon_name)
-            if hit:
-                parsed["weapon_name"] = hit["zh"]
-                parsed["weapon_en"] = hit["en"]
-                parsed["riven_type"] = hit["rivenType"]
-                parsed["weapon_match"] = {
-                    "input": weapon_name, "by": hit["matched_by"], "score": hit["score"],
-                }
-                if hit.get("ambiguous"):
-                    parsed["weapon_match"]["ambiguous"] = hit["ambiguous"]
-            else:
-                parsed["weapon_name"] = weapon_name
-
-        if not parsed["attrs"]:
-            return json.dumps({"success": False, "message": "未识别到词条数据，请检查格式（如：暴击几率 +119.2%）"}, ensure_ascii=False)
-
-        try:
-            result = analyse_riven(
-                weapon_name=parsed["weapon_name"],
-                attrs=parsed["attrs"],
-                riven_type=parsed.get("riven_type"),
-                riven_name=riven_name,
-            )
-            result["success"] = True
-            if parsed.get("weapon_en"):
-                result["weapon_en"] = parsed["weapon_en"]
-            if parsed.get("weapon_match"):
-                result["weapon_match"] = parsed["weapon_match"]
-            if riven_name:
-                result["riven_name"] = riven_name
-            if "dot" in result:
-                result["disposition"] = result["dot"]
-            return self._trim(json.dumps(result, ensure_ascii=False), 3500)
-        except Exception as e:
-            return json.dumps({"success": False, "message": f"分析失败: {type(e).__name__}: {e}"}, ensure_ascii=False)
-
 # ---------- 工具 5：词库/黑话 ----------
 
     @filter.llm_tool(name="wf_dict")
@@ -1064,7 +961,7 @@ class WFRagTool(Star):
                 "  wf_lich_price(item, page)         - 玄骸/姐妹武器市场价（wmw）\n"
                 "  wf_world_state(type)              - 世界状态（电波/突击/裂缝/钢裂/九重天/奸商/赏金…）\n"
                 "  wf_arbitration_essence(days)      - 仲裁精华表（精华/小时、品质）\n"
-                "  wf_riven_analyse(weapon_name, stats_text) - 紫卡分析（截图自动OCR，无需手动填词条）\n  wf_dict(keyword)                  - 黑话/词库解析\n\n"
+                "  wf_dict(keyword)                  - 黑话/词库解析\n\n"
                 "测试：/wfllm rag 电击异常 | price 奶妈P | riven 食人女魔 | lich 食人女魔 | ws 电波 | arb | dict 三傻"
             )
             return
@@ -1084,19 +981,8 @@ class WFRagTool(Star):
                 days = int(arg) if arg.isdigit() else 7
                 res = await self.wf_arbitration_essence(event, days=days)
             elif tool in ("riven", "ra", "analyse"):
-                # 支持 /wfllm analyse [武器名] 直接带图：武器名可省略（OCR 自动读卡面）
-                paths = await self._collect_images(event)
-                weapon_arg = arg.split()[0] if arg.split() else ""
-                if paths:
-                    raw = await self._ocr_riven(event, paths)
-                    ocr_text = self._format_ocr_text(raw)
-                    res = await self.wf_riven_analyse(
-                        event, weapon_name=weapon_arg or "", stats_text=ocr_text,
-                    )
-                else:
-                    res = await self.wf_riven_analyse(
-                        event, weapon_name=weapon_arg, stats_text=arg,
-                    )
+                # 已迁移到 #紫卡分析 指令，请使用该指令
+                res = json.dumps({"success": False, "message": "请使用 #紫卡分析 指令并发送截图"})
             elif tool in ("dict", "d"):
                 res = await self.wf_dict(event, keyword=arg)
             else:
