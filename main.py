@@ -31,6 +31,8 @@ sys.path.insert(0, "/AstrBot/data/tools")
 from riven_analyse import parse_ocr_text, analyse_riven, resolve_weapon
 
 from astrbot.api.star import Context, Star, register
+from astrbot.core.utils.session_waiter import session_waiter, SessionController, DefaultSessionFilter
+import copy
 
 # 默认服务地址（可用 _conf_schema.json 里的配置覆盖）
 WF_API = "http://127.0.0.1:3000"
@@ -1003,23 +1005,40 @@ class WFRagTool(Star):
 
     @filter.command("紫卡分析", alias={"rivenanalyse"})
     async def riven_analyse_cmd(self, event: AstrMessageEvent):
-        """分析紫卡品质：发 #紫卡分析 + 紫卡截图（同一消息或分两次发）"""
-        # 检查当前消息是否有截图
+        """分析紫卡品质：发 #紫卡分析，60秒内发截图"""
         try:
             paths = await self._collect_images(event)
         except Exception as e:
             yield event.plain_result(f"❌ 获取图片失败: {e}")
             return
         if paths:
-            # 有图直接分析
             prompt, err = await self._do_analyse(event, paths)
             if err:
                 yield event.plain_result(err)
                 return
             yield event.request_llm(prompt=prompt)
             return
-        # 无图，提示用户
-        yield event.plain_result("📷 请发送紫卡截图，格式：\n`#紫卡分析` + 紫卡截图（同一消息发送）\n或先发 `#紫卡分析`，再发截图（同样会识别）")
+        # 无图，等 60 秒内发截图
+        yield event.plain_result("📷 请在 60 秒内发送紫卡截图，我会帮你分析品质")
+        @session_waiter(60)
+        async def wait_shot(controller: SessionController, ev: AstrMessageEvent):
+            try:
+                paths2 = await self._collect_images(ev)
+                if not paths2:
+                    return  # 无图，继续等
+                # 取到图了，用 event.request_llm 需要 yield，但这里不能 yield
+                # 所以把图片信息塞回队列重新触发 #紫卡分析
+                new_ev = copy.copy(ev)
+                new_ev.message_str = "#紫卡分析"
+                self.context.get_event_queue().put_nowait(new_ev)
+                ev.stop_event()
+            except Exception:
+                pass
+            controller.stop()
+        try:
+            await wait_shot(event, DefaultSessionFilter())
+        except TimeoutError:
+            yield event.plain_result("⏰ 等待超时，请重新发送 #紫卡分析")
 
 
     async def _do_analyse(self, event, paths):
