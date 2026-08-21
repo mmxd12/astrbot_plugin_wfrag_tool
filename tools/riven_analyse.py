@@ -367,6 +367,8 @@ def get_base_value(attr_name: str, riven_type: str) -> float:
         riven_type = "melle"
     if riven_type == "kitgun":
         riven_type = "rifle"
+    if riven_type == "zaw":
+        riven_type = "melle"
     if attr_name in TREND_DATA:
         return TREND_DATA[attr_name].get(riven_type, 0)
     for key, val in TREND_DATA.items():
@@ -673,6 +675,7 @@ RIVEN_TYPE_MAP = {
     "melle": "近战",
     "melee": "近战", "archwing": "Archwing",
     "kitgun": "组合枪",
+    "zaw": "近战(Zaw)",
 }
 
 
