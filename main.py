@@ -954,7 +954,7 @@ class WFRagTool(Star):
             yield event.plain_result(
                 "Warframe LLM 工具插件 v1.4.0\n"
                 f"服务状态：{self._health_line()}\n"
-                "已注册 7 个 llm_tool：\n"
+                "已注册 6 个 llm_tool：\n"
                 "  wf_rag_search(query, top_k)       - Wiki 知识库检索\n"
                 "  wf_market_price(item)             - 市价查询（支持黑话）\n"
                 "  wf_riven_price(item, page)        - 紫卡拍卖查询（wmr，中英文武器名）\n"
@@ -1045,7 +1045,6 @@ class WFRagTool(Star):
 
     async def _do_analyse(self, event, paths):
         """OCR 识别 + 品质分析 + 市场行情，返回 (LLM prompt, None) 或 (None, 错误信息)"""
-        import json
         try:
             raw = await self._ocr_riven(event, paths)
             stats_text = self._format_ocr_text(raw)
