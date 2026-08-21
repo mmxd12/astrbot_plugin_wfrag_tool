@@ -31,6 +31,7 @@ sys.path.insert(0, "/AstrBot/data/tools")
 from riven_analyse import parse_ocr_text, analyse_riven, resolve_weapon
 
 from astrbot.api.star import Context, Star, register
+from astrbot.core.utils.session_waiter import session_waiter, SessionController, DefaultSessionFilter
 
 # 默认服务地址（可用 _conf_schema.json 里的配置覆盖）
 WF_API = "http://127.0.0.1:3000"
@@ -1108,107 +1109,82 @@ class WFRagTool(Star):
 
     @filter.command("紫卡分析", alias={"rivenanalyse"})
     async def riven_analyse_cmd(self, event: AstrMessageEvent):
-        """分析紫卡品质：发 #紫卡分析 + 紫卡截图"""
-        # 收集当前消息中的图片
+        """分析紫卡品质：发 #紫卡分析，60秒内发截图"""
+        # 检查当前消息是否有截图
         try:
             paths = await self._collect_images(event)
         except Exception as e:
             yield event.plain_result(f"❌ 获取图片失败: {e}")
             return
-
-        if not paths:
-            yield event.plain_result(
-                "📷 请发送紫卡截图，格式：\n"
-                "`#紫卡分析` + 紫卡截图（在同一消息中发送）\n\n"
-                "或者直接发截图给我，我会自动分析品质"
-            )
+        if paths:
+            # 有图直接分析
+            result = await self._do_analyse(event, paths)
+            yield event.plain_result(result)
             return
+        # 无图，等待用户 60 秒内发截图
+        yield event.plain_result("📷 请在 60 秒内发送紫卡截图，我会帮你分析品质")
+        @session_waiter(60)
+        async def wait_screenshot(controller: SessionController, ev: AstrMessageEvent):
+            try:
+                paths2 = await self._collect_images(ev)
+                if not paths2:
+                    yield ev.plain_result("⏰ 未检测到图片，请重新发送 #紫卡分析")
+                    controller.stop()
+                    return
+                result = await self._do_analyse(ev, paths2)
+                yield ev.plain_result(result)
+            except Exception as e:
+                yield ev.plain_result(f"❌ 分析异常: {e}")
+            controller.stop()
+        try:
+            await wait_screenshot(event, DefaultSessionFilter())
+        except TimeoutError:
+            yield event.plain_result("⏰ 等待超时，请重新发送 #紫卡分析")
 
-        # OCR 识别
+    async def _do_analyse(self, event, paths):
+        """OCR 识别 + 品质分析 + 市场行情，返回格式化文本"""
+        import json
         try:
             raw = await self._ocr_riven(event, paths)
             stats_text = self._format_ocr_text(raw)
         except Exception as e:
-            yield event.plain_result(f"❌ OCR 识别失败: {e}")
-            return
-
+            return f"❌ OCR 识别失败: {e}"
         if not stats_text:
-            yield event.plain_result("❌ 未能识别出紫卡词条，请确保截图清晰")
-            return
-
-        # 解析分析
+            return "❌ 未能识别出紫卡词条，请确保截图清晰"
         parsed = parse_ocr_text(stats_text)
         if not parsed["attrs"]:
-            yield event.plain_result(
-                f"❌ 未能解析出紫卡属性词条。\n原始识别结果：\n{stats_text[:200]}"
-            )
-            return
-
+            return f"❌ 未能解析出紫卡属性词条。\n原始识别结果：\n{stats_text[:200]}"
         weapon_name = parsed.get("weapon_name", "?")
         weapon_en = parsed.get("weapon_en", "")
         riven_type = parsed.get("riven_type", "")
-
-        # 品质分析
         try:
             result = analyse_riven(
-                weapon_name=weapon_name,
-                weapon_en=weapon_en,
-                attrs=parsed["attrs"],
-                riven_type=riven_type,
+                weapon_name=weapon_name, weapon_en=weapon_en,
+                attrs=parsed["attrs"], riven_type=riven_type,
                 riven_name=stats_text.strip().split("\n")[0] if stats_text else "",
             )
         except Exception as e:
-            yield event.plain_result(f"❌ 品质分析异常: {e}")
-            return
-
-        # 市场行情查询（并发）
-        market = ""
-        if weapon_en or weapon_name:
-            try:
-                price_res = await self.wf_riven_price(event, item=weapon_en or weapon_name)
-                price_data = json.loads(price_res) if isinstance(price_res, str) else price_res
-                if price_data.get("success"):
-                    summary = price_data.get("summary", "")
-                    price_lines = []
-                    for line in summary.split("\n"):
-                        if "紫卡行情" in line or "最低" in line or "平均" in line or "中位" in line:
-                            price_lines.append(line)
-                    if price_lines:
-                        market = "\n📊 市场行情：\n" + "\n".join(price_lines)
-            except Exception:
-                pass
-
-        # 格式化输出
+            return f"❌ 品质分析异常: {e}"
         lines = [f"🔮 {weapon_name} 紫卡分析"]
         summary = result.get("summary", "")
         if summary:
             lines.append(summary)
-        if market:
-            lines.append(market)
-
-        # 市场挂单对比
         if weapon_en or weapon_name:
             try:
                 price_res = await self.wf_riven_price(event, item=weapon_en or weapon_name)
                 price_data = json.loads(price_res) if isinstance(price_res, str) else price_res
                 if price_data.get("success"):
-                    raw = price_data.get("raw", [])
-                    if raw:
-                        lines.append("\n📋 相近挂单：")
-                        count = 0
-                        for item in raw[:5]:
-                            attrs_text = item.get("attrs", "")
-                            if weapon_name in attrs_text or weapon_en in attrs_text:
-                                continue
+                    raw_data = price_data.get("raw", [])
+                    if raw_data:
+                        lines.append("\n📋 市场挂单：")
+                        for item in raw_data[:5]:
                             price = item.get("price", "?")
-                            lines.append(f"  {price}p | {attrs_text[:60]}")
-                            count += 1
-                        if count == 0:
-                            lines.append("  （无相近挂单）")
+                            attrs = item.get("attrs", "")[:60]
+                            lines.append(f"  {price}p | {attrs}")
             except Exception:
                 pass
+        return "\n".join(lines)
 
-        yield event.plain_result("\n".join(lines))
 
     async def terminate(self) -> None:
         logger.info("[wfrag_tool] 已卸载")
