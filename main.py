@@ -254,7 +254,7 @@ class WFRagTool(Star):
 
     @filter.llm_tool(name="wf_rag_search")
     async def wf_rag_search(self, event: AstrMessageEvent, **kwargs) -> str:
-        """检索 Warframe 中文 Wiki 知识库（RAG）
+        """【全局调度】优先派给子代理(xj2h/xj3h/xj4h)处理，子代理失败你再自己查。\n        检索 Warframe 中文 Wiki 知识库（RAG）
 
         当用户问游戏机制、数值、公式类问题（如“电击异常几层”“护甲减伤怎么算”“紫卡怎么洗”）时调用。
         返回 wiki 权威片段与出处，回答时数值/机制以检索结果为准，不要凭记忆编造。
@@ -298,7 +298,7 @@ class WFRagTool(Star):
 
     @filter.llm_tool(name="wf_market_price")
     async def wf_market_price(self, event: AstrMessageEvent, **kwargs) -> str:
-        """查询 Warframe Market 物品价格（支持玩家黑话）
+        """【全局调度】优先派给子代理(xj2h/xj3h/xj4h)处理，子代理失败你再自己查。\n        查询 Warframe Market 物品价格（支持玩家黑话）
 
         用户问“XX多少钱”“XX值不值”“XX什么价”“现在XX的行情”时调用。
         物品名支持中文、英文、玩家黑话（如 奶妈P、福马、紫卡、高斯P、咖喱棒）。
@@ -389,7 +389,7 @@ class WFRagTool(Star):
 
     @filter.llm_tool(name="wf_riven_price")
     async def wf_riven_price(self, event: AstrMessageEvent, **kwargs) -> str:
-        """查询 Warframe 紫卡（Riven Mod）拍卖行情（wmr 接口）
+        """【全局调度】优先派给子代理(xj2h/xj3h/xj4h)处理，子代理失败你再自己查。\n        查询 Warframe 紫卡（Riven Mod）拍卖行情（wmr 接口）
 
         用户问“XX武器的紫卡多少钱”“XX紫卡什么价”“wmr XX”“紫卡行情”时调用。
         支持中文/英文武器名（如 食人女魔、Ogris、诸葛连弩）。
@@ -486,7 +486,7 @@ class WFRagTool(Star):
 
     @filter.llm_tool(name="wf_lich_price")
     async def wf_lich_price(self, event: AstrMessageEvent, **kwargs) -> str:
-        """查询玄骸/姐妹武器（Kuva / Tenet）市场价（wmw 接口，支持多属性筛选）
+        """【全局调度】优先派给子代理(xj2h/xj3h/xj4h)处理，子代理失败你再自己查。\n        查询玄骸/姐妹武器（Kuva / Tenet）市场价（wmw 接口，支持多属性筛选）
 
         用户问“赤毒XX多少钱”“信条XX什么价”“wmw XX”“玄骸武器行情”时调用。
         支持中文/英文武器名（如 食人女魔、Kuva Ogris、信条·循环离子枪）。
@@ -641,7 +641,7 @@ class WFRagTool(Star):
         return self._trim(json.dumps(out, ensure_ascii=False), 3500)
     @filter.llm_tool(name="wf_world_state")
     async def wf_world_state(self, event: AstrMessageEvent, **kwargs) -> str:
-        """查询 Warframe 当前世界状态（实时）
+        """【全局调度】优先派给子代理(xj2h/xj3h/xj4h)处理，子代理失败你再自己查。\n        查询 Warframe 当前世界状态（实时）
 
         用户问“现在有什么任务/活动”“电波本周任务”“奸商来了吗”“突击是什么”“钢铁之路轮换”等时调用。
 
@@ -684,7 +684,7 @@ class WFRagTool(Star):
 
     @filter.llm_tool(name="wf_arbitration_essence")
     async def wf_arbitration_essence(self, event: AstrMessageEvent, **kwargs) -> str:
-        """查询仲裁精华表：每个仲裁任务的精华/小时、品质、节点
+        """【全局调度】优先派给子代理(xj2h/xj3h/xj4h)处理，子代理失败你再自己查。\n        查询仲裁精华表：每个仲裁任务的精华/小时、品质、节点
 
         用户问“仲裁精华”“仲裁表”“仲裁奖励”“仲裁每小时多少精华”“仲裁哪个节点精华多”等时调用。
 
@@ -726,7 +726,7 @@ class WFRagTool(Star):
 
     @filter.llm_tool(name="wf_dict")
     async def wf_dict(self, event: AstrMessageEvent, **kwargs) -> str:
-        """查询 Warframe 词库：黑话/别名解析为正式名
+        """【全局调度】优先派给子代理(xj2h/xj3h/xj4h)处理，子代理失败你再自己查。\n        查询 Warframe 词库：黑话/别名解析为正式名
 
         当不确定物品/战甲的正式英文名，或用户说了黑话想确认对应物品时调用（如 咖喱棒、奶妈P、三傻）。
 
