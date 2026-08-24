@@ -27,6 +27,44 @@ except ImportError:
 
 
 class BuildToolsMixin:
+    # 属性名中英文映射（用于 MOD 数值显示）
+    STAT_ZH = {
+        "baseDamage": "基础伤害", "multishot": "多重射击",
+        "critChance": "暴击几率", "critDamage": "暴击伤害",
+        "fireRate": "射速", "statusChance": "触发几率",
+        "damage": "基础伤害", "accuracy": "精准度",
+        "Heat": "火焰伤害", "Cold": "冰冻伤害",
+        "Toxin": "毒素伤害", "Electricity": "电击伤害",
+        "heat": "火焰伤害", "cold": "冰冻伤害",
+        "toxin": "毒素伤害", "electricity": "电击伤害",
+        "Impact": "冲击伤害", "Puncture": "穿刺伤害",
+        "Slash": "切割伤害", "impact": "冲击伤害",
+        "puncture": "穿刺伤害", "slash": "切割伤害",
+        "magazineSize": "弹匣容量", "reloadTime": "换弹速度",
+        "punchThrough": "穿透", "comboDuration": "连击持续时间",
+        "range": "范围", "attackSpeed": "攻击速度",
+        "efficiency": "效率", "channelingEfficiency": "导引效率",
+        "criticalChance": "暴击几率", "criticalDamage": "暴击伤害",
+        "crit_chance": "暴击几率", "crit_damage": "暴击伤害",
+        "fire_rate": "射速", "accuracy_": "精准度",
+        "damage_": "基础伤害", "": "",
+    }
+
+    WEAPON_TYPE_ZH = {
+        "Rifle": "步枪", "Shotgun": "霰弹枪", "Pistol": "手枪", "Secondary": "副武器",
+        "Melee": "近战", "Primary": "主武器", "Arch-Gun": "空战武器", "Archgun": "空战武器",
+        "Sniper": "狙击枪", "Bow": "弓", "Laser Rifle": "激光步枪", "Thrown Melee": "投掷近战",
+        "Scythe": "镰刀", "Zaw": "Zaw", "Kitgun": "组合枪", "Staff": "杖", "Warframe": "战甲",
+        "Ghost": "鬼影", "Heavy Blade": "重型刃", "Hammer": "锤",
+    }
+
+    def _stat_zh(self, key: str) -> str:
+        """把英文属性名转中文"""
+        return self.STAT_ZH.get(key, key)
+
+    def _type_zh(self, t: str) -> str:
+        return self.WEAPON_TYPE_ZH.get(t, t)
+
     WF_WEAPON_SOURCES = {
         "Primary": "http://111.170.14.106:18511/weapons",
         "Secondary": "http://111.170.14.106:18511/weapons",
