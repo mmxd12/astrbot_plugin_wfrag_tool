@@ -1,6 +1,6 @@
 """AstrBot LLM 工具插件：Warframe 实时数据 + Wiki RAG
 
-注册 7 个 llm_tool（function calling），让 LLM 在对话中主动调用：
+注册 10 个 llm_tool（function calling），让 LLM 在对话中主动调用：
   - wf_rag_search         检索 Warframe 中文 Wiki 知识库（wf-rag 服务 / 8765）
   - wf_market_price       Warframe Market 市价查询（wf-api / 3000，支持黑话）
   - wf_riven_price        紫卡（Riven）拍卖查询（wf-api /wmr，中英文武器名）
@@ -8,6 +8,9 @@
   - wf_world_state        世界状态查询（电波/突击/裂缝/奸商/钢铁之路/仲裁…）
   - wf_arbitration_essence 仲裁精华表（精华/小时、品质、节点）
   - wf_dict               词库/黑话解析（wf-api / 3000）
+  - wf_recommend_build    配装推荐（基于伤害公式的最优 MOD 配装，v1.5 新增）
+  - wf_compare_weapons    武器对比（2-4把武器对比+DPS计算，v1.5 新增）
+  - wf_search_builds      社区配装搜索（Overframe.gg 社区热门配装，v1.5 新增）
 
 依赖两个本地服务（只读 HTTP，插件本身不缓存任何数据）：
   - wf-api  http://127.0.0.1:3000   (node wf-api，市价/世界状态/词库)
@@ -27,9 +30,12 @@ import urllib.request
 from astrbot.api import logger
 from astrbot.api.event import AstrMessageEvent, filter
 import sys
+import os
 sys.path.insert(0, "/AstrBot/data/tools")
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), "tools"))
 if 'riven_analyse' in sys.modules: del sys.modules['riven_analyse']
 from riven_analyse import parse_ocr_text, analyse_riven, resolve_weapon
+from wf_build_tools import BuildToolsMixin
 
 from astrbot.api.star import Context, Star, register
 from astrbot.core.utils.session_waiter import session_waiter, SessionController, DefaultSessionFilter
@@ -44,8 +50,8 @@ TIMEOUT = 30
 WS_TYPES = "电波|突击|裂缝|钢铁裂缝|九重天|奸商|达尔沃|小小黑|钢铁之路|执刑官|仲裁|仲裁精华(arb)|入侵|警报|双衍|科研|全局增益|赤毒|舰队|先遣舰|日历|促销|新闻|活动|集团任务|时间戳|地球|金星|火卫二|扎里曼|赏金|科维兽|1999赏金"
 
 
-@register("astrbot_plugin_wfrag_tool", "小浅", "Warframe LLM 工具：Wiki RAG + 市价 + 紫卡(wmr) + 玄骸/姐妹(wmw) + 世界状态 + 仲裁精华 + 词库", "1.4.0")
-class WFRagTool(Star):
+@register("astrbot_plugin_wfrag_tool", "小浅", "Warframe LLM 工具：Wiki RAG + 市价 + 紫卡(wmr) + 玄骸/姐妹(wmw) + 世界状态 + 仲裁精华 + 词库", "1.5.0")
+class WFRagTool(BuildToolsMixin, Star):
     def __init__(self, context: Context, config=None):
         super().__init__(context)
         cfg = config or {}
@@ -53,6 +59,7 @@ class WFRagTool(Star):
         self.rag = (cfg.get("wf_rag_url") or WF_RAG).rstrip("/")
         self.timeout = int(cfg.get("timeout") or TIMEOUT)
         self._health = {}  # 后台自检结果: {"wf_api": bool, "wf_rag": bool}
+        self.build_tools_init()
         logger.info(f"[wfrag_tool] 就绪 | wf-api: {self.api} | wf-rag: {self.rag}")
         threading.Thread(target=self._startup_check, daemon=True).start()
 
