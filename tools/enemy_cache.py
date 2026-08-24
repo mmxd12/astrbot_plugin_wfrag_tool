@@ -52,6 +52,30 @@ DEFAULT_ENEMIES: dict[str, dict[str, Any]] = {
         "phases": [{"name": "实体阶段", "note": "常规武器输出"}, {"name": "虚空阶段", "note": "需指挥官转移"}],
         "mechanics": ["阶段机制", "虚空形态需指挥官"],
     },
+    "Jackal": {
+        "faction": "Corpus", "healthType": "robotic", "armorType": "ferrite",
+        "baseArmor": 200, "baseHealth": 250000, "baseShield": 100000, "baseLevel": 15,
+        "weaknesses": ["腐蚀", "毒", "电"], "resistances": ["冲击", "磁力"],
+        "mechanics": ["弱点头部", "阶段机制", "腿部护盾"],
+    },
+    "Jackal V2": {
+        "faction": "Corpus", "healthType": "robotic", "armorType": "ferrite",
+        "baseArmor": 300, "baseHealth": 500000, "baseShield": 200000, "baseLevel": 30,
+        "weaknesses": ["腐蚀", "毒", "电"], "resistances": ["冲击", "磁力"],
+        "mechanics": ["弱点头部", "阶段机制", "腿部护盾"],
+    },
+    "Nox": {
+        "faction": "Grineer", "healthType": "clonedFlesh", "armorType": "alloy",
+        "baseArmor": 250, "baseHealth": 500, "baseShield": 0, "baseLevel": 15,
+        "weaknesses": ["腐蚀", "毒"], "resistances": ["冲击", "切割"],
+        "mechanics": ["弱点头部毒囊", "毒囊破坏后易伤"],
+    },
+    "Eximus": {
+        "faction": "General", "healthType": "clonedFlesh", "armorType": "ferrite",
+        "baseArmor": 200, "baseHealth": 800, "baseShield": 0, "baseLevel": 30,
+        "weaknesses": ["腐蚀", "辐射"], "resistances": [],
+        "mechanics": ["过载护盾", "光环效果"],
+    },
 }
 
 
