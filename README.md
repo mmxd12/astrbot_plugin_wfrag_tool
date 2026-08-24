@@ -71,3 +71,4 @@ wfllm dict 三傻
 - warframe-info-api（需部署）
 - rapidocr-onnxruntime（紫卡 OCR）
 - 灰机 Wiki API（敌人数据，可选）
+- [本地rag](https://github.com/mmxd12/wf-rag-pack)（这个是本地wiki与上方同源，请选择其一，可选）
