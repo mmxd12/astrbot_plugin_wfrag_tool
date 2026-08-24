@@ -20,6 +20,11 @@ from typing import Any
 from astrbot.api import logger
 from astrbot.api.event import AstrMessageEvent, filter
 
+try:
+    from .enemy_cache import resolve_enemy_async
+except ImportError:
+    from enemy_cache import resolve_enemy_async
+
 
 class BuildToolsMixin:
     WF_WEAPON_SOURCES = {
@@ -29,12 +34,8 @@ class BuildToolsMixin:
     }
     OVERFRAME_BASE = "https://overframe.gg"
     OVERFRAME_UA = "WFRagTool/1.4 (Warframe Knowledge Bot)"
-    WF_ENEMIES = {
-        "Corrupted Heavy Gunner": {"healthType":"clonedFlesh","armorType":"ferrite","baseArmor":500,"baseHealth":700,"baseShield":0,"baseLevel":8},
-        "Corrupted Bombard": {"healthType":"clonedFlesh","armorType":"alloy","baseArmor":500,"baseHealth":700,"baseShield":0,"baseLevel":8},
-        "Corpus Tech": {"healthType":"flesh","armorType":"none","baseArmor":0,"baseHealth":700,"baseShield":650,"baseLevel":15},
-        "Steel Path Lancer": {"healthType":"clonedFlesh","armorType":"ferrite","baseArmor":200,"baseHealth":150,"baseShield":0,"baseLevel":1},
-    }
+    # 敌人参数由 enemy_cache 统一提供，支持别名、缓存、Wiki 和虚空天使。
+    WF_ENEMIES = {}
     WF_DAMAGE_BONUSES = {
         "Slash":{"ferrite":.85,"alloy":.5,"flesh":1.25,"clonedFlesh":1.25,"robotic":.75},"Impact":{"flesh":.75,"clonedFlesh":.75,"shield":1.5},"Puncture":{"ferrite":1.5,"shield":.8,"robotic":1.25},
         "Heat":{"clonedFlesh":1.25,"protoShield":.5,"infestedFlesh":1.5,"infested":1.25},"Cold":{"alloy":1.25,"shield":1.5,"fossilized":.75},"Electricity":{"robotic":1.5,"machinery":1.5},
@@ -79,15 +80,20 @@ class BuildToolsMixin:
 
     def _wf_find_weapon(self, name: str) -> dict | None:
         q = name.lower().strip(); cache = self._wf_weapon_cache
+        # 精确匹配缓存键
         for n, w in cache.items():
             if n.lower() == q: return w
-        c = [w for n,w in cache.items() if q in n.lower() or n.lower() in q]
+            if (w.get("name") or "").lower() == q: return w
+            if (w.get("zh_name") or "").lower() == q: return w
+        # 模糊匹配
+        c = [w for n,w in cache.items() if q in n.lower() or n.lower() in q
+             or q in (w.get("name","").lower() or "") or q in (w.get("zh_name","").lower() or "")]
         return c[0] if len(c) == 1 else (min(c, key=lambda w: abs(len(w.get("name", ""))-len(name))) if c else None)
 
     def _wf_normalize_weapon(self, raw: dict) -> dict:
         dmg = raw.get("damage", {}) or {}
         damage = {k:v for k,v in dmg.items() if isinstance(v,(int,float)) and v > 0 and k != "total"}
-        return {"name":raw.get("name","Unknown"),"type":raw.get("type",""),"category":raw.get("category",""),"damage":damage,"totalDamage":raw.get("totalDamage",sum(damage.values())),"criticalChance":float(raw.get("criticalChance",0) or 0),"criticalMultiplier":float(raw.get("criticalMultiplier",1) or 1),"statusChance":float(raw.get("procChance",raw.get("statusChance",0)) or 0),"fireRate":float(raw.get("fireRate",1) or 1),"magazineSize":int(raw.get("magazineSize",30) or 30),"reloadTime":float(raw.get("reloadTime",2) or 2),"multishot":float(raw.get("multishot",1) or 1),"disposition":int(raw.get("disposition",1) or 1),"polarities":raw.get("polarities",[]),"trigger":raw.get("trigger",""),"masteryReq":int(raw.get("masteryReq",0) or 0),"raw":raw}
+        return {"name":raw.get("name","Unknown"),"zh_name":raw.get("zh_name") or raw.get("zhName"),"type":raw.get("type",raw.get("weaponType","")),"category":raw.get("category",""),"damage":damage,"totalDamage":float(raw.get("totalDamage",sum(damage.values())) or sum(damage.values())),"criticalChance":float(raw.get("criticalChance",raw.get("critChance",0)) or 0),"criticalMultiplier":float(raw.get("criticalMultiplier",raw.get("critMultiplier",1)) or 1),"statusChance":float(raw.get("procChance",raw.get("statusChance",0)) or 0),"fireRate":float(raw.get("fireRate",1) or 1),"magazineSize":int(raw.get("magazineSize",30) or 30),"reloadTime":float(raw.get("reloadTime",2) or 2),"multishot":float(raw.get("multishot",1) or 1),"disposition":int(raw.get("disposition",1) or 1),"polarities":raw.get("polarities",[]),"trigger":raw.get("trigger",""),"masteryReq":int(raw.get("masteryReq",0) or 0),"raw":raw}
 
     def _wf_load_mod_db(self) -> dict:
         if self._wf_mod_db is not None: return self._wf_mod_db
@@ -179,19 +185,30 @@ class BuildToolsMixin:
             enemy(string): 攻击目标敌人名（可选，钢 path 重甲兵等）
             enemy_level(int): 敌人等级（可选，默认使用基础等级）
         """
-        weapon_name=str(kwargs.get("weapon","")).strip(); goal=str(kwargs.get("goal","general_dps")).strip(); enemy=str(kwargs.get("enemy","")).strip(); level=kwargs.get("enemy_level")
+        weapon_name=str(kwargs.get("weapon","")).strip(); goal=str(kwargs.get("goal","general_dps")).strip(); enemy=str(kwargs.get("enemy","")).strip()
+        try: level = int(kwargs.get("enemy_level")) if kwargs.get("enemy_level") is not None else None
+        except (TypeError, ValueError): level = None
         if not weapon_name: return json.dumps({"success":False,"message":"缺少参数 weapon（武器名）"},ensure_ascii=False)
         await self._wf_fetch_all_weapons(); raw=self._wf_find_weapon(weapon_name)
         if not raw: return json.dumps({"success":False,"message":f"未找到武器「{weapon_name}」"},ensure_ascii=False)
         w=self._wf_normalize_weapon(raw); mods=self._wf_get_compatible_mods(w["type"])
         if not mods: return json.dumps({"success":False,"message":f"未找到适合 {w['type']} 类型的 MOD"},ensure_ascii=False)
-        selected=self._wf_select_mods(mods,goal,w); d=self._wf_calculate_dps(w,selected); ed=None
-        if enemy in self.WF_ENEMIES: ed=self._wf_enemy_damage(w,d,self.WF_ENEMIES[enemy],level)
+        selected=self._wf_select_mods(mods,goal,w); d=self._wf_calculate_dps(w,selected); ed=None; enemy_data=None; enemy_label=enemy
+        if enemy:
+            enemy_data = await resolve_enemy_async(enemy)
+            if enemy_data:
+                enemy_label = enemy_data.get("name") or enemy
+                ed = self._wf_enemy_damage(w, d, enemy_data, level)
         lines=[f"🎯 {w.get('zh_name') or w['name']} 推荐配装（{goal}）","","【MOD 配置】"]
         for i,m in enumerate(selected,1):
             desc=", ".join(f"{k} {v:+.0%}" for k,v in m.get("stats",{}).items()); lines.append(f"  {i}. {m.get('name', m.get('en', m.get('n', '?')))} ({m.get('group','')}) — {desc} [drain:{m.get('drain',0)}]")
         lines += ["","【DPS 数据】",f"  单发伤害: {d['damage_per_shot']:.1f}",f"  暴击倍率: {d['avg_crit_mult']:.2f}x (有效暴击率: {d['eff_crit']:.0%})",f"  爆发 DPS: {d['burst_dps']:.0f}",f"  持续 DPS: {d['sustained_dps']:.0f}",f"  触发/秒: {d['status_pps']:.1f}"]
-        if ed is not None: lines += ["",f"【对 {enemy} 有效 DPS】  {ed:.0f}"]
+        if ed is not None:
+            lines += ["", f"【对 {enemy_label} 有效 DPS】  {ed:.0f}"]
+            if enemy_data.get("weaknesses"):
+                lines.append("  敌人弱点：" + "、".join(enemy_data["weaknesses"]))
+            if enemy_data.get("mechanics"):
+                lines.append("  敌人机制：" + "；".join(enemy_data["mechanics"]))
         return "\n".join(lines)
 
     @filter.llm_tool(name="wf_compare_weapons")
