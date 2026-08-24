@@ -104,17 +104,3 @@ OCR 识别的中文名可能有错字（如鳄神→鲲神），会按本地 442
 源码同步维护在 `wf-rag/llm_tool.py`（本目录 main.py 为其副本）。
 自测脚本：`wf-rag/test_llm_tool.py` —— **零依赖**（mock 掉 AstrBot 装饰器），
 任意 Python 3.10+ 直接 `python test_llm_tool.py` 即可验证 7 个工具，只需 wf-api/wf-rag 服务在线。
-
-## 新增工具（v1.5.0）
-
-### 1. wf_recommend_build（配装推荐）
-基于伤害公式计算最优 MOD 配装，支持不同流派（暴击流/触发流/平伤流）。
-
-### 2. wf_compare_weapons（武器对比）
-2-4 把武器对比，含 DPS 计算、暴击率/倍率、触发率、射速等属性逐项对比。
-
-### 3. wf_search_builds（社区配装搜索）
-搜索 Overframe.gg 社区热门配装。
-
-### 数据源
-所有武器和 MOD 数据均通过 warframe-info-api 获取，自带中文名，多数据源归并（DE 官方 > WFA > browse.wf > 原文），每 3 小时自动刷新。
