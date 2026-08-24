@@ -1192,12 +1192,28 @@ class WFRagTool(BuildToolsMixin, Star):
             parts = msg.split("打", 1)
             weapon = parts[0].strip()
             enemy = parts[1].strip() if len(parts) > 1 else ""
-        # 调用配装推荐工具
+        # 调用配装推荐工具（数值计算）
         try:
             result = await self.wf_recommend_build(event, weapon=weapon, goal=goal, enemy=enemy)
             yield event.plain_result(result)
         except Exception as e:
             yield event.plain_result(f"❌ 配装计算异常: {e}")
+            return
+        # LLM 补充：赋能/紫卡/配装思路（基于数值结果）
+        try:
+            prompt = (
+                f"你是 Warframe 配装专家。以下是【{weapon}】打【{enemy or '通用'}】的数值计算配装结果：\n\n"
+                f"{result}\n\n"
+                f"请基于以上数值结果，补充以下内容（简洁、实战向）：\n"
+                f"1. **赋能推荐**：武器/战甲适合用什么赋能（如 武器：无情/毁灭者，战甲相关）\n"
+                f"2. **紫卡推荐**：这把武器值得收怎样的紫卡词条（2-3条核心词条，结合流派）\n"
+                f"3. **配装思路**：为什么这样配，针对敌人弱点的核心逻辑，实战注意事项\n"
+                f"4. **备选方案**：如果没有某些MOD（如镀层系列），用什么替代\n"
+                f"用中文回复，实战向、简洁、别太啰嗦。"
+            )
+            yield event.request_llm(prompt=prompt)
+        except Exception as e:
+            yield event.plain_result(f"❌ LLM 补充失败: {e}")
 
     @filter.command("武器对比", alias={"weaponcompare", "对比"})
     async def compare_cmd(self, event: AstrMessageEvent):
