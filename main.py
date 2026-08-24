@@ -828,7 +828,7 @@ class WFRagTool(BuildToolsMixin, Star):
                         f"{'（' + str(h.get('zh')) + '）' if h.get('zh') and h.get('key') else ''}"
                         f"{' | 紫卡价 ' + str(h.get('ducats')) if h.get('ducats') else ''}")
                 return "\n".join(lines) or "（无结果）"
-            if tool in ("rag", "search", "r"):
+            if tool in ("rag", "search"):
                 return (d.get("context") or "")[:1500] + (
                     "\n\n来源: " + ", ".join(
                         s.get("title") for s in (d.get("sources") or [])[:3]))
@@ -961,9 +961,9 @@ class WFRagTool(BuildToolsMixin, Star):
         parts = msg.split(maxsplit=1)
         if not parts:
             yield event.plain_result(
-                "Warframe LLM 工具插件 v1.4.0\n"
+                "Warframe LLM 工具插件 v1.5.0\n"
                 f"服务状态：{self._health_line()}\n"
-                "已注册 6 个 llm_tool：\n"
+                "已注册 10 个 llm_tool：\n"
                 "  wf_rag_search(query, top_k)       - Wiki 知识库检索\n"
                 "  wf_market_price(item)             - 市价查询（支持黑话）\n"
                 "  wf_riven_price(item, page)        - 紫卡拍卖查询（wmr，中英文武器名）\n"
@@ -976,7 +976,7 @@ class WFRagTool(BuildToolsMixin, Star):
             return
         tool, arg = parts[0].lower(), (parts[1] if len(parts) > 1 else "")
         try:
-            if tool in ("rag", "search", "r"):
+            if tool in ("rag", "search"):
                 res = await self.wf_rag_search(event, query=arg)
             elif tool in ("price", "wm", "p"):
                 res = await self.wf_market_price(event, item=arg)
@@ -987,7 +987,7 @@ class WFRagTool(BuildToolsMixin, Star):
             elif tool in ("ws", "wf", "world", "w"):
                 res = await self.wf_world_state(event, type=arg)
             elif tool in ("arb", "arbitration", "essence", "精华"):
-                days = int(arg) if arg.isdigit() else 7
+                days = max(1, min(int(arg), 30)) if arg.isdigit() else 7
                 res = await self.wf_arbitration_essence(event, days=days)
             elif tool in ("ra", "analyse"):
                 # 纯文本分析（不走 LLM），和 #紫卡分析 的区别仅在于输出格式
