@@ -1212,9 +1212,28 @@ class WFRagTool(BuildToolsMixin, WarframeBuildMixin, Star):
                     enemy = target
             except ImportError:
                 enemy = target
-        # 调用配装推荐工具（数值计算）
+        # 自动识别武器/战甲并调用对应配装工具
         try:
-            result = await self.wf_recommend_build(event, weapon=weapon, goal=goal, enemy=enemy)
+            result = None
+            # 先尝试武器配装
+            try:
+                await self._wf_fetch_all_weapons()
+                raw = self._wf_find_weapon(weapon)
+                if raw:
+                    result = await self.wf_recommend_build(event, weapon=weapon, goal=goal, enemy=enemy)
+            except Exception:
+                pass
+            # 如果武器没找到，尝试战甲配装
+            if result is None:
+                try:
+                    wf = self._wf_find_warframe(weapon)
+                    if wf:
+                        result = await self.wf_recommend_warframe_build(event, warframe=weapon, goal=goal, enemy=enemy)
+                except Exception:
+                    pass
+            if result is None:
+                yield event.plain_result(f"❌ 未找到「{weapon}」对应的武器或战甲，请检查名称")
+                return
             # 如果识别为环境，在结果前加上环境信息
             if environment:
                 try:
