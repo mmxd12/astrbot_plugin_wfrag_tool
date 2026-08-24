@@ -171,6 +171,14 @@ class BuildToolsMixin:
 
     @filter.llm_tool(name="wf_recommend_build")
     async def wf_recommend_build(self, event: AstrMessageEvent, **kwargs) -> str:
+        """根据武器名和流派推荐最优 MOD 配装。
+        
+        Args:
+            weapon(string): 武器名（中英文皆可，如 "舍杜" "Shedu"）
+            goal(string): 配装流派。可选：general_dps(均衡DPS/默认), crit(暴击流), status(触发流), viral_slash(病毒切), corrosive(腐蚀)
+            enemy(string): 攻击目标敌人名（可选，钢 path 重甲兵等）
+            enemy_level(int): 敌人等级（可选，默认使用基础等级）
+        """
         weapon_name=str(kwargs.get("weapon","")).strip(); goal=str(kwargs.get("goal","general_dps")).strip(); enemy=str(kwargs.get("enemy","")).strip(); level=kwargs.get("enemy_level")
         if not weapon_name: return json.dumps({"success":False,"message":"缺少参数 weapon（武器名）"},ensure_ascii=False)
         await self._wf_fetch_all_weapons(); raw=self._wf_find_weapon(weapon_name)
@@ -188,6 +196,12 @@ class BuildToolsMixin:
 
     @filter.llm_tool(name="wf_compare_weapons")
     async def wf_compare_weapons(self,event: AstrMessageEvent,**kwargs)->str:
+        """对比 2-4 把武器的属性，可选配装 DPS 计算。
+        
+        Args:
+            weapons(string): 武器名列表，逗号分隔（如 "舍杜, 迅发电浆炮"）
+            include_build(bool): 是否包含推荐 MOD DPS 计算，默认 false
+        """
         text=str(kwargs.get("weapons","")).strip(); inc=str(kwargs.get("include_build","false")).lower()=="true"
         if not text: return json.dumps({"success":False,"message":"缺少参数 weapons（武器名，逗号分隔）"},ensure_ascii=False)
         names=[x.strip() for x in text.split(",") if x.strip()][:4]
@@ -229,6 +243,13 @@ class BuildToolsMixin:
 
     @filter.llm_tool(name="wf_search_builds")
     async def wf_search_builds(self,event: AstrMessageEvent,**kwargs)->str:
+        """搜索 Overframe.gg 社区配装方案。
+        
+        Args:
+            item(string): 武器/物品名（中英文皆可）
+            filter(string): 可选过滤条件（如热门/最新/高评分）
+            limit(int): 返回数量，默认5，最多10
+        """
         name=str(kwargs.get("item","")).strip(); filt=str(kwargs.get("filter","") or "").strip()
         if not name: return json.dumps({"success":False,"message":"缺少参数 item（物品名）"},ensure_ascii=False)
         try: limit=max(1,min(int(kwargs.get("limit",5) or 5),10))
