@@ -1,0 +1,735 @@
+{
+ "Adept Surge": {
+  "group": "health",
+  "stats": {
+   "sprint": 0.1,
+   "health": 0.25
+  },
+  "drain": 3,
+  "polarity": "naramon",
+  "rarity": "Uncommon",
+  "name": "跃浪好手"
+ },
+ "Adrenaline Boost": {
+  "group": "energy",
+  "stats": {
+   "energy": 0.5,
+   "health": 0.2
+  },
+  "drain": 3,
+  "polarity": "madurai",
+  "rarity": "Rare",
+  "name": "肾上腺激素"
+ },
+ "Air Thrusters": {
+  "group": "sprint",
+  "stats": {
+   "sprint": 0.2
+  },
+  "drain": 3,
+  "polarity": "naramon",
+  "rarity": "Uncommon",
+  "name": "空中推进"
+ },
+ "Amar's Anguish": {
+  "group": "sprint",
+  "stats": {
+   "sprint": 0.15
+  },
+  "drain": 5,
+  "polarity": "vazarin",
+  "rarity": "Common",
+  "name": "欺谋狼主之苦"
+ },
+ "Amar's Hatred": {
+  "group": "armor",
+  "stats": {
+   "armor": 0.25,
+   "strength": 0.15
+  },
+  "drain": 5,
+  "polarity": "vazarin",
+  "rarity": "Uncommon",
+  "name": "欺谋狼主之恨"
+ },
+ "Anti-Flak Plating": {
+  "group": "sprint",
+  "stats": {
+   "sprint": 0.1
+  },
+  "drain": 3,
+  "polarity": "vazarin",
+  "rarity": "Uncommon",
+  "name": "抗爆覆甲"
+ },
+ "Archon Continuity": {
+  "group": "duration",
+  "stats": {
+   "duration": 0.55
+  },
+  "drain": 10,
+  "polarity": "madurai",
+  "rarity": "Legendary",
+  "name": "执刑官 持久力"
+ },
+ "Archon Flow": {
+  "group": "energy",
+  "stats": {
+   "energy": 1.85
+  },
+  "drain": 10,
+  "polarity": "naramon",
+  "rarity": "Legendary",
+  "name": "执刑官 川流不息"
+ },
+ "Archon Intensify": {
+  "group": "strength",
+  "stats": {
+   "strength": 0.3
+  },
+  "drain": 10,
+  "polarity": "madurai",
+  "rarity": "Legendary",
+  "name": "执刑官 聚精会神"
+ },
+ "Archon Stretch": {
+  "group": "range",
+  "stats": {
+   "range": 0.45,
+   "energy": 0.02
+  },
+  "drain": 10,
+  "polarity": "naramon",
+  "rarity": "Legendary",
+  "name": "执刑官 延伸"
+ },
+ "Archon Vitality": {
+  "group": "health",
+  "stats": {
+   "health": 1
+  },
+  "drain": 10,
+  "polarity": "vazarin",
+  "rarity": "Legendary",
+  "name": "执刑官 生命力"
+ },
+ "Armored Acrobatics": {
+  "group": "sprint",
+  "stats": {
+   "sprint": 0.1
+  },
+  "drain": 3,
+  "polarity": "vazarin",
+  "rarity": "Uncommon",
+  "name": "杂技装甲"
+ },
+ "Armored Agility": {
+  "group": "armor",
+  "stats": {
+   "sprint": 0.15,
+   "armor": 0.4
+  },
+  "drain": 5,
+  "polarity": "vazarin",
+  "rarity": "Rare",
+  "name": "灵活装甲"
+ },
+ "Armored Evade": {
+  "group": "sprint",
+  "stats": {
+   "sprint": 0.1
+  },
+  "drain": 3,
+  "polarity": "vazarin",
+  "rarity": "Uncommon",
+  "name": "闪避装甲"
+ },
+ "Augur Accord": {
+  "group": "shield",
+  "stats": {
+   "shield": 0.7
+  },
+  "drain": 5,
+  "polarity": "vazarin",
+  "rarity": "Uncommon",
+  "name": "预言 协约"
+ },
+ "Augur Message": {
+  "group": "duration",
+  "stats": {
+   "duration": 0.24
+  },
+  "drain": 5,
+  "polarity": "naramon",
+  "rarity": "Common",
+  "name": "预言 启示"
+ },
+ "Augur Reach": {
+  "group": "range",
+  "stats": {
+   "range": 0.3
+  },
+  "drain": 5,
+  "polarity": "naramon",
+  "rarity": "Uncommon",
+  "name": "预言 通灵"
+ },
+ "Augur Secrets": {
+  "group": "strength",
+  "stats": {
+   "strength": 0.24
+  },
+  "drain": 5,
+  "polarity": "naramon",
+  "rarity": "Rare",
+  "name": "预言 神密"
+ },
+ "Blind Rage": {
+  "group": "strength",
+  "stats": {
+   "strength": 0.99,
+   "efficiency": -0.55
+  },
+  "drain": 10,
+  "polarity": "madurai",
+  "rarity": "Rare",
+  "name": "盲怒"
+ },
+ "Boreal's Hatred": {
+  "group": "shield",
+  "stats": {
+   "shield": 0.65,
+   "efficiency": 0.15
+  },
+  "drain": 5,
+  "polarity": "vazarin",
+  "rarity": "Uncommon",
+  "name": "诡文枭主之恨"
+ },
+ "Calculated Spring": {
+  "group": "health",
+  "stats": {
+   "sprint": 0.1,
+   "health": 0.25
+  },
+  "drain": 3,
+  "polarity": "naramon",
+  "rarity": "Uncommon",
+  "name": "精准弹跳"
+ },
+ "Carnis Carapace": {
+  "group": "armor",
+  "stats": {
+   "armor": 0.55,
+   "health": 0.2
+  },
+  "drain": 5,
+  "polarity": "vazarin",
+  "rarity": "Uncommon",
+  "name": "肉碾虫 壳甲"
+ },
+ "Constitution": {
+  "group": "duration",
+  "stats": {
+   "duration": 0.28
+  },
+  "drain": 3,
+  "polarity": "naramon",
+  "rarity": "Rare",
+  "name": "百折不挠"
+ },
+ "Continuity": {
+  "group": "duration",
+  "stats": {
+   "duration": 0.3
+  },
+  "drain": 5,
+  "polarity": "madurai",
+  "rarity": "Rare",
+  "name": "持久力"
+ },
+ "Corrosive Projection": {
+  "group": "armor",
+  "stats": {
+   "armor": 0.18
+  },
+  "drain": 5,
+  "polarity": "naramon",
+  "rarity": "Uncommon",
+  "name": "腐蚀投射"
+ },
+ "Cunning Drift": {
+  "group": "range",
+  "stats": {
+   "range": 0.15
+  },
+  "drain": 5,
+  "polarity": "madurai",
+  "rarity": "Rare",
+  "name": "狡诈窜升"
+ },
+ "Endurance Drift": {
+  "group": "energy",
+  "stats": {
+   "energy": 0.1
+  },
+  "drain": 5,
+  "polarity": "zenurik",
+  "rarity": "Rare",
+  "name": "坚忍窜升"
+ },
+ "Equilibrium": {
+  "group": "energy",
+  "stats": {
+   "energy": 1.1
+  },
+  "drain": 10,
+  "polarity": "naramon",
+  "rarity": "Uncommon",
+  "name": "均衡点"
+ },
+ "Final Act": {
+  "group": "strength",
+  "stats": {
+   "strength": 0.3
+  },
+  "drain": 3,
+  "polarity": "madurai",
+  "rarity": "Rare",
+  "name": "搏命反扑"
+ },
+ "Fleeting Expertise": {
+  "group": "efficiency",
+  "stats": {
+   "efficiency": 0.6,
+   "duration": -0.6
+  },
+  "drain": 5,
+  "polarity": "naramon",
+  "rarity": "Rare",
+  "name": "弹指瞬技"
+ },
+ "Flow": {
+  "group": "energy",
+  "stats": {
+   "energy": 1
+  },
+  "drain": 5,
+  "polarity": "naramon",
+  "rarity": "Rare",
+  "name": "川流不息"
+ },
+ "Follow Through": {
+  "group": "energy",
+  "stats": {
+   "energy": 0.1
+  },
+  "drain": 3,
+  "polarity": "madurai",
+  "rarity": "Uncommon",
+  "name": "贯彻始终"
+ },
+ "Fracturing Crush": {
+  "group": "castSpeed",
+  "stats": {
+   "castSpeed": 0.5
+  },
+  "drain": 3,
+  "polarity": "zenurik",
+  "rarity": "Rare",
+  "name": "高压粉碎"
+ },
+ "Gladiator Aegis": {
+  "group": "armor",
+  "stats": {
+   "armor": 0.4
+  },
+  "drain": 5,
+  "polarity": "vazarin",
+  "rarity": "Common",
+  "name": "角斗士 圣盾"
+ },
+ "Gladiator Resolve": {
+  "group": "health",
+  "stats": {
+   "health": 0.4
+  },
+  "drain": 5,
+  "polarity": "vazarin",
+  "rarity": "Uncommon",
+  "name": "角斗士 决心"
+ },
+ "Hastened Steps": {
+  "group": "sprint",
+  "stats": {
+   "sprint": 0.2,
+   "shield": 0.2
+  },
+  "drain": 3,
+  "polarity": "madurai",
+  "rarity": "Rare",
+  "name": "紧凑步伐"
+ },
+ "Heightened Reflexes": {
+  "group": "castSpeed",
+  "stats": {
+   "castSpeed": 0.2,
+   "efficiency": 0.2
+  },
+  "drain": 3,
+  "polarity": "madurai",
+  "rarity": "Rare",
+  "name": "加剧反射"
+ },
+ "Intensify": {
+  "group": "strength",
+  "stats": {
+   "strength": 0.55
+  },
+  "drain": 10,
+  "polarity": "madurai",
+  "rarity": "Rare",
+  "name": "聚精会神"
+ },
+ "Jugulus Carapace": {
+  "group": "armor",
+  "stats": {
+   "armor": 0.55,
+   "health": 0.2
+  },
+  "drain": 5,
+  "polarity": "vazarin",
+  "rarity": "Uncommon",
+  "name": "喉骨刃者 壳甲"
+ },
+ "Narrow Minded": {
+  "group": "duration",
+  "stats": {
+   "duration": 0.99,
+   "range": -0.66
+  },
+  "drain": 10,
+  "polarity": "vazarin",
+  "rarity": "Rare",
+  "name": "心志偏狭"
+ },
+ "Natural Talent": {
+  "group": "castSpeed",
+  "stats": {
+   "castSpeed": 0.5
+  },
+  "drain": 3,
+  "polarity": "naramon",
+  "rarity": "Rare",
+  "name": "天赋"
+ },
+ "Nira's Hatred": {
+  "group": "health",
+  "stats": {
+   "health": 0.35,
+   "duration": 0.15
+  },
+  "drain": 5,
+  "polarity": "vazarin",
+  "rarity": "Uncommon",
+  "name": "混沌蛇主之恨"
+ },
+ "No Current Leap": {
+  "group": "sprint",
+  "stats": {
+   "sprint": 0.1
+  },
+  "drain": 3,
+  "polarity": "naramon",
+  "rarity": "Uncommon",
+  "name": "无电流飞跃"
+ },
+ "Overextended": {
+  "group": "range",
+  "stats": {
+   "range": 0.9,
+   "strength": -0.6
+  },
+  "drain": 5,
+  "polarity": "vazarin",
+  "rarity": "Rare",
+  "name": "过度延展"
+ },
+ "Power Drift": {
+  "group": "strength",
+  "stats": {
+   "strength": 0.15
+  },
+  "drain": 5,
+  "polarity": "zenurik",
+  "rarity": "Rare",
+  "name": "力量窜升"
+ },
+ "Primed Continuity": {
+  "group": "duration",
+  "stats": {
+   "duration": 0.55
+  },
+  "drain": 10,
+  "polarity": "madurai",
+  "rarity": "Legendary",
+  "name": "持久力 Prime"
+ },
+ "Primed Flow": {
+  "group": "energy",
+  "stats": {
+   "energy": 1.85
+  },
+  "drain": 10,
+  "polarity": "naramon",
+  "rarity": "Legendary",
+  "name": "川流不息 Prime"
+ },
+ "Primed Redirection": {
+  "group": "shield",
+  "stats": {
+   "shield": 1.8
+  },
+  "drain": 10,
+  "polarity": "vazarin",
+  "rarity": "Legendary",
+  "name": "蓄能重划 Prime"
+ },
+ "Primed Streamline": {
+  "group": "efficiency",
+  "stats": {
+   "efficiency": 0.55
+  },
+  "drain": 10,
+  "polarity": "naramon",
+  "rarity": "Legendary",
+  "name": "简化 Prime"
+ },
+ "Primed Vigor": {
+  "group": "shield",
+  "stats": {
+   "shield": 0.75,
+   "health": 0.75
+  },
+  "drain": 10,
+  "polarity": "vazarin",
+  "rarity": "Legendary",
+  "name": "活力 Prime"
+ },
+ "Quick Charge": {
+  "group": "shield",
+  "stats": {
+   "shield": 0.2
+  },
+  "drain": 3,
+  "polarity": "vazarin",
+  "rarity": "Rare",
+  "name": "护盾速充"
+ },
+ "Redirection": {
+  "group": "shield",
+  "stats": {
+   "shield": 1
+  },
+  "drain": 10,
+  "polarity": "vazarin",
+  "rarity": "Common",
+  "name": "蓄能重划"
+ },
+ "Rising Skill": {
+  "group": "shield",
+  "stats": {
+   "sprint": 0.1,
+   "shield": 0.3
+  },
+  "drain": 3,
+  "polarity": "naramon",
+  "rarity": "Uncommon",
+  "name": "飞升技巧"
+ },
+ "Rush": {
+  "group": "sprint",
+  "stats": {
+   "sprint": 0.55
+  },
+  "drain": 10,
+  "polarity": "naramon",
+  "rarity": "Uncommon",
+  "name": "冲刺"
+ },
+ "Saxum Carapace": {
+  "group": "armor",
+  "stats": {
+   "armor": 0.55,
+   "health": 0.2
+  },
+  "drain": 5,
+  "polarity": "vazarin",
+  "rarity": "Uncommon",
+  "name": "重岩者 壳甲"
+ },
+ "Shield Disruption": {
+  "group": "shield",
+  "stats": {
+   "shield": 0.18
+  },
+  "drain": 5,
+  "polarity": "naramon",
+  "rarity": "Uncommon",
+  "name": "护盾瓦解"
+ },
+ "Speed Drift": {
+  "group": "castSpeed",
+  "stats": {
+   "sprint": 0.12,
+   "castSpeed": 0.15
+  },
+  "drain": 5,
+  "polarity": "madurai",
+  "rarity": "Rare",
+  "name": "速度窜升"
+ },
+ "Spellbound Harvest": {
+  "group": "range",
+  "stats": {
+   "range": 0.4
+  },
+  "drain": 3,
+  "polarity": "zenurik",
+  "rarity": "Rare",
+  "name": "迷尘丰益"
+ },
+ "Sprint Boost": {
+  "group": "sprint",
+  "stats": {
+   "sprint": 0.15
+  },
+  "drain": 5,
+  "polarity": "naramon",
+  "rarity": "Uncommon",
+  "name": "冲刺提升"
+ },
+ "Stand United": {
+  "group": "armor",
+  "stats": {
+   "armor": 0.25
+  },
+  "drain": 5,
+  "polarity": "vazarin",
+  "rarity": "Uncommon",
+  "name": "团结一致"
+ },
+ "Steel Fiber": {
+  "group": "armor",
+  "stats": {
+   "armor": 1
+  },
+  "drain": 10,
+  "polarity": "vazarin",
+  "rarity": "Common",
+  "name": "钢铁纤维"
+ },
+ "Streamline": {
+  "group": "efficiency",
+  "stats": {
+   "efficiency": 0.3
+  },
+  "drain": 5,
+  "polarity": "naramon",
+  "rarity": "Rare",
+  "name": "简化"
+ },
+ "Stretch": {
+  "group": "range",
+  "stats": {
+   "range": 0.825
+  },
+  "drain": 10,
+  "polarity": "naramon",
+  "rarity": "Uncommon",
+  "name": "延伸"
+ },
+ "Surplus Diverters": {
+  "group": "energy",
+  "stats": {
+   "energy": 0.06
+  },
+  "drain": 5,
+  "polarity": "madurai",
+  "rarity": "Rare",
+  "name": "残盾转换"
+ },
+ "Tempered Bound": {
+  "group": "shield",
+  "stats": {
+   "sprint": 0.1,
+   "shield": 0.3
+  },
+  "drain": 3,
+  "polarity": "naramon",
+  "rarity": "Uncommon",
+  "name": "调节跳跃"
+ },
+ "Transient Fortitude": {
+  "group": "strength",
+  "stats": {
+   "strength": 0.55,
+   "duration": -0.275
+  },
+  "drain": 10,
+  "polarity": "madurai",
+  "rarity": "Rare",
+  "name": "瞬时坚毅"
+ },
+ "Umbral Fiber": {
+  "group": "armor",
+  "stats": {
+   "armor": 1
+  },
+  "drain": 10,
+  "polarity": "umbra",
+  "rarity": "Legendary",
+  "name": "暗影 纤维"
+ },
+ "Umbral Intensify": {
+  "group": "strength",
+  "stats": {
+   "strength": 0.44
+  },
+  "drain": 10,
+  "polarity": "umbra",
+  "rarity": "Legendary",
+  "name": "暗影 聚精会神"
+ },
+ "Umbral Vitality": {
+  "group": "health",
+  "stats": {
+   "health": 1
+  },
+  "drain": 10,
+  "polarity": "umbra",
+  "rarity": "Legendary",
+  "name": "暗影 生命力"
+ },
+ "Vigor": {
+  "group": "shield",
+  "stats": {
+   "shield": 0.5,
+   "health": 0.5
+  },
+  "drain": 5,
+  "polarity": "vazarin",
+  "rarity": "Rare",
+  "name": "活力"
+ },
+ "Vitality": {
+  "group": "health",
+  "stats": {
+   "health": 1
+  },
+  "drain": 10,
+  "polarity": "vazarin",
+  "rarity": "Common",
+  "name": "生命力"
+ }
+}
