@@ -187,14 +187,31 @@ class BuildToolsMixin:
         else: return 0
         return (hp+sh)/max(kt,.001)
 
-    def _wf_select_mods(self, mods, goal, weapon):
+    def _wf_select_mods(self, mods, goal, weapon, enemy_data=None):
         def score(m):
-            s=m.get("stats",{});
-            if goal=="crit": return s.get("critChance",0)*3+s.get("critDamage",0)*2+s.get("baseDamage",0)+s.get("multishot",0)
-            if goal=="status": return s.get("statusChance",0)*3+s.get("fireRate",0)*2+s.get("baseDamage",0)
-            if goal=="viral_slash": return s.get("Slash",0)*3+s.get("Toxin",0)*2+s.get("critChance",0)+s.get("baseDamage",0)
-            if goal=="corrosive": return s.get("Electricity",0)*2+s.get("Toxin",0)*2+s.get("baseDamage",0)+s.get("multishot",0)
-            return s.get("baseDamage",0)*2+s.get("multishot",0)*2+s.get("critChance",0)+s.get("critDamage",0)
+            s=m.get("stats",{})
+            # 敌人弱点加权：如果敌人弱某种元素，该元素 MOD 加分
+            bonus = 0.0
+            if enemy_data and m.get("group") == "elemental":
+                weak = [str(x).lower() for x in (enemy_data.get("weaknesses") or [])]
+                elem_map = {"火":"Heat","heat":"Heat","冰":"Cold","cold":"Cold",
+                            "毒":"Toxin","toxin":"Toxin","电":"Electricity","electricity":"Electricity",
+                            "腐蚀":"Electricity|Toxin","辐射":"Heat|Electricity",
+                            "病毒":"Cold|Toxin","磁力":"Cold|Electricity","气体":"Heat|Toxin",
+                            "爆炸":"Heat|Cold","切割":"Slash","冲击":"Impact","穿刺":"Puncture"}
+                for wk in weak:
+                    target = elem_map.get(wk, "")
+                    if target and "|" in target:
+                        t1, t2 = target.split("|")
+                        if s.get(t1, 0) > 0 or s.get(t2, 0) > 0:
+                            bonus += 2.0
+                    elif target and s.get(target, 0) > 0:
+                        bonus += 2.0
+            if goal=="crit": return bonus + s.get("critChance",0)*3+s.get("critDamage",0)*2+s.get("baseDamage",0)+s.get("multishot",0)
+            if goal=="status": return bonus + s.get("statusChance",0)*3+s.get("fireRate",0)*2+s.get("baseDamage",0)
+            if goal=="viral_slash": return bonus + s.get("Slash",0)*3+s.get("Toxin",0)*2+s.get("critChance",0)+s.get("baseDamage",0)
+            if goal=="corrosive": return bonus + s.get("Electricity",0)*2+s.get("Toxin",0)*2+s.get("baseDamage",0)+s.get("multishot",0)
+            return bonus + s.get("baseDamage",0)*2+s.get("multishot",0)*2+s.get("critChance",0)+s.get("critDamage",0)
         out=[]; seen_group=set(); seen_elem_stat=set()
         for m in sorted(mods,key=score,reverse=True):
             g=m.get("group","")
@@ -231,7 +248,7 @@ class BuildToolsMixin:
         if not raw: return json.dumps({"success":False,"message":f"未找到武器「{weapon_name}」"},ensure_ascii=False)
         w=self._wf_normalize_weapon(raw); mods=self._wf_get_compatible_mods(w["type"])
         if not mods: return json.dumps({"success":False,"message":f"未找到适合 {self._type_zh(w['type'])} 类型的 MOD"},ensure_ascii=False)
-        selected=self._wf_select_mods(mods,goal,w); d=self._wf_calculate_dps(w,selected); ed=None; enemy_data=None; enemy_label=enemy
+        selected=self._wf_select_mods(mods,goal,w,enemy_data); d=self._wf_calculate_dps(w,selected); ed=None; enemy_label=enemy
         if enemy:
             enemy_data = await resolve_enemy_async(enemy)
             if enemy_data:
