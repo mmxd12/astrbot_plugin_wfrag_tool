@@ -8,9 +8,10 @@
   - wf_world_state        世界状态查询（电波/突击/裂缝/奸商/钢铁之路/仲裁…）
   - wf_arbitration_essence 仲裁精华表（精华/小时、品质、节点）
   - wf_dict               词库/黑话解析（wf-api / 3000）
-  - wf_recommend_build    配装推荐（基于伤害公式的最优 MOD 配装，v1.5 新增）
-  - wf_compare_weapons    武器对比（2-4把武器对比+DPS计算，v1.5 新增）
-  - wf_search_builds      社区配装搜索（Overframe.gg 社区热门配装，v1.5 新增）
+  - wf_recommend_build    配装推荐（基于伤害公式的最优 MOD 配装，v1.6 新增）
+  - wf_compare_weapons    武器对比（2-4把武器对比+DPS计算，v1.6 新增）
+  - wf_search_builds      社区配装搜索（Overframe.gg 社区热门配装，v1.6 新增）
+  - wf_recommend_warframe_build  战甲配装推荐（流派+敌人感知，v1.6 新增）
 
 依赖两个本地服务（只读 HTTP，插件本身不缓存任何数据）：
   - wf-api  http://127.0.0.1:3000   (node wf-api，市价/世界状态/词库)
@@ -36,6 +37,7 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), "tools"))
 if 'riven_analyse' in sys.modules: del sys.modules['riven_analyse']
 from riven_analyse import parse_ocr_text, analyse_riven, resolve_weapon
 from wf_build_tools import BuildToolsMixin
+from wf_warframe_tools import WarframeBuildMixin
 
 from astrbot.api.star import Context, Star, register
 from astrbot.core.utils.session_waiter import session_waiter, SessionController, DefaultSessionFilter
@@ -50,8 +52,8 @@ TIMEOUT = 30
 WS_TYPES = "电波|突击|裂缝|钢铁裂缝|九重天|奸商|达尔沃|小小黑|钢铁之路|执刑官|仲裁|仲裁精华(arb)|入侵|警报|双衍|科研|全局增益|赤毒|舰队|先遣舰|日历|促销|新闻|活动|集团任务|时间戳|地球|金星|火卫二|扎里曼|赏金|科维兽|1999赏金"
 
 
-@register("astrbot_plugin_wfrag_tool", "小浅", "Warframe LLM 工具：Wiki RAG + 市价 + 紫卡(wmr) + 玄骸/姐妹(wmw) + 世界状态 + 仲裁精华 + 词库", "1.5.0")
-class WFRagTool(BuildToolsMixin, Star):
+@register("astrbot_plugin_wfrag_tool", "小浅", "Warframe LLM 工具：Wiki RAG + 市价 + 紫卡(wmr) + 玄骸/姐妹(wmw) + 世界状态 + 仲裁精华 + 词库", "1.6.0")
+class WFRagTool(BuildToolsMixin, WarframeBuildMixin, Star):
     def __init__(self, context: Context, config=None):
         super().__init__(context)
         cfg = config or {}
@@ -60,6 +62,7 @@ class WFRagTool(BuildToolsMixin, Star):
         self.timeout = int(cfg.get("timeout") or TIMEOUT)
         self._health = {}  # 后台自检结果: {"wf_api": bool, "wf_rag": bool}
         self.build_tools_init()
+        self.warframe_build_init()
         logger.info(f"[wfrag_tool] 就绪 | wf-api: {self.api} | wf-rag: {self.rag}")
         threading.Thread(target=self._startup_check, daemon=True).start()
 
@@ -961,7 +964,7 @@ class WFRagTool(BuildToolsMixin, Star):
         parts = msg.split(maxsplit=1)
         if not parts:
             yield event.plain_result(
-                "Warframe LLM 工具插件 v1.5.0\n"
+                "Warframe LLM 工具插件 v1.6.0\n"
                 f"服务状态：{self._health_line()}\n"
                 "已注册 10 个 llm_tool：\n"
                 "  wf_rag_search(query, top_k)       - Wiki 知识库检索\n"
@@ -1187,28 +1190,111 @@ class WFRagTool(BuildToolsMixin, Star):
                 goal = g
                 weapon = weapon.replace(kw, "").strip()
                 break
-        # 打敌人关键词
+        # 打敌人关键词（支持敌人或环境/场景）
+        enemy = ""
+        environment = ""
         if "打" in msg:
             parts = msg.split("打", 1)
             weapon = parts[0].strip()
-            enemy = parts[1].strip() if len(parts) > 1 else ""
+            target = parts[1].strip() if len(parts) > 1 else ""
+            # 先查是否环境（科研/钢路/仲裁/夜灵等）
+            try:
+                import sys as _sys
+                _base = __import__('os').path.dirname(__file__)
+                env_path = __import__('os').path.join(_base, "tools")
+                if env_path not in _sys.path: _sys.path.insert(0, env_path)
+                from environment_data import resolve_environment
+                env_info = resolve_environment(target)
+                if env_info:
+                    environment = env_info.get("name", target)
+                    enemy = ""  # 环境场景，不指定具体敌人
+                else:
+                    enemy = target
+            except ImportError:
+                enemy = target
         # 调用配装推荐工具（数值计算）
         try:
             result = await self.wf_recommend_build(event, weapon=weapon, goal=goal, enemy=enemy)
+            # 如果识别为环境，在结果前加上环境信息
+            if environment:
+                try:
+                    from environment_data import get_environment_recommendation
+                    env_text = get_environment_recommendation(env_info)
+                    result = env_text + "\n\n" + result
+                except Exception:
+                    pass
             yield event.plain_result(result)
         except Exception as e:
             yield event.plain_result(f"❌ 配装计算异常: {e}")
             return
-        # LLM 补充：赋能/紫卡/配装思路（基于数值结果）
+        # LLM 补充：赋能/紫卡/配装思路（基于数值结果 + 环境）
         try:
+            env_prompt = f"场景：{environment}（{env_info.get('notes', '') if environment else '通用'}）" if environment else f"敌人：{enemy or '通用'}"
             prompt = (
-                f"你是 Warframe 配装专家。以下是【{weapon}】打【{enemy or '通用'}】的数值计算配装结果：\n\n"
+                f"你是 Warframe 配装专家。以下是【{weapon}】的数值计算配装结果，{env_prompt}：\n\n"
                 f"{result}\n\n"
                 f"请基于以上数值结果，补充以下内容（简洁、实战向）：\n"
                 f"1. **赋能推荐**：武器/战甲适合用什么赋能（如 武器：无情/毁灭者，战甲相关）\n"
                 f"2. **紫卡推荐**：这把武器值得收怎样的紫卡词条（2-3条核心词条，结合流派）\n"
-                f"3. **配装思路**：为什么这样配，针对敌人弱点的核心逻辑，实战注意事项\n"
+                f"3. **配装思路**：为什么这样配，针对{'环境特点' if environment else '敌人弱点'}的核心逻辑，实战注意事项\n"
                 f"4. **备选方案**：如果没有某些MOD（如镀层系列），用什么替代\n"
+                f"用中文回复，实战向、简洁、别太啰嗦。"
+            )
+            yield event.request_llm(prompt=prompt)
+        except Exception as e:
+            yield event.plain_result(f"❌ LLM 补充失败: {e}")
+
+    @filter.command("配甲", alias={"warframe-build", "warframebuild", "战甲配装"})
+    async def warframe_build_cmd(self, event: AstrMessageEvent):
+        """战甲配装推荐：发 #配甲 战甲名 [流派] [打敌人]"""
+        msg = ""
+        try:
+            arg = event.get_command_arg()
+            if arg is not None and getattr(arg, "arg_str", None):
+                msg = str(arg.arg_str).strip()
+        except Exception:
+            msg = ""
+        if not msg:
+            msg = (event.message_str or "").strip()
+            for p in ("配甲", "warframe-build", "warframebuild", "战甲配装"):
+                if msg == p or msg.startswith(p + " "):
+                    msg = msg[len(p):].strip()
+                    break
+        if not msg:
+            yield event.plain_result("用法：#配甲 战甲名 [流派] [打敌人]\n例：#配甲 哪吒 强度流\n例：#配甲 咖喱棒 打豺狼\n流派：生存/强度/效率/范围/均衡")
+            return
+        # 解析参数
+        warframe = msg
+        goal = "balanced"
+        enemy = ""
+        for kw, g in [("生存流", "生存"), ("生存", "生存"), ("强度流", "强度"), ("强度", "强度"),
+                       ("效率流", "效率"), ("效率", "效率"), ("范围流", "范围"), ("范围", "范围"),
+                       ("均衡", "均衡"), ("平衡", "均衡")]:
+            if kw in msg:
+                goal = g
+                warframe = warframe.replace(kw, "").strip()
+                break
+        if "打" in msg:
+            parts = msg.split("打", 1)
+            warframe = parts[0].strip()
+            enemy = parts[1].strip() if len(parts) > 1 else ""
+        # 调用战甲配装工具（数值计算）
+        try:
+            result = await self.wf_recommend_warframe_build(event, warframe=warframe, goal=goal, enemy=enemy)
+            yield event.plain_result(result)
+        except Exception as e:
+            yield event.plain_result(f"❌ 战甲配装计算异常: {e}")
+            return
+        # LLM 补充：赋能/配卡思路（基于数值结果）
+        try:
+            prompt = (
+                f"你是 Warframe 战甲配装专家。以下是【{warframe}】打【{enemy or '通用'}】的数值计算配装结果：\n\n"
+                f"{result}\n\n"
+                f"请基于以上数值结果补充（简洁、实战向）：\n"
+                f"1. **赋能推荐**：战甲适合用什么赋能（如 优雅/保卫者/速攻 等，结合流派和敌人）\n"
+                f"2. **配卡思路**：为什么这样配，针对该战甲技能/敌人弱点的核心逻辑\n"
+                f"3. **紫卡/Helminth 建议**：如果适合移植技能或装紫卡，给出建议\n"
+                f"4. **备选方案**：低Forma或平民替代方案\n"
                 f"用中文回复，实战向、简洁、别太啰嗦。"
             )
             yield event.request_llm(prompt=prompt)
