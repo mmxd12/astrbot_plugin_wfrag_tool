@@ -192,7 +192,7 @@ class BuildToolsMixin:
         await self._wf_fetch_all_weapons(); raw=self._wf_find_weapon(weapon_name)
         if not raw: return json.dumps({"success":False,"message":f"未找到武器「{weapon_name}」"},ensure_ascii=False)
         w=self._wf_normalize_weapon(raw); mods=self._wf_get_compatible_mods(w["type"])
-        if not mods: return json.dumps({"success":False,"message":f"未找到适合 {w['type']} 类型的 MOD"},ensure_ascii=False)
+        if not mods: return json.dumps({"success":False,"message":f"未找到适合 {self._type_zh(w['type'])} 类型的 MOD"},ensure_ascii=False)
         selected=self._wf_select_mods(mods,goal,w); d=self._wf_calculate_dps(w,selected); ed=None; enemy_data=None; enemy_label=enemy
         if enemy:
             enemy_data = await resolve_enemy_async(enemy)
@@ -201,7 +201,7 @@ class BuildToolsMixin:
                 ed = self._wf_enemy_damage(w, d, enemy_data, level)
         lines=[f"🎯 {w.get('zh_name') or w['name']} 推荐配装（{goal}）","","【MOD 配置】"]
         for i,m in enumerate(selected,1):
-            desc=", ".join(f"{k} {v:+.0%}" for k,v in m.get("stats",{}).items()); lines.append(f"  {i}. {m.get('name', m.get('en', m.get('n', '?')))} ({m.get('group','')}) — {desc} [drain:{m.get('drain',0)}]")
+            desc=", ".join(f"{self._stat_zh(k)} {v:+.0%}" for k,v in m.get("stats",{}).items()); lines.append(f"  {i}. {m.get('name', m.get('en', m.get('n', '?')))} ({m.get('group','')}) — {desc} [drain:{m.get('drain',0)}]")
         lines += ["","【DPS 数据】",f"  单发伤害: {d['damage_per_shot']:.1f}",f"  暴击倍率: {d['avg_crit_mult']:.2f}x (有效暴击率: {d['eff_crit']:.0%})",f"  爆发 DPS: {d['burst_dps']:.0f}",f"  持续 DPS: {d['sustained_dps']:.0f}",f"  触发/秒: {d['status_pps']:.1f}"]
         if ed is not None:
             lines += ["", f"【对 {enemy_label} 有效 DPS】  {ed:.0f}"]
