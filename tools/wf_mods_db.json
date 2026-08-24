@@ -1,0 +1,1058 @@
+{
+  "Serration": {
+    "group": "baseDamage",
+    "stats": {
+      "baseDamage": 1.65
+    },
+    "drain": 14,
+    "polarity": "madurai",
+    "weaponType": [
+      "rifle",
+      "bow"
+    ],
+    "rarity": "Rare",
+    "name": "膛线"
+  },
+  "Heavy Caliber": {
+    "group": "baseDamage",
+    "stats": {
+      "baseDamage": 1.65,
+      "accuracy": -0.55
+    },
+    "drain": 14,
+    "polarity": "madurai",
+    "weaponType": [
+      "rifle",
+      "bow"
+    ],
+    "rarity": "Rare",
+    "name": "重口径"
+  },
+  "Split Chamber": {
+    "group": "multishot",
+    "stats": {
+      "multishot": 0.9
+    },
+    "drain": 15,
+    "polarity": "madurai",
+    "weaponType": [
+      "rifle",
+      "bow"
+    ],
+    "rarity": "Rare",
+    "name": "分裂膛室"
+  },
+  "Galvanized Chamber": {
+    "group": "multishot",
+    "stats": {
+      "multishot": 1.1
+    },
+    "drain": 15,
+    "polarity": "madurai",
+    "weaponType": [
+      "rifle",
+      "bow"
+    ],
+    "rarity": "Legendary",
+    "name": "镀层 分裂膛室"
+  },
+  "Vigilante Armaments": {
+    "group": "multishot",
+    "stats": {
+      "multishot": 0.6
+    },
+    "drain": 7,
+    "polarity": "naramon",
+    "weaponType": [
+      "rifle",
+      "bow"
+    ],
+    "rarity": "Uncommon",
+    "name": "私法 军备"
+  },
+  "Point Strike": {
+    "group": "critChance",
+    "stats": {
+      "critChance": 1.5
+    },
+    "drain": 9,
+    "polarity": "madurai",
+    "weaponType": [
+      "rifle",
+      "bow"
+    ],
+    "rarity": "Rare",
+    "name": "致命一击"
+  },
+  "Critical Delay": {
+    "group": "critChance",
+    "stats": {
+      "critChance": 2.0,
+      "fireRate": -0.2
+    },
+    "drain": 9,
+    "polarity": "madurai",
+    "weaponType": [
+      "rifle",
+      "bow"
+    ],
+    "rarity": "Rare",
+    "name": "关键延迟"
+  },
+  "Argon Scope": {
+    "group": "critChance",
+    "stats": {
+      "critChance": 1.35
+    },
+    "drain": 9,
+    "polarity": "madurai",
+    "weaponType": [
+      "rifle",
+      "bow"
+    ],
+    "rarity": "Rare",
+    "name": "氩晶瞄具"
+  },
+  "Galvanized Scope": {
+    "group": "critChance",
+    "stats": {
+      "critChance": 1.2
+    },
+    "drain": 11,
+    "polarity": "madurai",
+    "weaponType": [
+      "rifle",
+      "bow"
+    ],
+    "rarity": "Legendary",
+    "name": "镀层 氩晶瞄具"
+  },
+  "Vital Sense": {
+    "group": "critDamage",
+    "stats": {
+      "critDamage": 1.2
+    },
+    "drain": 11,
+    "polarity": "madurai",
+    "weaponType": [
+      "rifle",
+      "bow"
+    ],
+    "rarity": "Rare",
+    "name": "弱点感应"
+  },
+  "Hammer Shot": {
+    "group": "critDamage",
+    "stats": {
+      "critDamage": 0.6,
+      "statusChance": 0.8
+    },
+    "drain": 9,
+    "polarity": "madurai",
+    "weaponType": [
+      "rifle",
+      "bow"
+    ],
+    "rarity": "Rare",
+    "name": "重锤射击"
+  },
+  "Speed Trigger": {
+    "group": "fireRate",
+    "stats": {
+      "fireRate": 0.6
+    },
+    "drain": 9,
+    "polarity": "madurai",
+    "weaponType": [
+      "rifle",
+      "bow"
+    ],
+    "rarity": "Uncommon",
+    "name": "灵敏扳机"
+  },
+  "Shred": {
+    "group": "fireRate",
+    "stats": {
+      "fireRate": 0.3,
+      "punchThrough": 2.2
+    },
+    "drain": 11,
+    "polarity": "naramon",
+    "weaponType": [
+      "rifle",
+      "bow"
+    ],
+    "rarity": "Rare",
+    "name": "撕裂"
+  },
+  "Hellfire": {
+    "group": "elemental",
+    "stats": {
+      "Heat": 0.9
+    },
+    "drain": 11,
+    "polarity": "madurai",
+    "weaponType": [
+      "rifle",
+      "bow"
+    ],
+    "rarity": "Uncommon",
+    "name": "地狱火"
+  },
+  "Cryo Rounds": {
+    "group": "elemental",
+    "stats": {
+      "Cold": 0.9
+    },
+    "drain": 11,
+    "polarity": "madurai",
+    "weaponType": [
+      "rifle",
+      "bow"
+    ],
+    "rarity": "Uncommon",
+    "name": "低温弹头"
+  },
+  "Primed Cryo Rounds": {
+    "group": "elemental",
+    "stats": {
+      "Cold": 1.65
+    },
+    "drain": 16,
+    "polarity": "madurai",
+    "weaponType": [
+      "rifle",
+      "bow"
+    ],
+    "rarity": "Legendary",
+    "name": "低温弹头 Prime"
+  },
+  "Stormbringer": {
+    "group": "elemental",
+    "stats": {
+      "Electricity": 0.9
+    },
+    "drain": 11,
+    "polarity": "madurai",
+    "weaponType": [
+      "rifle",
+      "bow"
+    ],
+    "rarity": "Uncommon",
+    "name": "暴风使者"
+  },
+  "Infected Clip": {
+    "group": "elemental",
+    "stats": {
+      "Toxin": 0.9
+    },
+    "drain": 11,
+    "polarity": "madurai",
+    "weaponType": [
+      "rifle",
+      "bow"
+    ],
+    "rarity": "Uncommon",
+    "name": "污染弹匣"
+  },
+  "Malignant Force": {
+    "group": "elemental",
+    "stats": {
+      "Toxin": 0.6,
+      "statusChance": 0.6
+    },
+    "drain": 7,
+    "polarity": "naramon",
+    "weaponType": [
+      "rifle",
+      "bow"
+    ],
+    "rarity": "Uncommon",
+    "name": "致命火力"
+  },
+  "Rime Rounds": {
+    "group": "elemental",
+    "stats": {
+      "Cold": 0.6,
+      "statusChance": 0.6
+    },
+    "drain": 7,
+    "polarity": "naramon",
+    "weaponType": [
+      "rifle",
+      "bow"
+    ],
+    "rarity": "Uncommon",
+    "name": "白霜弹头"
+  },
+  "Thermite Rounds": {
+    "group": "elemental",
+    "stats": {
+      "Heat": 0.6,
+      "statusChance": 0.6
+    },
+    "drain": 7,
+    "polarity": "naramon",
+    "weaponType": [
+      "rifle",
+      "bow"
+    ],
+    "rarity": "Uncommon",
+    "name": "铝热焊弹"
+  },
+  "High Voltage": {
+    "group": "elemental",
+    "stats": {
+      "Electricity": 0.6,
+      "statusChance": 0.6
+    },
+    "drain": 7,
+    "polarity": "naramon",
+    "weaponType": [
+      "rifle",
+      "bow"
+    ],
+    "rarity": "Uncommon",
+    "name": "高压电流"
+  },
+  "Hunter Munitions": {
+    "group": "special",
+    "stats": {
+      "slashOnCrit": 0.3
+    },
+    "drain": 11,
+    "polarity": "madurai",
+    "weaponType": [
+      "rifle",
+      "bow"
+    ],
+    "rarity": "Rare",
+    "name": "猎人 战备"
+  },
+  "Galvanized Aptitude": {
+    "group": "special",
+    "stats": {
+      "damagePerStatus": 0.8
+    },
+    "drain": 14,
+    "polarity": "madurai",
+    "weaponType": [
+      "rifle",
+      "bow"
+    ],
+    "rarity": "Legendary",
+    "name": "镀层 步枪才能"
+  },
+  "Hornet Strike": {
+    "group": "baseDamage",
+    "stats": {
+      "baseDamage": 2.2
+    },
+    "drain": 14,
+    "polarity": "madurai",
+    "weaponType": [
+      "pistol"
+    ],
+    "rarity": "Rare",
+    "name": "黄蜂螫刺"
+  },
+  "Augur Pact": {
+    "group": "baseDamage",
+    "stats": {
+      "baseDamage": 0.9
+    },
+    "drain": 9,
+    "polarity": "madurai",
+    "weaponType": [
+      "pistol"
+    ],
+    "rarity": "Uncommon",
+    "name": "预言 契约"
+  },
+  "Barrel Diffusion": {
+    "group": "multishot",
+    "stats": {
+      "multishot": 1.2
+    },
+    "drain": 11,
+    "polarity": "madurai",
+    "weaponType": [
+      "pistol"
+    ],
+    "rarity": "Rare",
+    "name": "弹头扩散"
+  },
+  "Galvanized Diffusion": {
+    "group": "multishot",
+    "stats": {
+      "multishot": 1.1
+    },
+    "drain": 14,
+    "polarity": "madurai",
+    "weaponType": [
+      "pistol"
+    ],
+    "rarity": "Legendary",
+    "name": "镀层 弹头扩散"
+  },
+  "Lethal Torrent": {
+    "group": "multishot",
+    "stats": {
+      "multishot": 0.6,
+      "fireRate": 0.6
+    },
+    "drain": 11,
+    "polarity": "madurai",
+    "weaponType": [
+      "pistol"
+    ],
+    "rarity": "Rare",
+    "name": "致命洪流"
+  },
+  "Pistol Gambit": {
+    "group": "critChance",
+    "stats": {
+      "critChance": 1.2
+    },
+    "drain": 9,
+    "polarity": "madurai",
+    "weaponType": [
+      "pistol"
+    ],
+    "rarity": "Uncommon",
+    "name": "手枪精通"
+  },
+  "Primed Pistol Gambit": {
+    "group": "critChance",
+    "stats": {
+      "critChance": 1.87
+    },
+    "drain": 14,
+    "polarity": "madurai",
+    "weaponType": [
+      "pistol"
+    ],
+    "rarity": "Legendary",
+    "name": "手枪精通 Prime"
+  },
+  "Creeping Bullseye": {
+    "group": "critChance",
+    "stats": {
+      "critChance": 2.0,
+      "fireRate": -0.2
+    },
+    "drain": 9,
+    "polarity": "madurai",
+    "weaponType": [
+      "pistol"
+    ],
+    "rarity": "Rare",
+    "name": "匍匐靶心"
+  },
+  "Hydraulic Crosshairs": {
+    "group": "critChance",
+    "stats": {
+      "critChance": 1.2
+    },
+    "drain": 9,
+    "polarity": "madurai",
+    "weaponType": [
+      "pistol"
+    ],
+    "rarity": "Uncommon",
+    "name": "液压准心"
+  },
+  "Target Cracker": {
+    "group": "critDamage",
+    "stats": {
+      "critDamage": 0.6
+    },
+    "drain": 9,
+    "polarity": "madurai",
+    "weaponType": [
+      "pistol"
+    ],
+    "rarity": "Uncommon",
+    "name": "弱点专精"
+  },
+  "Primed Target Cracker": {
+    "group": "critDamage",
+    "stats": {
+      "critDamage": 1.1
+    },
+    "drain": 14,
+    "polarity": "madurai",
+    "weaponType": [
+      "pistol"
+    ],
+    "rarity": "Legendary",
+    "name": "弱点专精 Prime"
+  },
+  "Heated Charge": {
+    "group": "elemental",
+    "stats": {
+      "Heat": 0.9
+    },
+    "drain": 11,
+    "polarity": "madurai",
+    "weaponType": [
+      "pistol"
+    ],
+    "rarity": "Uncommon",
+    "name": "火焰装填"
+  },
+  "Primed Heated Charge": {
+    "group": "elemental",
+    "stats": {
+      "Heat": 1.65
+    },
+    "drain": 16,
+    "polarity": "madurai",
+    "weaponType": [
+      "pistol"
+    ],
+    "rarity": "Legendary",
+    "name": "火焰装填 Prime"
+  },
+  "Deep Freeze": {
+    "group": "elemental",
+    "stats": {
+      "Cold": 0.9
+    },
+    "drain": 11,
+    "polarity": "vazarin",
+    "weaponType": [
+      "pistol"
+    ],
+    "rarity": "Uncommon",
+    "name": "深层冷冻"
+  },
+  "Convulsion": {
+    "group": "elemental",
+    "stats": {
+      "Electricity": 0.9
+    },
+    "drain": 11,
+    "polarity": "madurai",
+    "weaponType": [
+      "pistol"
+    ],
+    "rarity": "Uncommon",
+    "name": "痉挛"
+  },
+  "Pathogen Rounds": {
+    "group": "elemental",
+    "stats": {
+      "Toxin": 0.9
+    },
+    "drain": 11,
+    "polarity": "madurai",
+    "weaponType": [
+      "pistol"
+    ],
+    "rarity": "Uncommon",
+    "name": "病原弹头"
+  },
+  "Scorch": {
+    "group": "elemental",
+    "stats": {
+      "Heat": 0.6,
+      "statusChance": 0.6
+    },
+    "drain": 7,
+    "polarity": "naramon",
+    "weaponType": [
+      "pistol"
+    ],
+    "rarity": "Uncommon",
+    "name": "灼痕焦点"
+  },
+  "Frostbite": {
+    "group": "elemental",
+    "stats": {
+      "Cold": 0.6,
+      "statusChance": 0.6
+    },
+    "drain": 7,
+    "polarity": "naramon",
+    "weaponType": [
+      "pistol"
+    ],
+    "rarity": "Uncommon",
+    "name": "结霜侵蚀"
+  },
+  "Jolt": {
+    "group": "elemental",
+    "stats": {
+      "Electricity": 0.6,
+      "statusChance": 0.6
+    },
+    "drain": 7,
+    "polarity": "naramon",
+    "weaponType": [
+      "pistol"
+    ],
+    "rarity": "Uncommon",
+    "name": "电流震击"
+  },
+  "Pistol Pestilence": {
+    "group": "elemental",
+    "stats": {
+      "Toxin": 0.6,
+      "statusChance": 0.6
+    },
+    "drain": 7,
+    "polarity": "naramon",
+    "weaponType": [
+      "pistol"
+    ],
+    "rarity": "Uncommon",
+    "name": "瘟疫手枪"
+  },
+  "Galvanized Shot": {
+    "group": "special",
+    "stats": {
+      "damagePerStatus": 0.8
+    },
+    "drain": 14,
+    "polarity": "madurai",
+    "weaponType": [
+      "pistol"
+    ],
+    "rarity": "Legendary",
+    "name": "镀层 准确射手"
+  },
+  "Point Blank": {
+    "group": "baseDamage",
+    "stats": {
+      "baseDamage": 0.9
+    },
+    "drain": 9,
+    "polarity": "madurai",
+    "weaponType": [
+      "shotgun"
+    ],
+    "rarity": "Uncommon",
+    "name": "抵近射击"
+  },
+  "Primed Point Blank": {
+    "group": "baseDamage",
+    "stats": {
+      "baseDamage": 1.65
+    },
+    "drain": 14,
+    "polarity": "madurai",
+    "weaponType": [
+      "shotgun"
+    ],
+    "rarity": "Legendary",
+    "name": "抵近射击 Prime"
+  },
+  "Blaze": {
+    "group": "baseDamage",
+    "stats": {
+      "Heat": 0.6,
+      "baseDamage": 0.6
+    },
+    "drain": 9,
+    "polarity": "madurai",
+    "weaponType": [
+      "shotgun"
+    ],
+    "rarity": "Rare",
+    "name": "烈焰"
+  },
+  "Hell's Chamber": {
+    "group": "multishot",
+    "stats": {
+      "multishot": 1.2
+    },
+    "drain": 15,
+    "polarity": "madurai",
+    "weaponType": [
+      "shotgun"
+    ],
+    "rarity": "Rare",
+    "name": "地狱弹膛"
+  },
+  "Galvanized Hell": {
+    "group": "multishot",
+    "stats": {
+      "multishot": 1.1
+    },
+    "drain": 15,
+    "polarity": "madurai",
+    "weaponType": [
+      "shotgun"
+    ],
+    "rarity": "Legendary",
+    "name": "镀层 地狱弹膛"
+  },
+  "Blunderbuss": {
+    "group": "critChance",
+    "stats": {
+      "critChance": 0.9
+    },
+    "drain": 9,
+    "polarity": "madurai",
+    "weaponType": [
+      "shotgun"
+    ],
+    "rarity": "Uncommon",
+    "name": "雷筒"
+  },
+  "Critical Deceleration": {
+    "group": "critChance",
+    "stats": {
+      "critChance": 2.0,
+      "fireRate": -0.2
+    },
+    "drain": 9,
+    "polarity": "madurai",
+    "weaponType": [
+      "shotgun"
+    ],
+    "rarity": "Rare",
+    "name": "降速暴击"
+  },
+  "Ravage": {
+    "group": "critDamage",
+    "stats": {
+      "critDamage": 0.6
+    },
+    "drain": 9,
+    "polarity": "madurai",
+    "weaponType": [
+      "shotgun"
+    ],
+    "rarity": "Uncommon",
+    "name": "破灭"
+  },
+  "Primed Ravage": {
+    "group": "critDamage",
+    "stats": {
+      "critDamage": 1.1
+    },
+    "drain": 14,
+    "polarity": "madurai",
+    "weaponType": [
+      "shotgun"
+    ],
+    "rarity": "Legendary",
+    "name": "破灭 Prime"
+  },
+  "Shotgun Spazz": {
+    "group": "fireRate",
+    "stats": {
+      "fireRate": 0.9
+    },
+    "drain": 11,
+    "polarity": "madurai",
+    "weaponType": [
+      "shotgun"
+    ],
+    "rarity": "Uncommon",
+    "name": "Shotgun Spazz"
+  },
+  "Incendiary Coat": {
+    "group": "elemental",
+    "stats": {
+      "Heat": 0.9
+    },
+    "drain": 11,
+    "polarity": "madurai",
+    "weaponType": [
+      "shotgun"
+    ],
+    "rarity": "Uncommon",
+    "name": "燃烧外壳"
+  },
+  "Chilling Grasp": {
+    "group": "elemental",
+    "stats": {
+      "Cold": 0.9
+    },
+    "drain": 11,
+    "polarity": "vazarin",
+    "weaponType": [
+      "shotgun"
+    ],
+    "rarity": "Uncommon",
+    "name": "急冻控场"
+  },
+  "Charged Shell": {
+    "group": "elemental",
+    "stats": {
+      "Electricity": 0.9
+    },
+    "drain": 11,
+    "polarity": "madurai",
+    "weaponType": [
+      "shotgun"
+    ],
+    "rarity": "Uncommon",
+    "name": "充电弹头"
+  },
+  "Contagious Spread": {
+    "group": "elemental",
+    "stats": {
+      "Toxin": 0.9
+    },
+    "drain": 11,
+    "polarity": "madurai",
+    "weaponType": [
+      "shotgun"
+    ],
+    "rarity": "Uncommon",
+    "name": "传染蔓延"
+  },
+  "Scattering Inferno": {
+    "group": "elemental",
+    "stats": {
+      "Heat": 0.6,
+      "statusChance": 0.6
+    },
+    "drain": 7,
+    "polarity": "naramon",
+    "weaponType": [
+      "shotgun"
+    ],
+    "rarity": "Uncommon",
+    "name": "炼狱轰击"
+  },
+  "Pressure Point": {
+    "group": "baseDamage",
+    "stats": {
+      "baseDamage": 0.9
+    },
+    "drain": 9,
+    "polarity": "madurai",
+    "weaponType": [
+      "melee"
+    ],
+    "rarity": "Uncommon",
+    "name": "压迫点"
+  },
+  "Primed Pressure Point": {
+    "group": "baseDamage",
+    "stats": {
+      "baseDamage": 1.65
+    },
+    "drain": 14,
+    "polarity": "madurai",
+    "weaponType": [
+      "melee"
+    ],
+    "rarity": "Legendary",
+    "name": "压迫点 Prime"
+  },
+  "Sacrificial Pressure": {
+    "group": "baseDamage",
+    "stats": {
+      "baseDamage": 1.0
+    },
+    "drain": 10,
+    "polarity": "madurai",
+    "weaponType": [
+      "melee"
+    ],
+    "rarity": "Rare",
+    "name": "牺牲 压迫点"
+  },
+  "True Steel": {
+    "group": "critChance",
+    "stats": {
+      "critChance": 1.5
+    },
+    "drain": 9,
+    "polarity": "madurai",
+    "weaponType": [
+      "melee"
+    ],
+    "rarity": "Rare",
+    "name": "斩铁"
+  },
+  "Sacrificial Steel": {
+    "group": "critChance",
+    "stats": {
+      "critChance": 2.0
+    },
+    "drain": 10,
+    "polarity": "madurai",
+    "weaponType": [
+      "melee"
+    ],
+    "rarity": "Rare",
+    "name": "牺牲 斩铁"
+  },
+  "Organ Shatter": {
+    "group": "critDamage",
+    "stats": {
+      "critDamage": 1.1
+    },
+    "drain": 9,
+    "polarity": "madurai",
+    "weaponType": [
+      "melee"
+    ],
+    "rarity": "Uncommon",
+    "name": "肢解"
+  },
+  "Gladiator Might": {
+    "group": "critDamage",
+    "stats": {
+      "critDamage": 0.6,
+      "baseDamage": 0.4
+    },
+    "drain": 9,
+    "polarity": "madurai",
+    "weaponType": [
+      "melee"
+    ],
+    "rarity": "Uncommon",
+    "name": "角斗士 威猛"
+  },
+  "Fury": {
+    "group": "fireRate",
+    "stats": {
+      "fireRate": 0.9
+    },
+    "drain": 11,
+    "polarity": "madurai",
+    "weaponType": [
+      "melee"
+    ],
+    "rarity": "Uncommon",
+    "name": "狂暴"
+  },
+  "Primed Fury": {
+    "group": "fireRate",
+    "stats": {
+      "fireRate": 1.4
+    },
+    "drain": 14,
+    "polarity": "madurai",
+    "weaponType": [
+      "melee"
+    ],
+    "rarity": "Legendary",
+    "name": "狂暴 Prime"
+  },
+  "Buzz Kill": {
+    "group": "physical",
+    "stats": {
+      "Slash": 0.6
+    },
+    "drain": 11,
+    "polarity": "naramon",
+    "weaponType": [
+      "melee"
+    ],
+    "rarity": "Rare",
+    "name": "败兴虐杀"
+  },
+  "Molten Impact": {
+    "group": "elemental",
+    "stats": {
+      "Heat": 0.9
+    },
+    "drain": 11,
+    "polarity": "madurai",
+    "weaponType": [
+      "melee"
+    ],
+    "rarity": "Uncommon",
+    "name": "熔岩冲击"
+  },
+  "North Wind": {
+    "group": "elemental",
+    "stats": {
+      "Cold": 0.9
+    },
+    "drain": 11,
+    "polarity": "madurai",
+    "weaponType": [
+      "melee"
+    ],
+    "rarity": "Uncommon",
+    "name": "北风"
+  },
+  "Shocking Touch": {
+    "group": "elemental",
+    "stats": {
+      "Electricity": 0.9
+    },
+    "drain": 11,
+    "polarity": "madurai",
+    "weaponType": [
+      "melee"
+    ],
+    "rarity": "Uncommon",
+    "name": "电击触点"
+  },
+  "Venomous Edge": {
+    "group": "elemental",
+    "stats": {
+      "Toxin": 0.9
+    },
+    "drain": 11,
+    "polarity": "madurai",
+    "weaponType": [
+      "melee"
+    ],
+    "rarity": "Uncommon",
+    "name": "Venomous Edge"
+  },
+  "Condition Overload": {
+    "group": "special",
+    "stats": {
+      "damagePerStatus": 0.8
+    },
+    "drain": 14,
+    "polarity": "madurai",
+    "weaponType": [
+      "melee"
+    ],
+    "rarity": "Rare",
+    "name": "异况超量"
+  },
+  "Blood Rush": {
+    "group": "special",
+    "stats": {
+      "critPerCombo": 0.4
+    },
+    "drain": 14,
+    "polarity": "madurai",
+    "weaponType": [
+      "melee"
+    ],
+    "rarity": "Rare",
+    "name": "急进猛突"
+  },
+  "Weeping Wounds": {
+    "group": "special",
+    "stats": {
+      "statusPerCombo": 0.4
+    },
+    "drain": 11,
+    "polarity": "naramon",
+    "weaponType": [
+      "melee"
+    ],
+    "rarity": "Rare",
+    "name": "创口溃烂"
+  },
+  "Primed Reach": {
+    "group": "special",
+    "stats": {
+      "range": 2.2
+    },
+    "drain": 14,
+    "polarity": "naramon",
+    "weaponType": [
+      "melee"
+    ],
+    "rarity": "Legendary",
+    "name": "剑风 Prime"
+  }
+}
