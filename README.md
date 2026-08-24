@@ -4,15 +4,15 @@ AstrBot Warframe LLM 工具插件：配装推荐 + DPS 计算 + 社区配装搜�
 
 ## 功能
 
-### 直接命令（#前缀触发）
+### 直接命令（任意前缀触发）
 
 | 命令 | 功能 |
 |------|------|
-| `#配装 武器名 [流派] [打敌人]` | 配装推荐（现场数值计算） |
-| `#武器对比 武器1, 武器2, ...` | 2-4 把武器对比 + DPS |
-| `#搜配装 武器名` | 搜索 Overframe 社区配装 |
-| `#紫卡分析` | 紫卡品质分析（截图 OCR） |
-| `#wfllm <工具> <参数>` | 其他工具入口 |
+| `配装 武器名 [流派] [打敌人]` | 配装推荐（现场数值计算） |
+| `武器对比 武器1, 武器2, ...` | 2-4 把武器对比 + DPS |
+| `搜配装 武器名` | 搜索 Overframe 社区配装 |
+| `紫卡分析` | 紫卡品质分析（截图 OCR） |
+| `wfllm <工具> <参数>` | 统一工具入口 |
 
 **配装流派：**
 - 暴击流（crit）
@@ -23,25 +23,38 @@ AstrBot Warframe LLM 工具插件：配装推荐 + DPS 计算 + 社区配装搜�
 
 **配装示例：**
 ```
-#配装 舍杜                  → 均衡配装
-#配装 舍杜 暴击流            → 暴击流派
-#配装 舍杜 打虚空天使         → 针对虚空天使配装
-#武器对比 舍杜, 迅发电浆炮    → 武器对比
-#搜配装 舍杜                → 社区配装
+配装 舍杜                  → 均衡配装
+配装 舍杜 暴击流            → 暴击流派
+配装 舍杜 打虚空天使         → 针对虚空天使配装
+武器对比 舍杜, 迅发电浆炮    → 武器对比
+搜配装 舍杜                → 社区配装
 ```
 
-### LLM 工具（function calling 自动调用）
+### LLM 工具（function calling 自动调用 / wfllm 指令入口）
 
-- `wf_recommend_build` — 配装推荐
-- `wf_compare_weapons` — 武器对比
-- `wf_search_builds` — 社区配装搜索
-- `wf_rag_search` — Wiki 知识检索
-- `wf_market_price` — 市价查询
-- `wf_riven_price` — 紫卡拍卖查询
-- `wf_lich_price` — 玄骸/姐妹武器市场价
-- `wf_world_state` — 世界状态
-- `wf_arbitration_essence` — 仲裁精华表
-- `wf_dict` — 词库查询
+| 工具名 | 功能 | wfllm 指令 |
+|--------|------|-----------|
+| `wf_recommend_build` | 配装推荐 | 配装 武器名 [流派] |
+| `wf_compare_weapons` | 武器对比 | 武器对比 武器1, 武器2 |
+| `wf_search_builds` | 社区配装搜索 | 搜配装 武器名 |
+| `wf_world_state` | 世界状态 | `wfllm ws 世界状态名称`（如 wfllm ws 电波） |
+| `wf_market_price` | 市价查询 | `wfllm price 物品名`（如 wfllm price 奶妈P） |
+| `wf_riven_price` | 紫卡拍卖查询 | `wfllm riven 武器名`（如 wfllm riven 食人女魔） |
+| `wf_lich_price` | 玄骸/姐妹市场价 | `wfllm lich 武器名` |
+| `wf_rag_search` | Wiki 知识检索 | `wfllm rag 问题` |
+| `wf_arbitration_essence` | 仲裁精华表 | `wfllm arb` |
+| `wf_dict` | 词库查询 | `wfllm dict 关键词` |
+
+**测试指令（wfllm）：**
+```
+wfllm rag 电击异常
+wfllm price 奶妈P
+wfllm riven 食人女魔
+wfllm lich 食人女魔
+wfllm ws 电波
+wfllm arb
+wfllm dict 三傻
+```
 
 ## 数据源
 
