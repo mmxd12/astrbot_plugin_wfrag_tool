@@ -1156,5 +1156,73 @@ class WFRagTool(BuildToolsMixin, Star):
         return prompt, None
 
 
+
+    @filter.command("配装", alias={"build", "builds"})
+    async def build_cmd(self, event: AstrMessageEvent):
+        """配装推荐：发 #配装 武器名 [流派] [打敌人]"""
+        msg = event.get_message_str().strip()
+        for p in ("#配装", "#build", "#builds", "配装", "build", "builds"):
+            if msg.startswith(p + " ") or msg == p:
+                msg = msg[len(p):].strip()
+                break
+        if not msg:
+            yield event.plain_result("用法：#配装 武器名 [流派] [打敌人]\n例：#配装 舍杜 暴击流\n流派：暴击流/触发流/病毒切/腐蚀流")
+            return
+        # 解析参数
+        weapon = msg
+        goal = "general_dps"
+        enemy = ""
+        # 流派关键词
+        for kw, g in [("暴击流", "crit"), ("触发流", "status"), ("病毒切", "viral_slash"), ("腐蚀流", "corrosive"), ("腐蚀", "corrosive"), ("病毒", "viral_slash")]:
+            if kw in msg:
+                goal = g
+                weapon = weapon.replace(kw, "").strip()
+                break
+        # 打敌人关键词
+        if "打" in msg:
+            parts = msg.split("打", 1)
+            weapon = parts[0].strip()
+            enemy = parts[1].strip() if len(parts) > 1 else ""
+        # 调用配装推荐工具
+        try:
+            result = await self.wf_recommend_build(event, weapon=weapon, goal=goal, enemy=enemy)
+            yield event.plain_result(result)
+        except Exception as e:
+            yield event.plain_result(f"❌ 配装计算异常: {e}")
+
+    @filter.command("武器对比", alias={"weaponcompare", "对比"})
+    async def compare_cmd(self, event: AstrMessageEvent):
+        """武器对比：发 #武器对比 武器1, 武器2, ..."""
+        msg = event.get_message_str().strip()
+        for p in ("#武器对比", "#对比", "#weaponcompare"):
+            if msg.startswith(p + " ") or msg == p:
+                msg = msg[len(p):].strip()
+                break
+        if not msg:
+            yield event.plain_result("用法：#武器对比 武器1, 武器2[, 武器3, 武器4]\n例：#武器对比 舍杜, 迅发电浆炮, 葬铭")
+            return
+        try:
+            result = await self.wf_compare_weapons(event, weapons=msg)
+            yield event.plain_result(result)
+        except Exception as e:
+            yield event.plain_result(f"❌ 武器对比异常: {e}")
+
+    @filter.command("搜配装", alias={"searchbuild", "搜索配装"})
+    async def search_build_cmd(self, event: AstrMessageEvent):
+        """搜索 Overframe 社区配装：发 #搜配装 武器名"""
+        msg = event.get_message_str().strip()
+        for p in ("#搜配装", "#searchbuild", "#搜索配装"):
+            if msg.startswith(p + " ") or msg == p:
+                msg = msg[len(p):].strip()
+                break
+        if not msg:
+            yield event.plain_result("用法：#搜配装 武器名\n例：#搜配装 舍杜")
+            return
+        try:
+            result = await self.wf_search_builds(event, item=msg)
+            yield event.plain_result(result)
+        except Exception as e:
+            yield event.plain_result(f"❌ 搜索配装异常: {e}")
+
     async def terminate(self) -> None:
         logger.info("[wfrag_tool] 已卸载")
