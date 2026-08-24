@@ -1160,11 +1160,20 @@ class WFRagTool(BuildToolsMixin, Star):
     @filter.command("配装", alias={"build", "builds"})
     async def build_cmd(self, event: AstrMessageEvent):
         """配装推荐：发 #配装 武器名 [流派] [打敌人]"""
-        msg = event.get_message_str().strip()
-        for p in ("#配装", "#build", "#builds", "配装", "build", "builds"):
-            if msg.startswith(p + " ") or msg == p:
-                msg = msg[len(p):].strip()
-                break
+        msg = ""
+        try:
+            arg = event.get_command_arg()
+            if arg is not None and getattr(arg, "arg_str", None):
+                msg = str(arg.arg_str).strip()
+        except Exception:
+            msg = ""
+        if not msg:
+            msg = (event.message_str or "").strip()
+            # 剥离命令名（兼容任何前缀）
+            for p in ("配装", "build", "builds"):
+                if msg == p or msg.startswith(p + " "):
+                    msg = msg[len(p):].strip()
+                    break
         if not msg:
             yield event.plain_result("用法：#配装 武器名 [流派] [打敌人]\n例：#配装 舍杜 暴击流\n流派：暴击流/触发流/病毒切/腐蚀流")
             return
@@ -1193,11 +1202,19 @@ class WFRagTool(BuildToolsMixin, Star):
     @filter.command("武器对比", alias={"weaponcompare", "对比"})
     async def compare_cmd(self, event: AstrMessageEvent):
         """武器对比：发 #武器对比 武器1, 武器2, ..."""
-        msg = event.get_message_str().strip()
-        for p in ("#武器对比", "#对比", "#weaponcompare"):
-            if msg.startswith(p + " ") or msg == p:
-                msg = msg[len(p):].strip()
-                break
+        msg = ""
+        try:
+            arg = event.get_command_arg()
+            if arg is not None and getattr(arg, "arg_str", None):
+                msg = str(arg.arg_str).strip()
+        except Exception:
+            msg = ""
+        if not msg:
+            msg = (event.message_str or "").strip()
+            for p in ("武器对比", "对比", "weaponcompare"):
+                if msg == p or msg.startswith(p + " "):
+                    msg = msg[len(p):].strip()
+                    break
         if not msg:
             yield event.plain_result("用法：#武器对比 武器1, 武器2[, 武器3, 武器4]\n例：#武器对比 舍杜, 迅发电浆炮, 葬铭")
             return
@@ -1210,11 +1227,19 @@ class WFRagTool(BuildToolsMixin, Star):
     @filter.command("搜配装", alias={"searchbuild", "搜索配装"})
     async def search_build_cmd(self, event: AstrMessageEvent):
         """搜索 Overframe 社区配装：发 #搜配装 武器名"""
-        msg = event.get_message_str().strip()
-        for p in ("#搜配装", "#searchbuild", "#搜索配装"):
-            if msg.startswith(p + " ") or msg == p:
-                msg = msg[len(p):].strip()
-                break
+        msg = ""
+        try:
+            arg = event.get_command_arg()
+            if arg is not None and getattr(arg, "arg_str", None):
+                msg = str(arg.arg_str).strip()
+        except Exception:
+            msg = ""
+        if not msg:
+            msg = (event.message_str or "").strip()
+            for p in ("搜配装", "搜索配装", "searchbuild"):
+                if msg == p or msg.startswith(p + " "):
+                    msg = msg[len(p):].strip()
+                    break
         if not msg:
             yield event.plain_result("用法：#搜配装 武器名\n例：#搜配装 舍杜")
             return
