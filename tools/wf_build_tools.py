@@ -142,10 +142,26 @@ class BuildToolsMixin:
         return self._wf_mod_db
 
     def _wf_get_compatible_mods(self, weapon_type: str) -> list[dict]:
-        mp={"Rifle":"rifle","Sniper":"rifle","Bow":"rifle","Pistol":"pistol","Shotgun":"shotgun","Melee":"melee","Arch-Gun":"archgun","Archgun":"archgun"}; wt=mp.get(weapon_type,weapon_type.lower()); out=[]
-        for n,m in self._wf_load_mod_db().items():
-            types=m.get("weaponType",[]); types=[types] if isinstance(types,str) else types
-            if wt in types or "all" in types or not types: out.append({"name":n,**m})
+        mp={"Rifle":"rifle","Sniper":"rifle","Bow":"rifle","Pistol":"pistol","Shotgun":"shotgun","Melee":"melee","Arch-Gun":"archgun","Archgun":"archgun"}; wt=mp.get(weapon_type,weapon_type.lower())
+        # 1. 先试本地 MOD 数据库（78 个核心）
+        out=[]
+        try:
+            for n,m in self._wf_load_mod_db().items():
+                types=m.get("weaponType",[]); types=[types] if isinstance(types,str) else types
+                if wt in types or "all" in types or not types: out.append({"name":n,**m})
+        except: pass
+        # 2. 如果不够，从 /mods API 动态补齐（1540 个全量）
+        if len(out) < 8:
+            try:
+                import urllib.request, json
+                req = urllib.request.Request("http://111.170.14.106:18511/mods", headers={"User-Agent": "Mozilla/5.0"})
+                with urllib.request.urlopen(req, timeout=15) as r:
+                    all_mods = json.loads(r.read().decode())
+                for mod in all_mods:
+                    wts = (mod.get("weaponType","") or "").lower()
+                    if wt in wts or "all" in wts or not wts:
+                        out.append(mod)
+            except: pass
         return out
 
     def _wf_average_crit_multiplier(self, chance, multiplier):
