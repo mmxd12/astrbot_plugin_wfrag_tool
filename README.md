@@ -57,7 +57,7 @@ AstrBot Warframe LLM 工具插件：配装推荐 + DPS 计算 + 社区配装搜�
 | `wf_market_price` | 市价查询 | `wfllm price 物品名`（如 wfllm price 奶妈P） |
 | `wf_riven_price` | 紫卡拍卖查询 | `wfllm riven 武器名`（如 wfllm riven 食人女魔） |
 | `wf_lich_price` | 玄骸/姐妹市场价 | `wfllm lich 武器名` |
-| `wf_rag_search` | Wiki 知识检索 | `wfllm rag 问题` |
+| `wf_rag_search` | rag 知识检索 | `wfllm rag 问题` |
 | `wf_arbitration_essence` | 仲裁精华表 | `wfllm arb` |
 | `wf_dict` | 词库查询 | `wfllm dict 关键词` |
 
@@ -81,7 +81,7 @@ wfllm dict 三傻
 | `/weapons` | 武器数据（WFCD + 中文名） |
 | `/mods` | MOD 数据（1806 个，数值化） |
 | `/warframes` | 战甲数据（121 个 + 黑话别名） |
-| 敌人数据 | 灰机 Wiki + 本地缓存兜底 |
+| 敌人数据 | rag + 本地缓存兜底 |
 | 环境数据 | 本地 environment_data.py（12 种环境） |
 
 中文名多数据源归并（DE 官方 > WFA > browse.wf > 原文），每 3 小时自动刷新。
@@ -91,4 +91,3 @@ MOD 动态补齐：本地不足时自动从 /mods API 拉全量数据。
 
 - warframe-info-api（需部署）
 - rapidocr-onnxruntime（紫卡 OCR）
-- 灰机 Wiki API（敌人数据，可选）
