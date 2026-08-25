@@ -118,13 +118,15 @@ class BuildToolsMixin:
 
     def _wf_find_weapon(self, name: str) -> dict | None:
         q = name.lower().strip(); cache = self._wf_weapon_cache
-        # 精确匹配缓存键
+        # 精确匹配缓存键（归一化去空格）
+        qn = q.replace(" ", "").replace("-", "")
         for n, w in cache.items():
-            if n.lower() == q: return w
-            if (w.get("name") or "").lower() == q: return w
-            if (w.get("zh_name") or "").lower() == q: return w
-        # 模糊匹配
+            if n.lower() == q or n.lower().replace(" ", "") == qn: return w
+            if (w.get("name") or "").lower() == q or (w.get("name") or "").lower().replace(" ", "") == qn: return w
+            if (w.get("zh_name") or "").lower() == q or (w.get("zh_name") or "").lower().replace(" ", "") == qn: return w
+        # 模糊匹配（归一化）
         c = [w for n,w in cache.items() if q in n.lower() or n.lower() in q
+             or qn in n.lower().replace(" ","") or n.lower().replace(" ","") in qn
              or q in (w.get("name","").lower() or "") or q in (w.get("zh_name","").lower() or "")]
         return c[0] if len(c) == 1 else (min(c, key=lambda w: abs(len(w.get("name", ""))-len(name))) if c else None)
 
