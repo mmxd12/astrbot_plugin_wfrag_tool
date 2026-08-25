@@ -25,7 +25,9 @@ WARFRAME_TYPE_ZH = {
     "aura": "光环", "Aura": "光环",
 }
 
-STAT_ZH = {
+class WarframeBuildMixin:
+    """战甲配装 Mixin，与 BuildToolsMixin 风格一致"""
+    STAT_ZH = {
         "health": "生命值", "maxHealth": "生命值", "armor": "护甲", "armorValue": "护甲",
         "shield": "护盾", "maxShield": "护盾", "shieldRecharge": "护盾回复",
         "energy": "能量上限", "maxEnergy": "能量上限", "energyRegen": "能量回复",
@@ -37,37 +39,45 @@ STAT_ZH = {
         "abilitySpeed": "技能速度", "abilityDuration": "技能持续时间",
         "adaptation": "适应", "factionDamage": "派系伤害", "castSpeed": "施法速度",
         "energyMax": "能量上限", "parkourVelocity": "跑酷速度",
+        "hallowed_ground_duration": "圣域持续时间", "ability_duration": "技能持续时间",
+        "ability_range": "技能范围", "ability_strength": "技能强度",
+        "ability_efficiency": "技能效率", "ability_speed": "技能速度",
+        "damage_and_gains": "伤害与增益", "health_and": "生命值",
+        "shield_recharge": "护盾回复", "shield_recharge_delay": "护盾回复延迟",
+        "damage": "伤害", "damage_reduction": "伤害减免", "resistance": "抗性",
+        "resistance_to_that_damage_type_for_20s": "适应性抗性",
+        "mobility": "机动性", "gravity_while_aim_gliding": "空中瞄准重力",
+        "s_aim_glide_and": "空中瞄准滑翔", "energy": "能量",
+        "strength_": "技能强度", "ability_": "技能", "armor_": "护甲",
+        "health_": "生命值", "shield_": "护盾", "energy_": "能量",
     }
 
     def _wstat_zh(self, key: str) -> str:
         return self.STAT_ZH.get(key, key)
 
     GOAL_MAP = {
-    "生存": ["health", "armor", "shield", "adaptation"],
-    "强度": ["strength", "duration", "energy"],
-    "效率": ["efficiency", "energy", "duration"],
-    "范围": ["range", "duration"],
-    "均衡": ["strength", "duration", "efficiency", "range"],
-    "balanced": ["strength", "duration", "efficiency", "range"],
-    "survival": ["health", "armor", "shield"],
-    "strength": ["strength", "duration"],
-    "efficiency": ["efficiency", "energy"],
-    "range": ["range", "duration"],
-    "duration": ["duration", "efficiency"],
-}
+        "生存": ["health", "armor", "shield", "adaptation"],
+        "强度": ["strength", "duration", "energy"],
+        "效率": ["efficiency", "energy", "duration"],
+        "范围": ["range", "duration"],
+        "均衡": ["strength", "duration", "efficiency", "range"],
+        "balanced": ["strength", "duration", "efficiency", "range"],
+        "survival": ["health", "armor", "shield"],
+        "strength": ["strength", "duration"],
+        "efficiency": ["efficiency", "energy"],
+        "range": ["range", "duration"],
+        "duration": ["duration", "efficiency"],
+    }
 
-GOAL_ZH = {
-    "生存": "生存", "survival": "生存",
-    "强度": "强度", "strength": "强度",
-    "效率": "效率", "efficiency": "效率",
-    "范围": "范围", "range": "范围",
-    "duration": "持续时间",
-    "均衡": "均衡", "balanced": "均衡",
-}
+    GOAL_ZH = {
+        "生存": "生存", "survival": "生存",
+        "强度": "强度", "strength": "强度",
+        "效率": "效率", "efficiency": "效率",
+        "范围": "范围", "range": "范围",
+        "duration": "持续时间",
+        "均衡": "均衡", "balanced": "均衡",
+    }
 
-
-class WarframeBuildMixin:
-    """战甲配装 Mixin，与 BuildToolsMixin 风格一致"""
 
     def warframe_build_init(self):
         """初始化战甲配装状态，由主类 __init__ 调用"""
@@ -216,7 +226,7 @@ class WarframeBuildMixin:
 
     # ---------- 选 MOD ----------
     def _wf_select_warframe_mods(self, mods: list[dict], goal: str, enemy_data: dict | None = None) -> list[dict]:
-        targets = GOAL_MAP.get(goal, GOAL_MAP.get("balanced", ["strength", "duration", "efficiency", "range"]))
+        targets = self.GOAL_MAP.get(goal, self.GOAL_MAP.get("balanced", ["strength", "duration", "efficiency", "range"]))
         enemy_focus = []
         if enemy_data:
             # 敌人弱点 -> 提示词加权（元素/机制相关词的 MOD）
@@ -310,7 +320,7 @@ class WarframeBuildMixin:
         if not selected:
             selected = mods[:8]
 
-        goal_zh = GOAL_ZH.get(goal, goal)
+        goal_zh = self.GOAL_ZH.get(goal, goal)
         lines = [f"🛡 {wf_zh} 推荐配装（{goal_zh}）", panel, "", "【MOD 配置】"]
         for i, m in enumerate(selected, 1):
             mn = m.get("zh_name") or m.get("name") or m.get("en") or "?"
