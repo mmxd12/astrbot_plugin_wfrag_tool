@@ -4,12 +4,12 @@
 """
 ENVIRONMENTS = {
     "科研": {
-        "aliases": ["科研", "异化区", "科维兽", "cavia", "低语者", "智械"],
-        "enemy_faction": "Sentient",
-        "enemy_level": 95,
+        "aliases": ["科研", "实验室", "research", "深层科研", "时光科研", "temporal research", "deep research", "精英科研"],
+        "enemy_faction": "Man in the Wall",
+        "enemy_level": 100,
         "armor_heavy": False,
-        "recommended": ["辐射", "虚空", "腐蚀"],
-        "notes": "科维兽智械/Cavia，Sentient 系敌人，辐射+虚空伤害最优",
+        "recommended": ["辐射", "病毒", "腐蚀"],
+        "notes": "1999 科研模式（实验室/Hex），派系为墙中人与科腐者/炽蛇军，每周轮换词条",
     },
     "钢铁之路": {
         "aliases": ["钢路", "钢铁", "steel path"],
@@ -77,15 +77,6 @@ ENVIRONMENTS = {
         "recommended": ["火", "病毒"],
         "notes": "Infested 无护甲但有回血，火+病毒最优",
     },
-    "时光科研": {
-        "aliases": ["时光科研", "1999", "霍瓦尼亚", "hex", "科腐者", "炽蛇军"],
-        "enemy_faction": "混合",
-        "enemy_level": 100,
-        "armor_heavy": True,
-        "recommended": ["腐蚀", "病毒"],
-        "notes": "1999 霍瓦尼亚，科腐者+炽蛇军混合，高等级重甲",
-    },
-
     "赤毒": {
         "aliases": ["赤毒", "赤毒要塞", "kuva"],
         "enemy_faction": "Grineer",
