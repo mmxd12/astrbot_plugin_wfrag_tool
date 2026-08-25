@@ -1228,7 +1228,9 @@ class WFRagTool(BuildToolsMixin, WarframeBuildMixin, Star):
                 try:
                     wf = self._wf_find_warframe(weapon)
                     if wf:
-                        result = await self.wf_recommend_warframe_build(event, warframe=weapon, goal=goal, enemy=enemy)
+                        # 战甲流派映射（武器流派→战甲流派）
+                        wf_goal = {"general_dps":"balanced","crit":"strength","status":"efficiency","viral_slash":"survival","corrosive":"survival"}.get(goal, "balanced")
+                        result = await self.wf_recommend_warframe_build(event, warframe=weapon, goal=wf_goal, enemy=enemy)
                 except Exception:
                     pass
             if result is None:
