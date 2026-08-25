@@ -25,7 +25,24 @@ WARFRAME_TYPE_ZH = {
     "aura": "光环", "Aura": "光环",
 }
 
-GOAL_MAP = {
+STAT_ZH = {
+        "health": "生命值", "maxHealth": "生命值", "armor": "护甲", "armorValue": "护甲",
+        "shield": "护盾", "maxShield": "护盾", "shieldRecharge": "护盾回复",
+        "energy": "能量上限", "maxEnergy": "能量上限", "energyRegen": "能量回复",
+        "sprintSpeed": "冲刺速度", "powerStrength": "技能强度", "strength": "技能强度",
+        "powerRange": "技能范围", "range": "技能范围", "powerEfficiency": "技能效率",
+        "powerDuration": "技能持续时间", "duration": "技能持续时间",
+        "efficiency": "技能效率", "movementSpeed": "移动速度", "knockdown": "击倒恢复",
+        "abilityStrength": "技能强度", "abilityRange": "技能范围",
+        "abilitySpeed": "技能速度", "abilityDuration": "技能持续时间",
+        "adaptation": "适应", "factionDamage": "派系伤害", "castSpeed": "施法速度",
+        "energyMax": "能量上限", "parkourVelocity": "跑酷速度",
+    }
+
+    def _wstat_zh(self, key: str) -> str:
+        return self.STAT_ZH.get(key, key)
+
+    GOAL_MAP = {
     "生存": ["health", "armor", "shield", "adaptation"],
     "强度": ["strength", "duration", "energy"],
     "效率": ["efficiency", "energy", "duration"],
@@ -296,8 +313,8 @@ class WarframeBuildMixin:
         goal_zh = GOAL_ZH.get(goal, goal)
         lines = [f"🛡 {wf_zh} 推荐配装（{goal_zh}）", panel, "", "【MOD 配置】"]
         for i, m in enumerate(selected, 1):
-            mn = m.get("name") or m.get("zh_name") or m.get("en") or "?"
-            desc = ", ".join(f"{k} {v:+.0%}" for k, v in (m.get("stats") or {}).items() if isinstance(v, (int, float)) and v)
+            mn = m.get("zh_name") or m.get("name") or m.get("en") or "?"
+            desc = ", ".join(f"{self._wstat_zh(k)} {v:+.0%}" for k, v in (m.get("stats") or {}).items() if isinstance(v, (int, float)) and v)
             pol = m.get("polarity", "")
             lines.append(f"  {i}. {mn} — {desc} [drain:{m.get('drain',0)}] {pol}")
         lines.append(f"\n📊 共 {len(mods)} 个战甲 MOD 可用（本地+API动态补齐）")
