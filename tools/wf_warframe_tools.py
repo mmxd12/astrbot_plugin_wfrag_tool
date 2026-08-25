@@ -18,6 +18,7 @@ except ImportError:
 
 MODS_API = "http://111.170.14.106:18511/mods"
 WFCD_WARFRAMES_URL = "https://cdn.jsdelivr.net/gh/WFCD/warframe-items@master/data/json/Warframes.json"
+WFCD_WARFRAMES_API = "http://111.170.14.106:18511/warframes"
 
 WARFRAME_TYPE_ZH = {
     "warframe": "战甲", "Warframe": "战甲", "Warframe Mod": "战甲MOD",
@@ -114,15 +115,23 @@ class WarframeBuildMixin:
         if self._wf_warframe_cache and now - self._wf_warframe_cache_time < 86400:
             return self._wf_warframe_cache
         out = {}
-        try:
-            req = urllib.request.Request(WFCD_WARFRAMES_URL, headers={"User-Agent": "Mozilla/5.0"})
-            with urllib.request.urlopen(req, timeout=30) as r:
-                data = json.loads(r.read().decode())
-            for wf in data or []:
-                if wf.get("name"):
-                    out[wf["name"].lower()] = wf
-        except Exception as e:
-            logger.warning(f"[wfrag_tool] WFCD 战甲面板拉取失败: {e}")
+        # 优先用我们的 API（含中文名 + 黑话别名），失败回退 WFCD CDN
+        sources = [WFCD_WARFRAMES_API, WFCD_WARFRAMES_URL]
+        for url in sources:
+            try:
+                req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0"})
+                with urllib.request.urlopen(req, timeout=30) as r:
+                    data = json.loads(r.read().decode())
+                for wf in data or []:
+                    if wf.get("name"):
+                        key = wf["name"].lower()
+                        out[key] = wf
+                        # 额外索引：中文名 + 黑话别名（保证 _wf_find_warframe 能通过别名命中）
+                if out:
+                    logger.info(f"[wfrag_tool] 战甲面板来源: {url.split('/')[2]}")
+                    break
+            except Exception as e:
+                logger.warning(f"[wfrag_tool] 战甲面板 {url} 拉取失败: {e}")
         self._wf_warframe_cache = out
         self._wf_warframe_cache_time = now
         return out
@@ -132,8 +141,22 @@ class WarframeBuildMixin:
         cache = self._wf_fetch_warframes_sync()
         if q in cache:
             return cache[q]
-        # 模糊 + 中文名尝试
+        # 模糊 + 中文名 + 黑话别名尝试
         hits = [w for n, w in cache.items() if q in n or n in q]
+        # 黑话别名匹配（做去空格/大小写归一化，兼容"悟空P" vs "悟空 p"）
+        qn = q.replace(" ", "").replace("-", "")
+        for w in cache.values():
+            z = (w.get("zh_name") or "").lower().replace(" ", "")
+            if qn == z:
+                return w
+            al = [str(a).lower().replace(" ", "") for a in (w.get("aliases") or [])]
+            if qn in al:
+                return w
+        # 别名子串匹配
+        for w in cache.values():
+            al = [str(a).lower().replace(" ", "") for a in (w.get("aliases") or [])]
+            if any(qn in a or a in qn for a in al):
+                return w
         if len(hits) == 1:
             return hits[0]
         # 中文名映射兜底
