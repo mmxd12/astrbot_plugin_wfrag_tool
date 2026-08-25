@@ -104,13 +104,21 @@ ENVIRONMENTS = {
 }
 
 def resolve_environment(name: str) -> dict | None:
-    """按名称/别名解析环境数据"""
+    """按名称/别名解析环境数据（支持包含匹配：'时光科研'→'科研'）"""
     name = (name or "").strip().lower()
+    # 精确匹配
     for env, data in ENVIRONMENTS.items():
         if name == env.lower():
             return {**data, "name": env}
         for a in data.get("aliases", []):
             if name == a.lower():
+                return {**data, "name": env}
+    # 包含匹配：输入包含环境名（如"时光科研"包含"科研"）
+    for env, data in ENVIRONMENTS.items():
+        if env.lower() in name:
+            return {**data, "name": env}
+        for a in data.get("aliases", []):
+            if a.lower() in name and len(a) >= 2:
                 return {**data, "name": env}
     return None
 
