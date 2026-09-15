@@ -16,9 +16,9 @@ try:
 except ImportError:
     from enemy_cache import resolve_enemy_async
 
-MODS_API = "http://111.170.14.106:18511/mods"
+MODS_API = "https://wf.nana7mi.top/mods"
 WFCD_WARFRAMES_URL = "https://cdn.jsdelivr.net/gh/WFCD/warframe-items@master/data/json/Warframes.json"
-WFCD_WARFRAMES_API = "http://111.170.14.106:18511/warframes"
+WFCD_WARFRAMES_API = "https://wf.nana7mi.top/warframes"
 
 WARFRAME_TYPE_ZH = {
     "warframe": "战甲", "Warframe": "战甲", "Warframe Mod": "战甲MOD",
@@ -117,10 +117,10 @@ class WarframeBuildMixin:
                 t = str(m.get("type") or "").lower() + " " + str(m.get("category") or "").lower()
                 if "warframe" in t:
                     out.append(m)
+            self._wf_warframe_mod_cache = out
+            self._wf_warframe_mod_cache_time = now  # 成功才缓存
         except Exception as e:
             logger.warning(f"[wfrag_tool] /mods 战甲MOD拉取失败: {e}")
-        self._wf_warframe_mod_cache = out
-        self._wf_warframe_mod_cache_time = now
         return out
 
     async def _wf_get_warframe_mods(self) -> list[dict]:
@@ -156,11 +156,11 @@ class WarframeBuildMixin:
                         # 额外索引：中文名 + 黑话别名（保证 _wf_find_warframe 能通过别名命中）
                 if out:
                     logger.info(f"[wfrag_tool] 战甲面板来源: {url.split('/')[2]}")
+                    self._wf_warframe_cache = out
+                    self._wf_warframe_cache_time = now  # 成功才缓存
                     break
             except Exception as e:
                 logger.warning(f"[wfrag_tool] 战甲面板 {url} 拉取失败: {e}")
-        self._wf_warframe_cache = out
-        self._wf_warframe_cache_time = now
         return out
 
     def _wf_find_warframe(self, name: str) -> dict | None:
