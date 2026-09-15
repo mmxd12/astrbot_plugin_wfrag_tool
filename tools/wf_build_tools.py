@@ -66,9 +66,9 @@ class BuildToolsMixin:
         return self.WEAPON_TYPE_ZH.get(t, t)
 
     WF_WEAPON_SOURCES = {
-        "Primary": "http://111.170.14.106:18511/weapons",
-        "Secondary": "http://111.170.14.106:18511/weapons",
-        "Melee": "http://111.170.14.106:18511/weapons",
+        "Primary": "https://wf.nana7mi.top/weapons",
+        "Secondary": "https://wf.nana7mi.top/weapons",
+        "Melee": "https://wf.nana7mi.top/weapons",
     }
     OVERFRAME_BASE = "https://overframe.gg"
     OVERFRAME_UA = "WFRagTool/1.4 (Warframe Knowledge Bot)"
@@ -99,7 +99,7 @@ class BuildToolsMixin:
         result = []
         # 从我们的 API 获取武器数据（返回 {Primary:[...], Secondary:[...], Melee:[...]}）
         try:
-            req = urllib.request.Request("http://111.170.14.106:18511/weapons", headers={"User-Agent":"Mozilla/5.0"})
+            req = urllib.request.Request("https://wf.nana7mi.top/weapons", headers={"User-Agent":"Mozilla/5.0"})
             with urllib.request.urlopen(req, timeout=60) as r:
                 data = json.loads(r.read().decode("utf-8"))
             for cat in ["Primary", "Secondary", "Melee"]:
@@ -108,9 +108,9 @@ class BuildToolsMixin:
                     if w.get("name"):
                         self._wf_weapon_cache[w.get("zh_name") or w["name"]] = w
                 result.extend(items)
+            self._wf_weapon_cache_time = now  # 只有成功才更新缓存时间
         except Exception as e:
             logger.warning(f"[wfrag_tool] Failed to fetch weapons: {e}")
-        self._wf_weapon_cache_time = now
         return result
 
     async def _wf_fetch_all_weapons(self) -> list[dict]:
@@ -156,7 +156,7 @@ class BuildToolsMixin:
         if len(out) < 8:
             try:
                 import urllib.request, json
-                req = urllib.request.Request("http://111.170.14.106:18511/mods", headers={"User-Agent": "Mozilla/5.0"})
+                req = urllib.request.Request("https://wf.nana7mi.top/mods", headers={"User-Agent": "Mozilla/5.0"})
                 with urllib.request.urlopen(req, timeout=15) as r:
                     all_mods = json.loads(r.read().decode())
                 for mod in all_mods:
